@@ -17,19 +17,21 @@ IF(NOT DEFINED JUCE_LIBRARIES)
 			juce_audio_devices
 			juce_data_structures
 			juce_gui_basics
+			juce_gui_extra
 	)
 ENDIF()
 
 # Define the sources for the static library
 set(Sources
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
+	MidiLogView.cpp MidiLogView.h
 	README.md
 	LICENSE
 )
 
 # Setup library
 add_library(juce-widgets ${Sources})
-target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${JUCE_INCLUDES})
+target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${JUCE_INCLUDES} ${boost_SOURCE_DIR})
 
 # Pedantic about warnings
 if (MSVC)
