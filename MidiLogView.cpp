@@ -17,7 +17,7 @@ MidiLogView::MidiLogView() : Component(), document_(new CodeDocument), midiMessa
 	LambdaButtonStrip::TButtonMap lambdas = {
 		{ "clearLog",{ 0, "Clear log", [this]() {
 			clearLog();
-		} } },
+		} , 0x4C /* L on Windows */, ModifierKeys::ctrlModifier } },
 	};
 	buttons_->setButtonDefinitions(lambdas);
 //	midiMessagesBox.setColour(TextEditor::backgroundColourId, Colour(0x32ffffff));

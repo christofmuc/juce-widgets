@@ -29,11 +29,10 @@ void LambdaButtonStrip::setButtonDefinitions(TButtonMap const &definitions)
 	buttons_.resize(buttonDefinitions_.size());
 	for (auto button : buttonDefinitions_) {
 		decltype(button.second) buttonDef = button.second;
-		int position = std::get<0>(buttonDef);
-		auto b = new TextButton(std::get<1>(buttonDef));
+		auto b = new TextButton(buttonDef.buttonText);
 		b->addListener(this);
 		b->setComponentID(button.first);
-		buttons_[position] = std::make_pair(button.first, b);
+		buttons_[buttonDef.zeroBasedOrderNo] = std::make_pair(button.first, b);
 		addAndMakeVisible(b);
 	}
 	resized();
@@ -47,8 +46,7 @@ void LambdaButtonStrip::buttonClicked(Button* button)
 			// That's our button!
 			if (buttonDefinitions_.find(b.first) != buttonDefinitions_.end()) {
 				// We have a definition for that!
-				auto functor = std::get<2>(buttonDefinitions_[b.first]);
-				functor();
+				buttonDefinitions_[b.first].functor();
 				return;
 			}
 			else {
@@ -91,7 +89,9 @@ void LambdaButtonStrip::getAllCommands(Array<CommandID>& commands)
 void LambdaButtonStrip::getCommandInfo(CommandID commandID, ApplicationCommandInfo& result)
 {
 	int index = ((int)commandID) - commandBaseIndex_;
-	result.setInfo(buttons_[index].first, buttons_[index].second->getButtonText(), "General Category", 0);
+	auto id = buttons_[index].first;
+	result.setInfo(id, buttons_[index].second->getButtonText(), "General Category", 0);
+	result.addDefaultKeypress(buttonDefinitions_[id].defaultKeycode, buttonDefinitions_[id].defaultModifiers);
 }
 
 bool LambdaButtonStrip::perform(const InvocationInfo& info)
@@ -100,8 +100,7 @@ bool LambdaButtonStrip::perform(const InvocationInfo& info)
 	auto id = buttons_[index].first;
 	if (buttonDefinitions_.find(id) != buttonDefinitions_.end()) {
 		// We have a definition for that!
-		auto functor = std::get<2>(buttonDefinitions_[id]);
-		functor();
+		buttonDefinitions_[id].functor();
 		return true;
 	}
 	else {

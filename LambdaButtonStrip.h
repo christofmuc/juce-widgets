@@ -10,14 +10,21 @@
 
 #include <map>
 
+struct ButtonDefinition {
+	int zeroBasedOrderNo;
+	std::string buttonText;
+	std::function<void()> functor;
+	int defaultKeycode;
+	ModifierKeys defaultModifiers;
+};
+
 class LambdaButtonStrip : public Component,
 	public Button::Listener,
 	public ApplicationCommandTarget
 {
 public:
 	enum class Direction { Horizontal, Vertical };
-	typedef std::tuple<int, std::string, std::function<void()>> TButtonDefinition;
-	typedef std::map<std::string, TButtonDefinition> TButtonMap;
+	typedef std::map<std::string, ButtonDefinition> TButtonMap;
 
 	LambdaButtonStrip(int commandBaseIndex, Direction dir = Direction::Vertical);
 	virtual ~LambdaButtonStrip();
