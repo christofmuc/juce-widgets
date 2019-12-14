@@ -11,14 +11,15 @@
 #include <map>
 
 class LambdaButtonStrip : public Component,
-	public Button::Listener
+	public Button::Listener,
+	public ApplicationCommandTarget
 {
 public:
-	enum Direction { Horizontal, Vertical };
+	enum class Direction { Horizontal, Vertical };
 	typedef std::tuple<int, std::string, std::function<void()>> TButtonDefinition;
 	typedef std::map<std::string, TButtonDefinition> TButtonMap;
 
-	LambdaButtonStrip(Direction dir = Vertical);
+	LambdaButtonStrip(int commandBaseIndex, Direction dir = Direction::Vertical);
 	virtual ~LambdaButtonStrip();
 
 	void setButtonDefinitions(TButtonMap const &definitions);
@@ -27,7 +28,14 @@ public:
 
 	virtual void resized() override;
 
+	// All lambda buttons registered will be available as command targets within the JUCE framework
+	virtual ApplicationCommandTarget* getNextCommandTarget() override;
+	virtual void getAllCommands(Array<CommandID>& commands) override;
+	virtual void getCommandInfo(CommandID commandID, ApplicationCommandInfo& result) override;
+	virtual bool perform(const InvocationInfo& info) override;
+
 private:
+	int commandBaseIndex_;
 	Direction dir_;
 	TButtonMap buttonDefinitions_;
 	std::vector<std::pair<std::string, TextButton *>> buttons_;

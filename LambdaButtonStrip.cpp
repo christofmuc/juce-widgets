@@ -6,7 +6,7 @@
 
 #include "LambdaButtonStrip.h"
 
-LambdaButtonStrip::LambdaButtonStrip(Direction dir /*= Vertical*/) : dir_(dir)
+LambdaButtonStrip::LambdaButtonStrip(int commandBaseIndex, Direction dir /*= Vertical*/) : dir_(dir), commandBaseIndex_(commandBaseIndex)
 {
 }
 
@@ -64,7 +64,7 @@ void LambdaButtonStrip::resized()
 	Rectangle<int> area(getLocalBounds());
 
 	// This is random order I fear
-	if (dir_ == Vertical) {
+	if (dir_ == Direction::Vertical) {
 		for (auto b : buttons_) {
 			b.second->setBounds(area.removeFromTop(20));
 		}
@@ -73,5 +73,40 @@ void LambdaButtonStrip::resized()
 		for (auto b : buttons_) {
 			b.second->setBounds(area.removeFromLeft(100));
 		}
+	}
+}
+
+juce::ApplicationCommandTarget* LambdaButtonStrip::getNextCommandTarget()
+{
+	return nullptr;
+}
+
+void LambdaButtonStrip::getAllCommands(Array<CommandID>& commands)
+{
+	for (int i = 0; i < buttons_.size(); i++) {
+		commands.add(commandBaseIndex_ + i);
+	}
+}
+
+void LambdaButtonStrip::getCommandInfo(CommandID commandID, ApplicationCommandInfo& result)
+{
+	int index = ((int)commandID) - commandBaseIndex_;
+	result.setInfo(buttons_[index].first, buttons_[index].second->getButtonText(), "General Category", 0);
+}
+
+bool LambdaButtonStrip::perform(const InvocationInfo& info)
+{
+	int index = ((int)info.commandID) - commandBaseIndex_;
+	auto id = buttons_[index].first;
+	if (buttonDefinitions_.find(id) != buttonDefinitions_.end()) {
+		// We have a definition for that!
+		auto functor = std::get<2>(buttonDefinitions_[id]);
+		functor();
+		return true;
+	}
+	else {
+		// That's weird
+		jassert(false);
+		return false;
 	}
 }
