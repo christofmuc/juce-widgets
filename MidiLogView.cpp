@@ -15,7 +15,7 @@ MidiLogView::MidiLogView() : Component(), document_(new CodeDocument), midiMessa
 	buttons_ = std::make_unique<LambdaButtonStrip>();
 	addAndMakeVisible(*buttons_);
 	LambdaButtonStrip::TButtonMap lambdas = {
-		{ "clearLog",{ "Clear log", [this]() {
+		{ "clearLog",{ 0, "Clear log", [this]() {
 			clearLog();
 		} } },
 	};

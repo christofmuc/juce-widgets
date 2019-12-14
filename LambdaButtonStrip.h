@@ -15,7 +15,7 @@ class LambdaButtonStrip : public Component,
 {
 public:
 	enum Direction { Horizontal, Vertical };
-	typedef std::pair<std::string, std::function<void()>> TButtonDefinition;
+	typedef std::tuple<int, std::string, std::function<void()>> TButtonDefinition;
 	typedef std::map<std::string, TButtonDefinition> TButtonMap;
 
 	LambdaButtonStrip(Direction dir = Vertical);
@@ -29,7 +29,7 @@ public:
 
 private:
 	Direction dir_;
-	TButtonMap buttonDefintions_;
-	std::map<std::string, TextButton *> buttons_;
+	TButtonMap buttonDefinitions_;
+	std::vector<std::pair<std::string, TextButton *>> buttons_;
 };
 

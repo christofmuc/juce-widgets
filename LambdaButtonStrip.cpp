@@ -19,19 +19,22 @@ LambdaButtonStrip::~LambdaButtonStrip()
 
 void LambdaButtonStrip::setButtonDefinitions(TButtonMap const &definitions)
 {
-	buttonDefintions_ = definitions;
+	buttonDefinitions_ = definitions;
 
 	// Currently not allowed to be replaced
 	jassert(buttons_.size() == 0);
 
 	// Now, make a loop and create these buttons. They will not be visible until 
 	// they are explicitly arranged in the resize function, though, don't forget that!
-	for (auto button : buttonDefintions_) {
+	buttons_.resize(buttonDefinitions_.size());
+	for (auto button : buttonDefinitions_) {
 		decltype(button.second) buttonDef = button.second;
-		buttons_[button.first] = new TextButton(std::get<0>(buttonDef));
-		buttons_[button.first]->addListener(this);
-		buttons_[button.first]->setComponentID(button.first);
-		addAndMakeVisible(buttons_[button.first]);
+		int position = std::get<0>(buttonDef);
+		auto b = new TextButton(std::get<1>(buttonDef));
+		b->addListener(this);
+		b->setComponentID(button.first);
+		buttons_[position] = std::make_pair(button.first, b);
+		addAndMakeVisible(b);
 	}
 	resized();
 }
@@ -42,9 +45,9 @@ void LambdaButtonStrip::buttonClicked(Button* button)
 	for (auto b : buttons_) {
 		if (b.first == button->getComponentID()) {
 			// That's our button!
-			if (buttonDefintions_.find(b.first) != buttonDefintions_.end()) {
+			if (buttonDefinitions_.find(b.first) != buttonDefinitions_.end()) {
 				// We have a definition for that!
-				auto functor = std::get<1>(buttonDefintions_[b.first]);
+				auto functor = std::get<2>(buttonDefinitions_[b.first]);
 				functor();
 				return;
 			}
@@ -68,7 +71,7 @@ void LambdaButtonStrip::resized()
 	}
 	else {
 		for (auto b : buttons_) {
-			b.second->setBounds(area.removeFromLeft(150));
+			b.second->setBounds(area.removeFromLeft(100));
 		}
 	}
 }
