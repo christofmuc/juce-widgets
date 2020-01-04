@@ -24,6 +24,7 @@ ENDIF()
 # Define the sources for the static library
 set(Sources
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
+	LogView.cpp LogView.h
 	MidiLogView.cpp MidiLogView.h
 	README.md
 	LICENSE
