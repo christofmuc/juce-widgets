@@ -69,6 +69,7 @@ void LambdaButtonStrip::resized()
 	}
 	else {
 		for (auto b : buttons_) {
+			//TODO - if this fails, that is because you don't have a continuous count in your buttons for the order field
 			b.second->setBounds(area.removeFromLeft(100));
 		}
 	}
