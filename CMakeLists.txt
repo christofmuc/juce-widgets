@@ -26,6 +26,8 @@ set(Sources
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
 	LogView.cpp LogView.h
 	MidiLogView.cpp MidiLogView.h
+	PatchButton.cpp PatchButton.h
+	PatchButtonGrid.cpp PatchButtonGrid.h
 	README.md
 	LICENSE
 )
