@@ -28,6 +28,7 @@ set(Sources
 	MidiLogView.cpp MidiLogView.h
 	PatchButton.cpp PatchButton.h
 	PatchButtonGrid.cpp PatchButtonGrid.h
+	SimpleTable.h
 	README.md
 	LICENSE
 )
