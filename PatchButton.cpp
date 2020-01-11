@@ -53,6 +53,11 @@ void PatchButton::setColour(int colourId, Colour newColour)
 	button_.setColour(colourId, newColour);
 }
 
+String PatchButton::getButtonText() const
+{
+	return button_.getButtonText();
+}
+
 void PatchButton::setButtonText(const String& text)
 {
 	button_.setButtonText(text);

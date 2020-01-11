@@ -20,6 +20,7 @@ public:
 	//virtual void paint(Graphics& g) override;
 
 	void setColour(int colourId, Colour newColour);
+	String getButtonText() const;
 	void setButtonText(const String& text);
 	void setFavorite(bool isFavorite);
 
