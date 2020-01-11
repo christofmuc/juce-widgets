@@ -16,10 +16,10 @@ template <class T>
 class SimpleTable : public Component, public TableListBoxModel {
 public:
 
-	SimpleTable(std::vector<std::string> const &columnHeader, T const &data) : items_(data) {
+	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandler) : items_(data), rowSelectedHandler_(rowSelectedHandler) {
 		addAndMakeVisible(table_);
 
-		int numColumns_ = 1;
+		numColumns_ = 1;
 		for (const auto& column : columnHeader) {
 			table_.getHeader().addColumn(column,
 				numColumns_++,
@@ -38,6 +38,7 @@ public:
 		items_ = newData;
 		MessageManager::callAsync([this]() {
 			table_.updateContent();
+			table_.autoSizeAllColumns();
 			table_.repaint();
 		});
 		
@@ -71,9 +72,26 @@ public:
 		g.fillRect(width - 1, 0, 1, height);
 	}
 
+	virtual void selectedRowsChanged(int lastRowSelected) override {
+		rowSelectedHandler_(lastRowSelected);
+	}
+
 	void resized() override
 	{
 		table_.setBoundsInset(BorderSize<int>(8));
+	}
+
+	int getColumnAutoSizeWidth(int columnId) override
+	{
+		Font defaultFont;
+		int widest = defaultFont.getStringWidth(table_.getHeader().getColumnName(columnId));
+		for (auto rowNumber = getNumRows(); --rowNumber >= 0;)
+		{
+			visit(items_[rowNumber], columnId, [&](std::string const &text) {
+				widest = jmax(widest, defaultFont.getStringWidth(text));
+			});
+		}
+		return widest + 8;
 	}
 
 
@@ -81,5 +99,6 @@ private:
 	TableListBox table_;
 	T items_;
 	int numColumns_;
+	std::function<void(int)> rowSelectedHandler_;
 };
 
