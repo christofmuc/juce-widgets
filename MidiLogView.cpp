@@ -27,8 +27,8 @@ MidiLogView::MidiLogView() : Component(), document_(new CodeDocument), midiMessa
 
 void MidiLogView::resized() {
 	Rectangle<int> area(getLocalBounds());
-	buttons_->setBounds(area.removeFromBottom(60).reduced(8));
-	midiMessagesBox.setBounds(area.reduced(8));
+	buttons_->setBounds(area.removeFromBottom(40).withTrimmedTop(8).withSizeKeepingCentre(100, 30));
+	midiMessagesBox.setBounds(area);
 }
 
 String MidiLogView::getMidiMessageDescription(const MidiMessage& m)

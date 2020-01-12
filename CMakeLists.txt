@@ -23,6 +23,8 @@ ENDIF()
 
 # Define the sources for the static library
 set(Sources
+	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
+	InsetBox.cpp InsetBox.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
 	LogView.cpp LogView.h
 	MidiLogView.cpp MidiLogView.h

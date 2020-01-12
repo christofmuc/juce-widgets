@@ -78,7 +78,7 @@ public:
 
 	void resized() override
 	{
-		table_.setBoundsInset(BorderSize<int>(8));
+		table_.setBounds(getLocalBounds());
 	}
 
 	int getColumnAutoSizeWidth(int columnId) override

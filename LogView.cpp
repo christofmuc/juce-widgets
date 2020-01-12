@@ -24,8 +24,8 @@ LogView::LogView() : Component(), document_(new CodeDocument), logBox_(*document
 
 void LogView::resized() {
 	Rectangle<int> area(getLocalBounds());
-	buttons_->setBounds(area.removeFromBottom(60).reduced(8));
-	logBox_.setBounds(area.reduced(8));
+	buttons_->setBounds(area.removeFromBottom(40).withTrimmedTop(8).withSizeKeepingCentre(100, 30));
+	logBox_.setBounds(area);
 }
 
 void LogView::addMessageToList(String const &message)
