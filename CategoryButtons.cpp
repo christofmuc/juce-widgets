@@ -73,3 +73,8 @@ void CategoryButtons::setActive(std::set<Category> const &activeCategories)
 		button->setToggleState(found, dontSendNotification);
 	}
 }
+
+bool operator<(CategoryButtons::Category const &left, CategoryButtons::Category const &right)
+{
+	return left.category < right.category;
+}

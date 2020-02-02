@@ -37,3 +37,6 @@ private:
 	OwnedArray<TextButton> categoryFilter_;
 	std::function<void()> updateHandler_;
 };
+
+// To allow storing a set of these categories
+bool operator <(CategoryButtons::Category const &left, CategoryButtons::Category const &right);
