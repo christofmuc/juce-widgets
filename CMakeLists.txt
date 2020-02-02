@@ -23,6 +23,7 @@ ENDIF()
 
 # Define the sources for the static library
 set(Sources
+	CategoryButtons.cpp CategoryButtons.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	InsetBox.cpp InsetBox.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
