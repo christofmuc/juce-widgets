@@ -13,5 +13,7 @@ InsetBox::InsetBox(Component *content, BorderSize<int> borders) : content_(conte
 
 void InsetBox::resized()
 {
-	content_->setBoundsInset(borders_);
+	if (content_) {
+		content_->setBoundsInset(borders_);
+	}
 }
