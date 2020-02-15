@@ -27,6 +27,7 @@ PatchButton::PatchButton(int id, std::function<void(int)> clickHandler) : clicke
 void PatchButton::setActive(bool active)
 {
 	active_ = active;
+	button_.setToggleState(active, dontSendNotification);
 	repaint();
 }
 
