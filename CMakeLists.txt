@@ -21,8 +21,20 @@ IF(NOT DEFINED JUCE_LIBRARIES)
 	)
 ENDIF()
 
+set(RESOURCE_FILES 
+	resources/heart-32.png
+)
+
+add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/BinaryResources.h
+	COMMAND ${CMAKE_COMMAND} -P createResources.cmake	
+	DEPENDS ${RESOURCE_FILES}
+	COMMENT "Compiling binary resources"
+	WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+)
+
 # Define the sources for the static library
 set(Sources
+	BinaryResources.h
 	CategoryButtons.cpp CategoryButtons.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	InsetBox.cpp InsetBox.h
@@ -34,6 +46,12 @@ set(Sources
 	SimpleTable.h
 	README.md
 	LICENSE
+	${RESOURCE_FILES}
+)
+
+set_source_files_properties(
+	BinaryResources.h
+	PROPERTIES GENERATED TRUE
 )
 
 # Setup library

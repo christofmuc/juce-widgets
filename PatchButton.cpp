@@ -6,19 +6,22 @@
 
 #include "PatchButton.h"
 
+#include "BinaryResources.h"
+
 PatchButton::PatchButton(int id, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
 {
 	addAndMakeVisible(button_);
 	button_.addListener(this);
 	button_.setClickingTogglesState(true);
 	PNGImageFormat reader;
-//	auto im = reader.decodeImage(MemoryInputStream(BinaryData::hearts32_png, BinaryData::hearts32_pngSize, false));
-//	auto smaller = im.rescaled(16, 16);
-//	favoriteIcon_.setImage(smaller);
-	//favoriteIcon_.setInterceptsMouseClicks(false, false);
-	//addAndMakeVisible(favoriteIcon_);
-	//favoriteIcon_.setVisible(false);
-	//favoriteIcon_.toFront(false);
+	MemoryInputStream memStream(heart_32_png, heart_32_png_size, false);
+	auto im = reader.decodeImage(memStream);
+	auto smaller = im.rescaled(16, 16);
+	favoriteIcon_.setImage(smaller);
+	favoriteIcon_.setInterceptsMouseClicks(false, false);
+	addAndMakeVisible(favoriteIcon_);
+	favoriteIcon_.setVisible(false);
+	favoriteIcon_.toFront(false);
 }
 
 void PatchButton::setActive(bool active)
