@@ -15,6 +15,8 @@ public:
 	MidiLogView();
 
 	void addMessageToList(const MidiMessage& message, const String& source, bool isOut);
+	void addMessageToList(double time, const String& description, const String &bytes, const String& source, bool isOut);
+
 	void clearLog();
 
 	virtual void resized() override;

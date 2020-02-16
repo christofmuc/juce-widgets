@@ -59,8 +59,14 @@ String MidiLogView::getMidiMessageDescription(const MidiMessage& m)
 
 void MidiLogView::addMessageToList(const MidiMessage& message, const String& source, bool isOut)
 {
+	const String description(getMidiMessageDescription(message));
 	const double time = message.getTimeStamp(); // -startTime;
+	const String bytes = String::toHexString(message.getRawData(), message.getRawDataSize());
+	addMessageToList(time, description, bytes, source, isOut);
+}
 
+void MidiLogView::addMessageToList(double time, const String& description, const String &bytes, const String& source, bool isOut)
+{
 	const int hours = ((int)(time / 3600.0)) % 24;
 	const int minutes = ((int)(time / 60.0)) % 60;
 	const int seconds = ((int)time) % 60;
@@ -68,10 +74,7 @@ void MidiLogView::addMessageToList(const MidiMessage& message, const String& sou
 
 	String timecode = (boost::format("%02d:%02d:%02d.%03d") % hours % minutes % seconds %millis).str();
 
-	const String description(getMidiMessageDescription(message));
 	const String direction = isOut ? "Out" : "In ";
-	const String bytes = String::toHexString(message.getRawData(), message.getRawDataSize());
-
 	String midiMessageString = (boost::format("%s: %s %s %s [%s]\n") % timecode %	direction % source % description %bytes).str();
 
 	MessageManager::callAsync([this, midiMessageString]() {
