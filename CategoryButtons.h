@@ -14,11 +14,12 @@ class CategoryButtons : public Component,
 	private ToggleButton::Listener 
 {
 public:
-	struct Category {
-		Category(std::string const &cat, Colour const &color) : category(cat), color(color) {
-		}
+	class Category {
+	public:
+		Category(std::string const &c, Colour o, int i) : category(c), color(o), bitIndex(i) {}
 		std::string category;
 		Colour color;
+		int bitIndex;
 	};
 
 	CategoryButtons(std::vector<Category> const &categories, std::function<void()> updated, bool colouredButtons);
