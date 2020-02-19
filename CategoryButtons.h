@@ -22,7 +22,7 @@ public:
 		int bitIndex;
 	};
 
-	CategoryButtons(std::vector<Category> const &categories, std::function<void()> updated, bool colouredButtons);
+	CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons);
 
 	bool isAtLeastOne() const;
 	std::vector<Category> selectedCategories() const;
@@ -36,7 +36,7 @@ public:
 private:
 	std::vector<Category> categories_;
 	OwnedArray<TextButton> categoryFilter_;
-	std::function<void()> updateHandler_;
+	std::function<void(Category)> updateHandler_;
 };
 
 // To allow storing a set of these categories

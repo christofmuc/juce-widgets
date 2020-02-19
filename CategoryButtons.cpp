@@ -6,7 +6,7 @@
 
 #include "CategoryButtons.h"
 
-CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void()> updated, bool colouredButtons) : categories_(categories), updateHandler_(updated)
+CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons) : categories_(categories), updateHandler_(updated)
 {
 	// Build filter buttons for the categories
 	for (const auto& c : categories_) {
@@ -56,9 +56,14 @@ void CategoryButtons::resized()
 	grid.performLayout(getLocalBounds());
 }
 
-void CategoryButtons::buttonClicked(Button*)
+void CategoryButtons::buttonClicked(Button* button)
 {
-	updateHandler_();
+	const auto& category = button->getButtonText();
+	for (auto predef : categories_) {
+		if (predef.category == category) {
+			updateHandler_(predef);
+		}
+	}
 }
 
 void CategoryButtons::setActive(std::set<Category> const &activeCategories)
