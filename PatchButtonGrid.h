@@ -26,4 +26,6 @@ private:
 	int columns_;
 	int rows_;
 	OwnedArray<PatchButton> patchButtons_;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchButtonGrid)
 };

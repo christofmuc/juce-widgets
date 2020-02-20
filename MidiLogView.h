@@ -27,4 +27,6 @@ private:
 	std::unique_ptr<CodeDocument> document_;
 	std::unique_ptr<LambdaButtonStrip> buttons_;
 	CodeEditorComponent midiMessagesBox;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiLogView)
 };

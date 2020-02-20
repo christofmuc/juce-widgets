@@ -37,6 +37,8 @@ private:
 	std::vector<Category> categories_;
 	OwnedArray<TextButton> categoryFilter_;
 	std::function<void(Category)> updateHandler_;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CategoryButtons)
 };
 
 // To allow storing a set of these categories

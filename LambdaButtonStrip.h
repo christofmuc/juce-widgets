@@ -46,5 +46,7 @@ private:
 	Direction dir_;
 	TButtonMap buttonDefinitions_;
 	std::vector<std::pair<std::string, TextButton *>> buttons_;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LambdaButtonStrip)
 };
 

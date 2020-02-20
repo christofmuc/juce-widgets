@@ -35,4 +35,6 @@ private:
 	ImageComponent favoriteIcon_;
 	int id_;
 	bool active_;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchButton)
 };
