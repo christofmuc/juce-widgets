@@ -1,6 +1,10 @@
 #include "PropertyEditor.h"
 
-PropertyEditor::PropertyEditor(TProperties &properties) : properties_(properties)
+PropertyEditor::PropertyEditor()
+{
+}
+
+PropertyEditor::PropertyEditor(TProperties &properties) 
 {
 	addAndMakeVisible(propertyPanel_);
 	setProperties(properties);
@@ -14,12 +18,11 @@ void PropertyEditor::resized()
 
 void PropertyEditor::setProperties(TProperties &props)
 {
-	properties_ = props;
 	propertyPanel_.clear();
 
 	Array<PropertyComponent *> editors;
 	String activeSectionName = "";
-	for (auto property : properties_) {
+	for (auto property : props) {
 		// See if we need to close the previous section
 		if (activeSectionName != property->sectionName) {
 			if (!editors.isEmpty()) {
