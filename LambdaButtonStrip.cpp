@@ -82,7 +82,7 @@ juce::ApplicationCommandTarget* LambdaButtonStrip::getNextCommandTarget()
 
 void LambdaButtonStrip::getAllCommands(Array<CommandID>& commands)
 {
-	for (size_t i = 0; i < buttons_.size(); i++) {
+	for (int i = 0; i < (int) buttons_.size(); i++) {
 		commands.add(commandBaseIndex_ + i);
 	}
 }
