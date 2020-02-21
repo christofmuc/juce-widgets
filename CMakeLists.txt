@@ -43,6 +43,7 @@ set(Sources
 	MidiLogView.cpp MidiLogView.h
 	PatchButton.cpp PatchButton.h
 	PatchButtonGrid.cpp PatchButtonGrid.h
+	PropertyEditor.cpp PropertyEditor.h
 	SimpleTable.h
 	README.md
 	LICENSE
@@ -56,6 +57,7 @@ set_source_files_properties(
 
 # Setup library
 add_library(juce-widgets ${Sources})
+target_link_libraries(juce-widgets juce-utils)
 target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${JUCE_INCLUDES} ${boost_SOURCE_DIR})
 
 # Pedantic about warnings
