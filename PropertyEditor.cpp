@@ -2,11 +2,11 @@
 
 PropertyEditor::PropertyEditor()
 {
+	addAndMakeVisible(propertyPanel_);
 }
 
-PropertyEditor::PropertyEditor(TProperties &properties) 
+PropertyEditor::PropertyEditor(TProperties &properties) : PropertyEditor()
 {
-	addAndMakeVisible(propertyPanel_);
 	setProperties(properties);
 }
 
