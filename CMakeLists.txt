@@ -45,6 +45,7 @@ set(Sources
 	PatchButtonGrid.cpp PatchButtonGrid.h
 	PropertyEditor.cpp PropertyEditor.h
 	SimpleTable.h
+	SynthList.cpp SynthList.h
 	README.md
 	LICENSE
 	${RESOURCE_FILES}
