@@ -16,7 +16,7 @@ void PropertyEditor::resized()
 	propertyPanel_.setBounds(area);
 }
 
-void PropertyEditor::setProperties(TProperties &props)
+void PropertyEditor::setProperties(TProperties const &props)
 {
 	propertyPanel_.clear();
 
