@@ -13,15 +13,20 @@ PatchButton::PatchButton(int id, std::function<void(int)> clickHandler) : clicke
 	addAndMakeVisible(button_);
 	button_.addListener(this);
 	button_.setClickingTogglesState(true);
+	setupIcon(favoriteIcon_, heart_32_png, heart_32_png_size);
+	setupIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
+}
+
+void PatchButton::setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize) {
 	PNGImageFormat reader;
-	MemoryInputStream memStream(heart_32_png, heart_32_png_size, false);
+	MemoryInputStream memStream(icondata, iconsize, false);
 	auto im = reader.decodeImage(memStream);
 	auto smaller = im.rescaled(16, 16);
-	favoriteIcon_.setImage(smaller);
-	favoriteIcon_.setInterceptsMouseClicks(false, false);
-	addAndMakeVisible(favoriteIcon_);
-	favoriteIcon_.setVisible(false);
-	favoriteIcon_.toFront(false);
+	icon.setImage(smaller);
+	icon.setInterceptsMouseClicks(false, false);
+	icon.setVisible(false);
+	icon.toFront(false);
+	addAndMakeVisible(icon);
 }
 
 void PatchButton::setActive(bool active)
@@ -38,19 +43,9 @@ void PatchButton::resized()
 	button_.setBounds(area.reduced(2));
 	favoriteIcon_.setBounds(area);
 	favoriteIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yTop | RectanglePlacement::onlyReduceInSize);
+	hiddenIcon_.setBounds(area);
+	hiddenIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yBottom | RectanglePlacement::onlyReduceInSize);
 }
-
-/*void PatchButton::paint(Graphics& g) 
-{
-	if (active_) {
-		g.fillAll(Colours::darkgrey);
-		g.setColour(Colours::lightgrey);
-		g.fillRect(getLocalBounds());
-	}
-	else {
-		Component::paint(g);
-	}
-}*/
 
 void PatchButton::setColour(int colourId, Colour newColour)
 {
@@ -70,6 +65,10 @@ void PatchButton::setButtonText(const String& text)
 void PatchButton::setFavorite(bool isFavorite)
 {
 	favoriteIcon_.setVisible(isFavorite);
+}
+
+void PatchButton::setHidden(bool isHidden) {
+	hiddenIcon_.setVisible(isHidden);
 }
 
 void PatchButton::setToggleState(bool state)

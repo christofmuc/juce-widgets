@@ -23,6 +23,7 @@ ENDIF()
 
 set(RESOURCE_FILES 
 	resources/heart-32.png
+	resources/blind-symbol-of-an-opened-eye-with-a-slash.png
 )
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/BinaryResources.h

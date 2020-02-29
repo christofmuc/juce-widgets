@@ -22,7 +22,9 @@ public:
 	void setColour(int colourId, Colour newColour);
 	String getButtonText() const;
 	void setButtonText(const String& text);
+
 	void setFavorite(bool isFavorite);
+	void setHidden(bool isHidden);
 
 	void setToggleState(bool state);
 	bool getToggleState() const;
@@ -30,9 +32,12 @@ public:
 	virtual void buttonClicked(Button*) override;
 
 private:
+	void setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize);
+
 	std::function<void(int)> clicked_;
 	TextButton button_;
 	ImageComponent favoriteIcon_;
+	ImageComponent hiddenIcon_;
 	int id_;
 	bool active_;
 
