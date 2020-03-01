@@ -62,6 +62,11 @@ void PatchButton::setButtonText(const String& text)
 	button_.setButtonText(text);
 }
 
+void PatchButton::setButtonText(const String& line1, const String &line2)
+{
+	button_.setButtonText(line1 + "\n" + line2);
+}
+
 void PatchButton::setFavorite(bool isFavorite)
 {
 	favoriteIcon_.setVisible(isFavorite);

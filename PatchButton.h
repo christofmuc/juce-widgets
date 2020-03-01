@@ -22,6 +22,7 @@ public:
 	void setColour(int colourId, Colour newColour);
 	String getButtonText() const;
 	void setButtonText(const String& text);
+	void setButtonText(const String& line1, const String &line2);
 
 	void setFavorite(bool isFavorite);
 	void setHidden(bool isHidden);
