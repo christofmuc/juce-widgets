@@ -42,14 +42,23 @@ void PropertyEditor::setProperties(TProperties const &props)
 				choices.add(lookup.second);
 			}
 			editor = new ChoicePropertyComponent(Value(property->value), property->name, choices, values);
+			//editor->setEnabled(property->enabled);
 			break;
 		}
 		case ValueType::Integer:
 			editor = new SliderPropertyComponent(Value(property->value), property->name, property->minValue, property->maxValue, 1.0);
+			//editor->setEnabled(property->enabled);
 			break;
 		case ValueType::Bool:
 			editor = new BooleanPropertyComponent(Value(property->value), property->name, "On/Off");
+			//editor->setEnabled(property->enabled);
 			break;
+		case ValueType::String:
+			editor = new TextPropertyComponent(Value(property->value), property->name, property->maxValue, false, property->enabled);
+			break;
+		default:
+			// Type needs to be implemented
+			jassert(false);
 		}
 		if (editor) {
 			editors.add(editor);
