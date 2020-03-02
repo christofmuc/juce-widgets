@@ -22,7 +22,7 @@ public:
 		int bitIndex;
 	};
 
-	CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons);
+	CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
 
 	bool isAtLeastOne() const;
 	std::vector<Category> selectedCategories() const;
@@ -34,8 +34,9 @@ public:
 	void buttonClicked(Button*) override;
 
 private:
+	bool useCheckboxes_;
 	std::vector<Category> categories_;
-	OwnedArray<TextButton> categoryFilter_;
+	OwnedArray<Button> categoryFilter_;
 	std::function<void(Category)> updateHandler_;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CategoryButtons)
