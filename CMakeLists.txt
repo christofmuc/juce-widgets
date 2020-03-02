@@ -40,6 +40,7 @@ set(Sources
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	InsetBox.cpp InsetBox.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
+	LambdaMenuModel.cpp LambdaMenuModel.h
 	LogView.cpp LogView.h
 	MidiLogView.cpp MidiLogView.h
 	PatchButton.cpp PatchButton.h
