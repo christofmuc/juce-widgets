@@ -48,3 +48,7 @@ void LogView::clearLog()
 	document_->setSavePoint();
 }
 
+void LogViewLogger::postMessage(const String& message)
+{
+	logview_.addMessageToList(message);
+}
