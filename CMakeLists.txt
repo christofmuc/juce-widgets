@@ -43,6 +43,7 @@ set(Sources
 	LambdaMenuModel.cpp LambdaMenuModel.h
 	LogView.cpp LogView.h
 	MidiLogView.cpp MidiLogView.h
+	MouseUpAndDownButton.h
 	PatchButton.cpp PatchButton.h
 	PatchButtonGrid.cpp PatchButtonGrid.h
 	PropertyEditor.cpp PropertyEditor.h
