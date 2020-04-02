@@ -24,9 +24,9 @@ void PatchButton::setupIcon(ImageComponent &icon, const unsigned char *icondata,
 	auto smaller = im.rescaled(16, 16);
 	icon.setImage(smaller);
 	icon.setInterceptsMouseClicks(false, false);
+	addAndMakeVisible(icon);
 	icon.setVisible(false);
 	icon.toFront(false);
-	addAndMakeVisible(icon);
 }
 
 void PatchButton::setActive(bool active)
