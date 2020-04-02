@@ -21,7 +21,7 @@ public:
 
 	virtual void resized() override;
 
-	static String MidiLogView::getMidiMessageDescription(const MidiMessage& m);
+	static String getMidiMessageDescription(const MidiMessage& m);
 
 private:
 	std::unique_ptr<CodeDocument> document_;
