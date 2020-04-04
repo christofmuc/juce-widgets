@@ -23,13 +23,21 @@ private:
 };
 
 CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes) 
-	: categories_(categories), updateHandler_(updated), useCheckboxes_(useCheckboxes)
+	: updateHandler_(updated), useCheckboxes_(useCheckboxes), colouredButtons_(colouredButtons)
 {
+	setCategories(categories);
+}
+
+void CategoryButtons::setCategories(std::vector<Category> const &categories)
+{
+	categories_ = categories;
+	categoryFilter_.clear();
+
 	// Build filter buttons for the categories
 	for (const auto& c : categories_) {
 		Button *button;
-		if (useCheckboxes) {
-			if (colouredButtons) {
+		if (useCheckboxes_) {
+			if (colouredButtons_) {
 				button = new ColouredCheckbox(c.category, c.color.darker());
 			}
 			else {
@@ -38,14 +46,15 @@ CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::f
 		}
 		else {
 			button = new TextButton(c.category);
-			button->setColour(TextButton::ColourIds::buttonOnColourId, colouredButtons ? c.color : c.color.darker());
-			button->setColour(TextButton::ColourIds::buttonColourId, colouredButtons ? c.color.darker() : Colours::black);
+			button->setColour(TextButton::ColourIds::buttonOnColourId, colouredButtons_ ? c.color : c.color.darker());
+			button->setColour(TextButton::ColourIds::buttonColourId, colouredButtons_ ? c.color.darker() : Colours::black);
 			button->setClickingTogglesState(true);
 		}
 		button->addListener(this);
 		addAndMakeVisible(button);
 		categoryFilter_.add(button);
 	}
+	resized();
 }
 
 bool CategoryButtons::isAtLeastOne() const
