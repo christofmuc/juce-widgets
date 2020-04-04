@@ -24,6 +24,8 @@ public:
 
 	CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
 
+	void setCategories(std::vector<Category> const &categories);
+
 	bool isAtLeastOne() const;
 	std::vector<Category> selectedCategories() const;
 	void setActive(std::set<Category> const &activeCategories);
@@ -35,6 +37,7 @@ public:
 
 private:
 	bool useCheckboxes_;
+	bool colouredButtons_;
 	std::vector<Category> categories_;
 	OwnedArray<Button> categoryFilter_;
 	std::function<void(Category)> updateHandler_;
