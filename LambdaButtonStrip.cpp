@@ -68,9 +68,16 @@ void LambdaButtonStrip::resized()
 		}
 	}
 	else {
+		int buttonWidth = std::min(200, getWidth() / (int) buttons_.size());
 		for (auto b : buttons_) {
 			//TODO - if this fails, that is because you don't have a continuous count in your buttons for the order field
-			b.second->setBounds(area.removeFromLeft(100));
+			if (b == buttons_[0]) {
+				b.second->setBounds(area.removeFromLeft(buttonWidth));
+			}
+			else {
+				b.second->setBounds(area.removeFromLeft(buttonWidth).withTrimmedLeft(8));
+			}
+			
 		}
 	}
 }
