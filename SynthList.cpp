@@ -33,11 +33,6 @@ void SynthList::resized() {
 }
 
 void SynthList::buttonClicked(Button *button) {
-	// Nothing to do
-	ignoreUnused(button);
-}
-
-void SynthList::buttonStateChanged(Button *button) {
 	if (button->getToggleState()) {
 		for (auto synth : synths_) {
 			if (button->getButtonText() == juce::String(synth->getName())) {
@@ -47,6 +42,11 @@ void SynthList::buttonStateChanged(Button *button) {
 		}
 		jassert(false);
 	}
+}
+
+void SynthList::buttonStateChanged(Button *button) {
+	// Nothing to do
+	ignoreUnused(button);
 }
 
 void SynthList::changeListenerCallback(ChangeBroadcaster*)
