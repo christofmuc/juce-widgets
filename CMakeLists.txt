@@ -42,6 +42,7 @@ set(Sources
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
 	LambdaMenuModel.cpp LambdaMenuModel.h
 	LogView.cpp LogView.h
+	MidiChannelEntry.cpp MidiChannelEntry.h
 	MidiLogView.cpp MidiLogView.h
 	MouseUpAndDownButton.h
 	PatchButton.cpp PatchButton.h
