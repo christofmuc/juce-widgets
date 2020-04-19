@@ -2,6 +2,8 @@
 
 void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback)
 {
+	buttons_.clear();
+	labels_.clear();
 	synths_ = synths;
 	synthSwitchCallback_ = synthSwitchCallback;
 	for (auto synth : synths_) {
@@ -18,6 +20,7 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, st
 		label->setColour(Label::ColourIds::backgroundColourId, synth->isActive() ? Colours::darkgreen : Colours::darkgrey);
 		addAndMakeVisible(label);
 	}
+	resized();
 }
 
 void SynthList::resized() {
@@ -25,7 +28,7 @@ void SynthList::resized() {
 	// Horizontal layout
 	auto bottomrow = area.removeFromBottom(20);
 	auto toprow = area;
-	int width = std::min(area.getWidth() / buttons_.size(), 150);
+	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), 150) : 0;
 	for (int i = 0; i < buttons_.size(); i++) {
 		buttons_[i]->setBounds(toprow.removeFromRight(width));
 		labels_[i]->setBounds(bottomrow.removeFromRight(width).reduced(8));
