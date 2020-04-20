@@ -15,6 +15,7 @@ IF(NOT DEFINED JUCE_LIBRARIES)
 			juce_events
 			juce_audio_basics
 			juce_audio_devices
+			juce_audio_utils
 			juce_data_structures
 			juce_gui_basics
 			juce_gui_extra
@@ -50,6 +51,7 @@ set(Sources
 	PropertyEditor.cpp PropertyEditor.h
 	SimpleTable.h
 	SynthList.cpp SynthList.h
+	Thumbnail.cpp Thumbnail.h
 	README.md
 	LICENSE
 	${RESOURCE_FILES}
