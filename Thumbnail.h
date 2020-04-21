@@ -8,7 +8,7 @@
 
 #include "JuceHeader.h"
 
-class Thumbnail : public Component {
+class Thumbnail : public Component, public ChangeBroadcaster, private Timer {
 public:
 	Thumbnail();
 
@@ -17,9 +17,12 @@ public:
 	void paint(Graphics& g) override;
 
 private:
+	void timerCallback() override;
+
 	static AudioThumbnailCache sCache_;
 
 	AudioFormatManager formatManager_;
 	std::unique_ptr<AudioThumbnail> audioThumbnail_;
+	float gainScale_;
 };
 
