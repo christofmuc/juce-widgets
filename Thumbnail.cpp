@@ -36,13 +36,18 @@ void Thumbnail::loadFromFile(std::string fullpath)
 		startTimer(100);
 	}
 	else {
-		audioThumbnail_.reset();
+		clearThumbnail();
 	}
+}
+
+void Thumbnail::clearThumbnail()
+{
+	audioThumbnail_.reset();
 }
 
 void Thumbnail::paint(Graphics& g)
 {
-	g.fillAll(Colours::darkblue);
+	//g.fillAll(Colours::darkblue);
 	g.setColour(Colours::white);
 
 	if (audioThumbnail_) {

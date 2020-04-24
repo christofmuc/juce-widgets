@@ -10,11 +10,14 @@
 
 PatchButton::PatchButton(int id, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
 {
+	
 	addAndMakeVisible(button_);
 	button_.addListener(this);
 	button_.setClickingTogglesState(true);
 	setupIcon(favoriteIcon_, heart_32_png, heart_32_png_size);
 	setupIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
+	addAndMakeVisible(thumbnail_);
+	thumbnail_.setAlpha(0.3f);
 }
 
 void PatchButton::setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize) {
@@ -45,6 +48,7 @@ void PatchButton::resized()
 	favoriteIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yTop | RectanglePlacement::onlyReduceInSize);
 	hiddenIcon_.setBounds(area);
 	hiddenIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yBottom | RectanglePlacement::onlyReduceInSize);
+	thumbnail_.setBounds(area.reduced(4));
 }
 
 void PatchButton::setColour(int colourId, Colour newColour)
@@ -74,6 +78,21 @@ void PatchButton::setFavorite(bool isFavorite)
 
 void PatchButton::setHidden(bool isHidden) {
 	hiddenIcon_.setVisible(isHidden);
+}
+
+void PatchButton::setThumbnailFile(const String &filename)
+{
+	if (filename.isNotEmpty()) {
+		thumbnail_.loadFromFile(filename.toStdString());
+	}
+	else {
+		thumbnail_.clearThumbnail();
+	}
+}
+
+void PatchButton::clearThumbnailFile()
+{
+	thumbnail_.clearThumbnail();
 }
 
 void PatchButton::setToggleState(bool state)

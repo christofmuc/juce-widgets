@@ -13,6 +13,7 @@ public:
 	Thumbnail();
 
 	void loadFromFile(std::string fullpath);
+	void clearThumbnail();
 
 	void paint(Graphics& g) override;
 

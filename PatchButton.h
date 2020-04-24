@@ -8,6 +8,8 @@
 
 #include "JuceHeader.h"
 
+#include "Thumbnail.h"
+
 class PatchButton : public Component, 
 	private TextButton::Listener 
 {
@@ -26,6 +28,8 @@ public:
 
 	void setFavorite(bool isFavorite);
 	void setHidden(bool isHidden);
+	void setThumbnailFile(const String &filename);
+	void clearThumbnailFile();
 
 	void setToggleState(bool state);
 	bool getToggleState() const;
@@ -37,6 +41,7 @@ private:
 
 	std::function<void(int)> clicked_;
 	TextButton button_;
+	Thumbnail thumbnail_;
 	ImageComponent favoriteIcon_;
 	ImageComponent hiddenIcon_;
 	int id_;
