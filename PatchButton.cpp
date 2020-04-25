@@ -18,6 +18,7 @@ PatchButton::PatchButton(int id, std::function<void(int)> clickHandler) : clicke
 	setupIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
 	addAndMakeVisible(thumbnail_);
 	thumbnail_.setAlpha(0.3f);
+	thumbnail_.setInterceptsMouseClicks(false, false);
 }
 
 void PatchButton::setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize) {
@@ -80,14 +81,19 @@ void PatchButton::setHidden(bool isHidden) {
 	hiddenIcon_.setVisible(isHidden);
 }
 
-void PatchButton::setThumbnailFile(const String &filename)
+void PatchButton::setThumbnailFile(const String &filename, const String &cacheFileName)
 {
 	if (filename.isNotEmpty()) {
-		thumbnail_.loadFromFile(filename.toStdString());
+		thumbnail_.loadFromFile(filename.toStdString(), cacheFileName.toStdString());
 	}
 	else {
 		thumbnail_.clearThumbnail();
 	}
+}
+
+void PatchButton::setThumbnailFromCache(const Thumbnail::CacheInfo &cacheInfo)
+{
+	thumbnail_.loadFromCache(cacheInfo);
 }
 
 void PatchButton::clearThumbnailFile()

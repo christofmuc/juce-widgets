@@ -28,7 +28,8 @@ public:
 
 	void setFavorite(bool isFavorite);
 	void setHidden(bool isHidden);
-	void setThumbnailFile(const String &filename);
+	void setThumbnailFile(const String &filename, const String &cacheFileName);
+	void setThumbnailFromCache(const Thumbnail::CacheInfo &cacheInfo);
 	void clearThumbnailFile();
 
 	void setToggleState(bool state);
