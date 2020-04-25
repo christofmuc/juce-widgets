@@ -28,11 +28,13 @@ public:
 	static CacheInfo loadCacheInfo(File cacheFile);
 
 private:
+	void initMemoryCache();
 	void timerCallback() override;
 
-	static AudioThumbnailCache sCache_; // This is a memory cache only 
+	static std::weak_ptr<AudioThumbnailCache> sCache_; // This is a memory cache only, weak because then it will be released once the last thumbnail is gone and not leak
 
 	AudioFormatManager formatManager_;
+	std::shared_ptr<AudioThumbnailCache> memoryCache_;
 	std::unique_ptr<AudioThumbnail> audioThumbnail_;
 	float gainScale_;
 	CacheInfo cacheInfo_;

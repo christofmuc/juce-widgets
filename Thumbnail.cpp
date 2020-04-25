@@ -12,6 +12,16 @@ Thumbnail::Thumbnail()
 	formatManager_.registerBasicFormats(); //TODO this shouldn't be necessary for all thumbnails, but rather just once?
 }
 
+void Thumbnail::initMemoryCache() {
+	if (sCache_.expired()) {
+		memoryCache_ = std::make_shared<AudioThumbnailCache>(1024);
+		sCache_ = memoryCache_;
+	}
+	else {
+		memoryCache_ = sCache_.lock();
+	}
+}
+
 void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &fullpathOfCacheFileToBeCreated)
 {
 	File inputFile(fullpath);
@@ -31,7 +41,8 @@ void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &ful
 		int reductionFactor = (int) (lengthInSeconds / 0.5); // 0.5 being the 500 ms*/
 		int reductionFactor = std::max((int)( length / 512), 1);
 
-		audioThumbnail_ = std::make_unique<AudioThumbnail>(reductionFactor, formatManager_, sCache_);
+		initMemoryCache();
+		audioThumbnail_ = std::make_unique<AudioThumbnail>(reductionFactor, formatManager_, *memoryCache_);
 		audioThumbnail_->setSource(new FileInputSource(inputFile));
 		startTimer(100);
 
@@ -48,7 +59,8 @@ void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &ful
 void Thumbnail::loadFromCache(CacheInfo const &cacheInfo) {
 	cacheInfo_ = cacheInfo;
 	gainScale_ = cacheInfo.gainScale;
-	audioThumbnail_ = std::make_unique<AudioThumbnail>(cacheInfo.reductionFactor, formatManager_, sCache_);
+	initMemoryCache();
+	audioThumbnail_ = std::make_unique<AudioThumbnail>(cacheInfo.reductionFactor, formatManager_, *memoryCache_);
 	MemoryInputStream input(cacheInfo.cacheData, false);
 	audioThumbnail_->loadFrom(input);
 }
@@ -105,4 +117,4 @@ void Thumbnail::timerCallback()
 	}
 }
 
-AudioThumbnailCache Thumbnail::sCache_(1024);
+std::weak_ptr<AudioThumbnailCache> Thumbnail::sCache_;
