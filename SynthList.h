@@ -6,6 +6,7 @@ class ActiveListItem {
 public:
 	virtual std::string getName() = 0;
 	virtual bool isActive() = 0;
+	virtual Colour getColour() = 0;
 };
 
 class SynthList : public Component,

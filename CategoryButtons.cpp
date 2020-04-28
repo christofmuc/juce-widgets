@@ -6,6 +6,8 @@
 
 #include "CategoryButtons.h"
 
+#include "ColourHelpers.h"
+
 class ColouredCheckbox : public ToggleButton {
 public:
 	ColouredCheckbox(String text, Colour colour) : ToggleButton(text), colour_(colour) {
@@ -47,7 +49,9 @@ void CategoryButtons::setCategories(std::vector<Category> const &categories)
 		else {
 			button = new TextButton(c.category);
 			button->setColour(TextButton::ColourIds::buttonOnColourId, colouredButtons_ ? c.color : c.color.darker());
-			button->setColour(TextButton::ColourIds::buttonColourId, colouredButtons_ ? c.color.darker() : Colours::black);
+			if (colouredButtons_) {
+				button->setColour(TextButton::ColourIds::buttonColourId, c.color.darker());
+			}
 			button->setClickingTogglesState(true);
 		}
 		button->addListener(this);

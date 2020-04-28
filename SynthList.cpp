@@ -12,6 +12,7 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, st
 		button->setClickingTogglesState(true);
 		button->setRadioGroupId(111);
 		button->setToggleState(buttons_.size() == 0, dontSendNotification);
+		button->setColour(TextButton::buttonOnColourId, synth->getColour());
 		buttons_.add(button);
 		addAndMakeVisible(button);
 
