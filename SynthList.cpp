@@ -25,13 +25,16 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, st
 
 void SynthList::resized() {
 	Rectangle<int> area(getLocalBounds());
-	// Horizontal layout
-	auto bottomrow = area.removeFromBottom(20);
-	auto toprow = area;
 	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), 150) : 0;
+
+	auto activeArea = area.removeFromRight(width * buttons_.size());
+	
+	// Horizontal layout
+	auto bottomrow = activeArea.removeFromBottom(20);
+	auto toprow = activeArea;
 	for (int i = 0; i < buttons_.size(); i++) {
-		buttons_[i]->setBounds(toprow.removeFromRight(width));
-		labels_[i]->setBounds(bottomrow.removeFromRight(width).reduced(8));
+		buttons_[i]->setBounds(toprow.removeFromLeft(width).withTrimmedRight(8));
+		labels_[i]->setBounds(bottomrow.removeFromLeft(width).withTrimmedRight(8).reduced(8));
 	}
 }
 
