@@ -69,3 +69,8 @@ void PropertyEditor::setProperties(TProperties const &props)
 	}
 }
 
+void PropertyEditor::clear()
+{
+	propertyPanel_.clear();
+}
+

@@ -13,6 +13,7 @@ public:
 	virtual void resized() override;
 
 	void setProperties(TProperties const &props);
+	void clear();
 
 private:
 	PropertyPanel propertyPanel_;
