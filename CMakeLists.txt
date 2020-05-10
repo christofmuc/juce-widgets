@@ -45,6 +45,7 @@ set(Sources
 	LambdaMenuModel.cpp LambdaMenuModel.h
 	LogView.cpp LogView.h
 	MidiChannelEntry.cpp MidiChannelEntry.h
+	MidiChannelPropertyEditor.cpp MidiChannelPropertyEditor.h
 	MidiLogView.cpp MidiLogView.h
 	MouseUpAndDownButton.h
 	PatchButton.cpp PatchButton.h
