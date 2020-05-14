@@ -31,35 +31,10 @@ void MidiLogView::resized() {
 	midiMessagesBox.setBounds(area);
 }
 
-String MidiLogView::getMidiMessageDescription(const MidiMessage& m)
-{
-	if (m.isNoteOn())           return "Note on " + MidiMessage::getMidiNoteName(m.getNoteNumber(), true, true, 3);
-	if (m.isNoteOff())          return "Note off " + MidiMessage::getMidiNoteName(m.getNoteNumber(), true, true, 3);
-	if (m.isProgramChange())    return "Program change " + String(m.getProgramChangeNumber());
-	if (m.isPitchWheel())       return "Pitch wheel " + String(m.getPitchWheelValue());
-	if (m.isAftertouch())       return "After touch " + MidiMessage::getMidiNoteName(m.getNoteNumber(), true, true, 3) + ": " + String(m.getAfterTouchValue());
-	if (m.isChannelPressure())  return "Channel pressure " + String(m.getChannelPressureValue());
-	if (m.isAllNotesOff())      return "All notes off";
-	if (m.isAllSoundOff())      return "All sound off";
-	if (m.isMetaEvent())        return "Meta event";
-	if (m.isSysEx())			return "Sysex";
-
-	if (m.isController())
-	{
-		String name(MidiMessage::getControllerName(m.getControllerNumber()));
-
-		if (name.isEmpty())
-			name = "[" + String(m.getControllerNumber()) + "]";
-
-		return "Controller " + name + ": " + String(m.getControllerValue());
-	}
-
-	return String::toHexString(m.getRawData(), m.getRawDataSize());
-}
-
 void MidiLogView::addMessageToList(const MidiMessage& message, const String& source, bool isOut)
 {
-	const String description(getMidiMessageDescription(message));
+	String description(message.getDescription());
+	if (message.isSysEx()) description = "Sysex"; // The raw bytes will be printed anyway
 	const double time = message.getTimeStamp(); // -startTime;
 	const String bytes = String::toHexString(message.getRawData(), message.getRawDataSize());
 	addMessageToList(time, description, bytes, source, isOut);

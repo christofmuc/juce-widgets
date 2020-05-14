@@ -21,8 +21,6 @@ public:
 
 	virtual void resized() override;
 
-	static String getMidiMessageDescription(const MidiMessage& m);
-
 private:
 	std::unique_ptr<CodeDocument> document_;
 	std::unique_ptr<LambdaButtonStrip> buttons_;
