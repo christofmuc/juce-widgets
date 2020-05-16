@@ -38,6 +38,7 @@ add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/BinaryResources.h
 set(Sources
 	BinaryResources.h
 	CategoryButtons.cpp CategoryButtons.h
+	CollapsibleContainer.cpp CollapsibleContainer.h
 	ColourHelpers.cpp ColourHelpers.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	InsetBox.cpp InsetBox.h
