@@ -14,7 +14,7 @@ class PatchButton : public Component,
 	private TextButton::Listener 
 {
 public:
-	PatchButton(int id, std::function<void(int)> clickHandler);
+	PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler);
 
 	void setActive(bool active);
 

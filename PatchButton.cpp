@@ -8,12 +8,11 @@
 
 #include "BinaryResources.h"
 
-PatchButton::PatchButton(int id, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
+PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
 {
-	
 	addAndMakeVisible(button_);
 	button_.addListener(this);
-	button_.setClickingTogglesState(true);
+	button_.setClickingTogglesState(isToggle);
 	setupIcon(favoriteIcon_, heart_32_png, heart_32_png_size);
 	setupIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
 	addAndMakeVisible(thumbnail_);

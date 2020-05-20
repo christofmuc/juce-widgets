@@ -9,7 +9,7 @@
 PatchButtonGrid::PatchButtonGrid(int w, int h, std::function<void(int)> buttonClicked) : columns_(w), rows_(h)
 {
 	for (int patch = 0; patch < w * h; patch++) {
-		auto patchButton = new PatchButton(patch, [this, buttonClicked](int index) {
+		auto patchButton = new PatchButton(patch, true, [this, buttonClicked](int index) {
 			disableAllExcept(index);
 			buttonClicked(index);
 		});
