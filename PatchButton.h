@@ -25,6 +25,7 @@ public:
 	String getButtonText() const;
 	void setButtonText(const String& text);
 	void setButtonText(const String& line1, const String &line2);
+	void setSubtitle(const String &text);
 
 	void setFavorite(bool isFavorite);
 	void setHidden(bool isHidden);
@@ -45,6 +46,7 @@ private:
 	Thumbnail thumbnail_;
 	ImageComponent favoriteIcon_;
 	ImageComponent hiddenIcon_;
+	Label synthName_;
 	int id_;
 	bool active_;
 

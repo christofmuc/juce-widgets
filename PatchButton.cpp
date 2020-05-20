@@ -18,6 +18,9 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 	addAndMakeVisible(thumbnail_);
 	thumbnail_.setAlpha(0.3f);
 	thumbnail_.setInterceptsMouseClicks(false, false);
+	addAndMakeVisible(synthName_);
+	synthName_.setInterceptsMouseClicks(false, false);
+	synthName_.setJustificationType(Justification::bottomLeft);
 }
 
 void PatchButton::setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize) {
@@ -45,10 +48,16 @@ void PatchButton::resized()
 	auto upperRight = area;
 	button_.setBounds(area.reduced(2));
 	favoriteIcon_.setBounds(area);
+	synthName_.setBounds(area.reduced(4));
 	favoriteIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yTop | RectanglePlacement::onlyReduceInSize);
 	hiddenIcon_.setBounds(area);
 	hiddenIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yBottom | RectanglePlacement::onlyReduceInSize);
 	thumbnail_.setBounds(area.reduced(4));
+
+	// Calculate font size
+	Font font = synthName_.getFont();
+	font.setHeight(button_.getHeight() / 4.0f);
+	synthName_.setFont(font);
 }
 
 void PatchButton::setColour(int colourId, Colour newColour)
@@ -69,6 +78,11 @@ void PatchButton::setButtonText(const String& text)
 void PatchButton::setButtonText(const String& line1, const String &line2)
 {
 	button_.setButtonText(line1 + "\n" + line2);
+}
+
+void PatchButton::setSubtitle(const String &text)
+{
+	synthName_.setText(text, dontSendNotification);
 }
 
 void PatchButton::setFavorite(bool isFavorite)
