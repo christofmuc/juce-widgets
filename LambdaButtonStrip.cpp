@@ -17,7 +17,7 @@ LambdaButtonStrip::~LambdaButtonStrip()
 	}
 }
 
-void LambdaButtonStrip::setButtonDefinitions(TButtonMap const &definitions)
+void LambdaButtonStrip::setButtonDefinitions(TButtonMap const& definitions)
 {
 	buttonDefinitions_ = definitions;
 
@@ -68,16 +68,17 @@ void LambdaButtonStrip::resized()
 		}
 	}
 	else {
-		int buttonWidth = std::min(200, getWidth() / (int) buttons_.size());
-		for (auto b : buttons_) {
-			//TODO - if this fails, that is because you don't have a continuous count in your buttons for the order field
-			if (b == buttons_[0]) {
-				b.second->setBounds(area.removeFromLeft(buttonWidth));
+		if (buttons_.size() > 0) {
+			int buttonWidth = std::min(200, getWidth() / (int)buttons_.size());
+			for (auto b : buttons_) {
+				//TODO - if this fails, that is because you don't have a continuous count in your buttons for the order field
+				if (b == buttons_[0]) {
+					b.second->setBounds(area.removeFromLeft(buttonWidth));
+				}
+				else {
+					b.second->setBounds(area.removeFromLeft(buttonWidth).withTrimmedLeft(8));
+				}
 			}
-			else {
-				b.second->setBounds(area.removeFromLeft(buttonWidth).withTrimmedLeft(8));
-			}
-			
 		}
 	}
 }
@@ -89,7 +90,7 @@ juce::ApplicationCommandTarget* LambdaButtonStrip::getNextCommandTarget()
 
 void LambdaButtonStrip::getAllCommands(Array<CommandID>& commands)
 {
-	for (int i = 0; i < (int) buttons_.size(); i++) {
+	for (int i = 0; i < (int)buttons_.size(); i++) {
 		commands.add(commandBaseIndex_ + i);
 	}
 }
