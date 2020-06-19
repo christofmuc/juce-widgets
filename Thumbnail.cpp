@@ -106,7 +106,7 @@ Thumbnail::CacheInfo Thumbnail::loadCacheInfo(File cacheFile)
 
 void Thumbnail::timerCallback()
 {
-	if (audioThumbnail_->isFullyLoaded()) {
+	if (audioThumbnail_ && audioThumbnail_->isFullyLoaded()) {
 		stopTimer();
 		// Record cache info
 		MemoryOutputStream output(cacheInfo_.cacheData, false);
