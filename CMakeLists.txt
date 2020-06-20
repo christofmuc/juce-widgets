@@ -41,6 +41,7 @@ set(Sources
 	CollapsibleContainer.cpp CollapsibleContainer.h
 	ColourHelpers.cpp ColourHelpers.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
+	InfoText.cpp InfoText.h
 	InsetBox.cpp InsetBox.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
 	LambdaMenuModel.cpp LambdaMenuModel.h
