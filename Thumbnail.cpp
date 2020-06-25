@@ -29,6 +29,11 @@ void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &ful
 	if (inputFile.existsAsFile()) {
 		// We need the total length of the file and its sample rate
 		auto reader = formatManager_.createReaderFor(inputFile);
+		if (!reader) {
+			// That file must be corrupt!
+			inputFile.deleteFile();
+			return;
+		}
 		int64 length = reader->lengthInSamples;
 		//double sampleRate = reader->sampleRate;
 		Range<float> results[1];
