@@ -52,6 +52,7 @@ set(Sources
 	MouseUpAndDownButton.h
 	PatchButton.cpp PatchButton.h
 	PatchButtonGrid.cpp PatchButtonGrid.h
+	ProgressHandlerWindow.cpp ProgressHandlerWindow.h
 	PropertyEditor.cpp PropertyEditor.h
 	SimpleTable.h
 	SynthList.cpp SynthList.h
