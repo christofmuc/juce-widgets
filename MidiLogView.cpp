@@ -8,27 +8,7 @@
 
 #include <boost/format.hpp>
 
-MidiLogView::MidiLogView() : Component(), document_(new CodeDocument), midiMessagesBox(*document_, nullptr) {
-	addAndMakeVisible(midiMessagesBox);
-	midiMessagesBox.setReadOnly(true);
-	document_->setNewLineCharacters("\n");
-	buttons_ = std::make_unique<LambdaButtonStrip>(101);
-	addAndMakeVisible(*buttons_);
-	LambdaButtonStrip::TButtonMap lambdas = {
-		{ "clearLog",{ 0, "Clear log", [this]() {
-			clearLog();
-		} , 0x4C /* L on Windows */, ModifierKeys::ctrlModifier } },
-	};
-	buttons_->setButtonDefinitions(lambdas);
-//	midiMessagesBox.setColour(TextEditor::backgroundColourId, Colour(0x32ffffff));
-//	midiMessagesBox.setColour(TextEditor::outlineColourId, Colour(0x1c000000));
-//	midiMessagesBox.setColour(TextEditor::shadowColourId, Colour(0x16000000));
-}
-
-void MidiLogView::resized() {
-	Rectangle<int> area(getLocalBounds());
-	buttons_->setBounds(area.removeFromBottom(40).withTrimmedTop(8).withSizeKeepingCentre(100, 30));
-	midiMessagesBox.setBounds(area);
+MidiLogView::MidiLogView() : LogView() {
 }
 
 void MidiLogView::addMessageToList(const MidiMessage& message, const String& source, bool isOut)
@@ -51,18 +31,7 @@ void MidiLogView::addMessageToList(double time, const String& description, const
 
 	const String direction = isOut ? "Out" : "In ";
 	String midiMessageString = (boost::format("%s: %s %s %s [%s]\n") % timecode %	direction % source % description %bytes).str();
-
-	MessageManager::callAsync([this, midiMessageString]() {
-		document_->insertText(document_->getNumCharacters(), midiMessageString);
-		document_->clearUndoHistory();
-		midiMessagesBox.scrollToKeepCaretOnScreen();
-	});
+	addMessageToListWithoutTimestamp(midiMessageString);
 }
 
-void MidiLogView::clearLog()
-{
-	document_->replaceAllContent("");
-	document_->clearUndoHistory();
-	document_->setSavePoint();
-}
 

@@ -16,7 +16,9 @@ public:
 	LogView();
 
 	void addMessageToList(String const &message);
+	void addMessageToListWithoutTimestamp(String const &message);
 	void clearLog();
+	void saveLog();
 
 	virtual void resized() override;
 

@@ -8,23 +8,15 @@
 
 #include "JuceHeader.h"
 
-#include "LambdaButtonStrip.h"
+#include "LogView.h"
 
-class MidiLogView : public Component {
+class MidiLogView : public LogView {
 public:
 	MidiLogView();
 
 	void addMessageToList(const MidiMessage& message, const String& source, bool isOut);
 	void addMessageToList(double time, const String& description, const String &bytes, const String& source, bool isOut);
 
-	void clearLog();
-
-	virtual void resized() override;
-
 private:
-	std::unique_ptr<CodeDocument> document_;
-	std::unique_ptr<LambdaButtonStrip> buttons_;
-	CodeEditorComponent midiMessagesBox;
-
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiLogView)
 };
