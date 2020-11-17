@@ -24,6 +24,15 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, st
 	resized();
 }
 
+void SynthList::setActiveListItem(std::string const &active)
+{
+	for (auto button : buttons_) {
+		if (button->getButtonText().toStdString() == active) {
+			button->setToggleState(true, dontSendNotification);
+		}
+	}
+}
+
 void SynthList::resized() {
 	Rectangle<int> area(getLocalBounds());
 	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), 150) : 0;

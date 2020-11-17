@@ -15,6 +15,7 @@ class SynthList : public Component,
 {
 public:
 	void setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback);
+	void setActiveListItem(std::string const &active);
 
 	virtual void resized() override;
 
