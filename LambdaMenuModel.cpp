@@ -25,17 +25,25 @@ PopupMenu LambdaMenuModel::getMenuForIndex(int topLevelMenuIndex, const String& 
 {
 	ignoreUnused(menuName);
 	PopupMenu menu;
-	for (auto item : menuStructure_[topLevelMenuIndex].second) {
-		// Ok, we want a command-based menu bar - for that, we need to search all commands in the lambdaButtons and fine one with the correct name
-		Array<int> commands;
-		lambdaButtons_->getAllCommands(commands);
-		for (auto command : commands) {
-			ApplicationCommandInfo info(command);
-			lambdaButtons_->getCommandInfo(command, info);
-			if (info.description == String(item)) {
-				// Found!
-				menu.addCommandItem(commandManager_, command);
-				break;
+	for (auto &item : menuStructure_[topLevelMenuIndex].second) {
+		if (item.hasSubmenu) {
+			// Found!
+			PopupMenu submenu = item.getMenu();
+			menu.addSubMenu(item.name, submenu);
+			item.subItemNo = submenu.getNumItems();
+		}
+		else {
+			// Ok, we want a command-based menu bar - for that, we need to search all commands in the lambdaButtons and fine one with the correct name
+			Array<int> commands;
+			lambdaButtons_->getAllCommands(commands);
+			for (auto command : commands) {
+				ApplicationCommandInfo info(command);
+				lambdaButtons_->getCommandInfo(command, info);
+				if (info.description == String(item.name)) {
+					// Found!
+					menu.addCommandItem(commandManager_, command);
+					break;
+				}
 			}
 		}
 	}
@@ -44,6 +52,11 @@ PopupMenu LambdaMenuModel::getMenuForIndex(int topLevelMenuIndex, const String& 
 
 void LambdaMenuModel::menuItemSelected(int menuItemID, int topLevelMenuIndex)
 {
-	// nothing to be done, because the command manager will fire the command anyway
-	ignoreUnused(menuItemID, topLevelMenuIndex);
+	// Commands will fire automatically, but submenus need special treatment here
+	for (auto const &item : menuStructure_[topLevelMenuIndex].second) {
+		if (item.hasSubmenu && menuItemID >= item.baseItemID && item.baseItemID < (menuItemID + item.subItemNo)) {
+			item.subitemSelected(menuItemID - item.baseItemID);
+		}
+	}
 }
+

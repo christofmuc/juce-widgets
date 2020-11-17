@@ -12,7 +12,15 @@
 
 class LambdaMenuModel : public MenuBarModel {
 public:
-	typedef std::map<int, std::pair<std::string, std::vector<std::string>>> TMenuStructure;
+	struct MenuEntry {
+		std::string name;
+		bool hasSubmenu;
+		int baseItemID;
+		std::function<PopupMenu()> getMenu;
+		std::function<void(int)> subitemSelected;
+		int subItemNo; // Automatically calculated
+	};
+	typedef std::map<int, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
 
 	LambdaMenuModel(TMenuStructure const &menuStructure, ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons);
 
