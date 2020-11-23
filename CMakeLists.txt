@@ -6,22 +6,6 @@
 
 project(juce-widgets)
 
-# Find JUCE, and add the components we need
-IF(NOT DEFINED JUCE_LIBRARIES)
-	SET(JUCE_DIR_HINT "${CMAKE_CURRENT_LIST_DIR}/../third_party")
-	find_package(JUCE REQUIRED 
-		COMPONENTS 
-			juce_core		
-			juce_events
-			juce_audio_basics
-			juce_audio_devices
-			juce_audio_utils
-			juce_data_structures
-			juce_gui_basics
-			juce_gui_extra
-	)
-ENDIF()
-
 set(RESOURCE_FILES 
 	resources/heart-32.png
 	resources/blind-symbol-of-an-opened-eye-with-a-slash.png
@@ -70,7 +54,7 @@ set_source_files_properties(
 # Setup library
 add_library(juce-widgets ${Sources})
 target_link_libraries(juce-widgets juce-utils ${APPLE_BOOST})
-target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${JUCE_INCLUDES} ${boost_SOURCE_DIR})
+target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${boost_SOURCE_DIR})
 
 # Pedantic about warnings
 if (MSVC)
