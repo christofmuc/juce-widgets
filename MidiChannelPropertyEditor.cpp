@@ -51,11 +51,16 @@ void MidiChannelPropertyEditor::setValue(MidiChannel channel)
 	}
 }
 
-MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput, bool startTimerToCheckDeviceListUpdates) :
+MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput) :
 	TypedNamedValue(title, sn, 0, std::map<int, std::string>()), inputInsteadOfOutput_(inputInsteadOfOutput)
 {
 	value_ = Value(1);
-	if (inputInsteadOfOutput) {
+	refreshDeviceList();
+}
+
+void MidiDevicePropertyEditor::refreshDeviceList()
+{
+	if (inputInsteadOfOutput_) {
 		refreshDropdownList(currentInputDevices());
 	}
 	else {
@@ -63,25 +68,6 @@ MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std
 	}
 	// Need to call this to calculate minimum and maximum value. Smell!
 	setLookup(lookup_);
-
-	if (startTimerToCheckDeviceListUpdates) {
-		// Start a timer checking for plugged in devices
-		startTimer(500);
-	}
-}
-
-void MidiDevicePropertyEditor::timerCallback()
-{
-	auto newDeviceVector = currentOutputDevices();
-	if (inputInsteadOfOutput_) {
-		newDeviceVector = currentInputDevices();
-	}
-	std::set<std::string> newDeviceSet(newDeviceVector.begin(), newDeviceVector.end());
-	if (devices_ != newDeviceSet) {
-		// List changed, refresh dropdown box
-		refreshDropdownList(newDeviceVector);
-		sendChangeMessage();
-	}
 }
 
 void MidiDevicePropertyEditor::refreshDropdownList(std::vector<std::string> const &deviceList) {
@@ -92,5 +78,4 @@ void MidiDevicePropertyEditor::refreshDropdownList(std::vector<std::string> cons
 	}
 	// Need to call this to calculate minimum and maximum value. Smell!
 	setLookup(lookup_);
-	devices_ = std::set<std::string>(deviceList.begin(), deviceList.end());
 }

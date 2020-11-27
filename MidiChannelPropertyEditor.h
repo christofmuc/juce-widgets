@@ -19,16 +19,15 @@ public:
 	void setValue(MidiChannel channel);
 };
 
-class MidiDevicePropertyEditor: public TypedNamedValue, public ChangeBroadcaster, private Timer {
+class MidiDevicePropertyEditor: public TypedNamedValue {
 public:
-	MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput, bool startTimerToCheckDeviceListUpdates);
+	MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
+
+	void refreshDeviceList();
 
 private:
-	// Frequently check if new devices have become available
-	void timerCallback() override;
 	void refreshDropdownList(std::vector<std::string> const &deviceList);
 
 	bool inputInsteadOfOutput_;
-	std::set<std::string> devices_;
 };
 
