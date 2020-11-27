@@ -16,9 +16,9 @@ std::map<int, std::string> sMidiChannelLookup = {
 
 std::vector<std::string> currentOutputDevices() {
 	std::vector<std::string> outputs;
-	auto devices = MidiOutput::getDevices();
+	auto devices = MidiOutput::getAvailableDevices();
 	for (const auto& device : devices) {
-		outputs.push_back(device.toStdString());
+		outputs.push_back(device.name.toStdString());
 	}
 	return outputs;
 }
@@ -26,9 +26,9 @@ std::vector<std::string> currentOutputDevices() {
 //TODO this should go into MidiController
 std::vector<std::string> currentInputDevices() {
 	std::vector<std::string> inputs;
-	auto devices = MidiInput::getDevices();
+	auto devices = MidiInput::getAvailableDevices();
 	for (const auto& device : devices) {
-		inputs.push_back(device.toStdString());
+		inputs.push_back(device.name.toStdString());
 	}
 	return inputs;
 }
