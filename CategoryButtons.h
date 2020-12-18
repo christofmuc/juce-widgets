@@ -16,10 +16,9 @@ class CategoryButtons : public Component,
 public:
 	class Category {
 	public:
-		Category(std::string const &c, Colour o, int i) : category(c), color(o), bitIndex(i) {}
+		Category(std::string const &c, Colour o) : category(c), color(o) {}
 		std::string category;
 		Colour color;
-		int bitIndex;
 	};
 
 	CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
