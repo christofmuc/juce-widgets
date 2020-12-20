@@ -51,8 +51,8 @@ void MidiChannelPropertyEditor::setValue(MidiChannel channel)
 	}
 }
 
-MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput) :
-	TypedNamedValue(title, sn, 0, std::map<int, std::string>()), inputInsteadOfOutput_(inputInsteadOfOutput)
+MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput, bool keepOldEntries /* = false */) :
+	TypedNamedValue(title, sn, 0, std::map<int, std::string>()), inputInsteadOfOutput_(inputInsteadOfOutput), keepOldEntries_(keepOldEntries)
 {
 	value_ = Value(1);
 	refreshDeviceList();
@@ -72,9 +72,20 @@ void MidiDevicePropertyEditor::refreshDeviceList()
 
 void MidiDevicePropertyEditor::refreshDropdownList(std::vector<std::string> const &deviceList) {
 	int i = 0;
-	lookup_.clear();
-	for (const auto &device : deviceList) {
-		lookup_[++i] = device;
+	if (keepOldEntries_) {
+		for (const auto& newDevice : deviceList) {
+			if (indexOfValue(newDevice) == 0) {
+				// new entry
+				lookup_[maxValue_ + 1] = newDevice;
+				maxValue_++;
+			}
+		}
+	}
+	else {
+		lookup_.clear();
+		for (const auto &device : deviceList) {
+			lookup_[++i] = device;
+		}
 	}
 	// Need to call this to calculate minimum and maximum value. Smell!
 	setLookup(lookup_);

@@ -21,12 +21,15 @@ public:
 
 class MidiDevicePropertyEditor: public TypedNamedValue {
 public:
-	MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
+	MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput, bool keepOldEntries = false);
 
 	void refreshDeviceList();
+
+protected:
 	void refreshDropdownList(std::vector<std::string> const &deviceList);
 
 private:
 	bool inputInsteadOfOutput_;
+	bool keepOldEntries_;
 };
 
