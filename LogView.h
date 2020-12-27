@@ -11,6 +11,8 @@
 #include "Logger.h"
 #include "LambdaButtonStrip.h"
 
+#include <set>
+
 class LogView : public Component {
 public:
 	LogView();
@@ -35,8 +37,10 @@ public:
 	LogViewLogger(LogView &logview) : logview_(logview) {}
 
 	virtual void postMessage(const String& message) override;
+	virtual void postMessageOncePerRun(const String& message) override;
 
 private:
 	LogView &logview_;
+	std::set<std::string> logsPosted_;
 };
 

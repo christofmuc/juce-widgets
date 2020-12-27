@@ -85,3 +85,14 @@ void LogViewLogger::postMessage(const String& message)
 {
 	logview_.addMessageToList(message);
 }
+
+void LogViewLogger::postMessageOncePerRun(const String& message)
+{
+	std::string id = juce::MD5(String(message).toUTF8()).toHexString().toStdString();
+
+	if (logsPosted_.find(id) == logsPosted_.end()) {
+		// First time exact this text comes up - output, and put it into the suppression log
+		postMessage(message);
+		logsPosted_.insert(id);
+	}
+}
