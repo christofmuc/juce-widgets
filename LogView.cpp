@@ -30,8 +30,8 @@ LogView::LogView() : Component(), document_(new CodeDocument), logBox_(*document
 
 void LogView::resized() {
 	Rectangle<int> area(getLocalBounds());
-	buttons_->setBounds(area.removeFromBottom(40).withTrimmedTop(8).withSizeKeepingCentre(180, 30));
-	logBox_.setBounds(area);
+	buttons_->setBounds(area.removeFromTop(30).withTrimmedTop(8).removeFromRight(180).withTrimmedRight(20));
+	logBox_.setBounds(getLocalBounds());
 }
 
 void LogView::addMessageToListWithoutTimestamp(String const &message)
