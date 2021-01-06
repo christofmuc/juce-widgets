@@ -85,7 +85,7 @@ std::vector<CategoryButtons::Category> CategoryButtons::selectedCategories() con
 
 void CategoryButtons::resized()
 {
-	if (!useCheckboxes_) {
+	if (false) {
 		// One row grid for the filter buttons
 		juce::Grid grid;
 		grid.setGap(4_px);
@@ -103,11 +103,12 @@ void CategoryButtons::resized()
 		fb.flexWrap = FlexBox::Wrap::wrap;
 		fb.flexDirection = FlexBox::Direction::row;
 		fb.justifyContent = FlexBox::JustifyContent::center;
-		fb.alignItems = FlexBox::AlignItems::stretch;
+		//fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
+		fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
 		for (auto filterbutton : categoryFilter_) {
 			filterbutton->setSize(100, 20);
 			((ToggleButton*)filterbutton)->changeWidthToFitText();
-			fb.items.add(FlexItem(*filterbutton).withMinWidth((float) filterbutton->getWidth() + 20.0f).withMinHeight(20.0f).withMargin(4));
+			fb.items.add(FlexItem(*filterbutton).withMinWidth((float) filterbutton->getWidth() + 20.0f).withMinHeight(20.0f).withMargin(4)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
 		}
 		fb.performLayout(getLocalBounds().toFloat());
 	}
