@@ -8,7 +8,7 @@
 
 #include <boost/format.hpp>
 
-MidiLogView::MidiLogView() : LogView() {
+MidiLogView::MidiLogView(bool showClear, bool showSave) : LogView(showClear, showSave) {
 }
 
 void MidiLogView::addMessageToList(const MidiMessage& message, const String& source, bool isOut)
