@@ -26,13 +26,12 @@ void LambdaButtonStrip::setButtonDefinitions(TButtonMap const& definitions)
 
 	// Now, make a loop and create these buttons. They will not be visible until 
 	// they are explicitly arranged in the resize function, though, don't forget that!
-	buttons_.resize(buttonDefinitions_.size());
 	for (auto button : buttonDefinitions_) {
 		decltype(button.second) buttonDef = button.second;
 		auto b = new TextButton(buttonDef.buttonText);
 		b->addListener(this);
 		b->setComponentID(button.first);
-		buttons_[buttonDef.zeroBasedOrderNo] = std::make_pair(button.first, b);
+		buttons_.push_back(std::make_pair(button.first, b));
 		addAndMakeVisible(b);
 	}
 	resized();
@@ -41,18 +40,10 @@ void LambdaButtonStrip::setButtonDefinitions(TButtonMap const& definitions)
 void LambdaButtonStrip::buttonClicked(Button* button)
 {
 	// Use our dispatching table we built in the constructor to have less code
-	for (auto b : buttons_) {
+	for (auto b : buttonDefinitions_) {
 		if (b.first == button->getComponentID()) {
-			// That's our button!
-			if (buttonDefinitions_.find(b.first) != buttonDefinitions_.end()) {
-				// We have a definition for that!
-				buttonDefinitions_[b.first].functor();
-				return;
-			}
-			else {
-				// That's weird
-				jassert(false);
-			}
+			b.second.functor();
+			return;
 		}
 	}
 }
@@ -100,21 +91,16 @@ void LambdaButtonStrip::getCommandInfo(CommandID commandID, ApplicationCommandIn
 	int index = ((int)commandID) - commandBaseIndex_;
 	auto id = buttons_[index].first;
 	result.setInfo(id, buttons_[index].second->getButtonText(), "General Category", 0);
-	result.addDefaultKeypress(buttonDefinitions_[id].defaultKeycode, buttonDefinitions_[id].defaultModifiers);
+	result.addDefaultKeypress(buttonDefinitions_[index].second.defaultKeycode, buttonDefinitions_[index].second.defaultModifiers);
+	bool active = buttonDefinitions_[index].second.canFire ? buttonDefinitions_[index].second.canFire() : true;
+	result.setActive(active);
+	buttons_[index].second->setEnabled(active);
 }
 
 bool LambdaButtonStrip::perform(const InvocationInfo& info)
 {
 	int index = ((int)info.commandID) - commandBaseIndex_;
 	auto id = buttons_[index].first;
-	if (buttonDefinitions_.find(id) != buttonDefinitions_.end()) {
-		// We have a definition for that!
-		buttonDefinitions_[id].functor();
-		return true;
-	}
-	else {
-		// That's weird
-		jassert(false);
-		return false;
-	}
+	buttonDefinitions_[index].second.functor();
+	return true;
 }

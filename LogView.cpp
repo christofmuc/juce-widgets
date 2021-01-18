@@ -17,16 +17,15 @@ LogView::LogView(bool showClear, bool showSave) : Component(), document_(new Cod
 	buttons_ = std::make_unique<LambdaButtonStrip>(101, LambdaButtonStrip::Direction::Horizontal);
 	addAndMakeVisible(*buttons_);
 	LambdaButtonStrip::TButtonMap lambdas;
-	int i = 0;
 	if (showClear) {
-		lambdas["clearLog"] = { i++, "Clear log", [this]() {
+		lambdas.push_back({ "clearLog", { "Clear log", [this]() {
 			clearLog();
-	} , 0x4C /* L on Windows */, ModifierKeys::ctrlModifier };
+	} , 0x4C /* L on Windows */, ModifierKeys::ctrlModifier } });
 	}
 	if (showSave) {
-		lambdas["saveLog"] = { i++, "Save log...", [this]() {
+		lambdas.push_back({ "saveLog", { "Save log...", [this]() {
 			saveLog();
-		} };
+		} } });
 	};
 	buttons_->setButtonDefinitions(lambdas);
 }

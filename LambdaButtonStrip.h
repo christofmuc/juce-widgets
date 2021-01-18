@@ -11,11 +11,16 @@
 #include <map>
 
 struct ButtonDefinition {
-	int zeroBasedOrderNo;
+	ButtonDefinition(std::string const &text, std::function<void()> functor) : buttonText(text), functor(functor) {}
+	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode) : buttonText(text), functor(functor) , defaultKeycode(defaultKeycode) {}
+	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode, ModifierKeys modifiers) : buttonText(text), functor(functor), defaultKeycode(defaultKeycode), defaultModifiers(modifiers) {}
+	ButtonDefinition(std::string const &text, std::function<void()> function, std::function<bool()> isEnabled) : buttonText(text), functor(function), canFire(isEnabled) {}
+
 	std::string buttonText;
 	std::function<void()> functor;
 	int defaultKeycode;
 	ModifierKeys defaultModifiers;
+	std::function<bool()> canFire;
 };
 
 class LambdaButtonStrip : public Component,
@@ -24,7 +29,7 @@ class LambdaButtonStrip : public Component,
 {
 public:
 	enum class Direction { Horizontal, Vertical };
-	typedef std::map<std::string, ButtonDefinition> TButtonMap;
+	typedef std::vector<std::pair<std::string, ButtonDefinition>> TButtonMap;
 
 	LambdaButtonStrip(int commandBaseIndex, Direction dir = Direction::Vertical);
 	virtual ~LambdaButtonStrip();
