@@ -11,10 +11,10 @@
 #include <map>
 
 struct ButtonDefinition {
-	ButtonDefinition(std::string const &text, std::function<void()> functor) : buttonText(text), functor(functor) {}
-	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode) : buttonText(text), functor(functor) , defaultKeycode(defaultKeycode) {}
+	ButtonDefinition(std::string const &text, std::function<void()> functor) : buttonText(text), functor(functor), defaultKeycode(0), defaultModifiers(0)  {}
+	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode) : buttonText(text), functor(functor) , defaultKeycode(defaultKeycode), defaultModifiers(0) {}
 	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode, ModifierKeys modifiers) : buttonText(text), functor(functor), defaultKeycode(defaultKeycode), defaultModifiers(modifiers) {}
-	ButtonDefinition(std::string const &text, std::function<void()> function, std::function<bool()> isEnabled) : buttonText(text), functor(function), canFire(isEnabled) {}
+	ButtonDefinition(std::string const &text, std::function<void()> function, std::function<bool()> isEnabled) : buttonText(text), functor(function), defaultKeycode(0), defaultModifiers(0), canFire(isEnabled) {}
 
 	std::string buttonText;
 	std::function<void()> functor;
