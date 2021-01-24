@@ -21,6 +21,8 @@ public:
 	void setProperties(TProperties const &props);
 	void clear();
 
+	static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
+
 private:
 	PropertyPanel propertyPanel_;
 
