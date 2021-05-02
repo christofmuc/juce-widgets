@@ -16,7 +16,10 @@ void MidiLogView::addMessageToList(const MidiMessage& message, const String& sou
 	String description(message.getDescription());
 	if (message.isSysEx()) description = "Sysex"; // The raw bytes will be printed anyway
 	const double time = Time::getMillisecondCounterHiRes() / 1000.0; // message.getTimeStamp(); // -startTime;
-	const String bytes = String::toHexString(message.getRawData(), message.getRawDataSize());
+	String bytes = String::toHexString(message.getRawData(), std::min(message.getRawDataSize(), 1000));
+	if (message.getRawDataSize() > 1000) {
+		bytes += "... (" + String(message.getRawDataSize()) + " more bytes)";
+	}
 	addMessageToList(time, description, bytes, source, isOut);
 }
 
