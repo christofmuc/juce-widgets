@@ -15,7 +15,7 @@
 
 class LogView : public Component {
 public:
-	LogView();
+	LogView(bool showClear = true, bool showSave = true);
 
 	void addMessageToList(String const &message);
 	void addMessageToListWithoutTimestamp(String const &message);

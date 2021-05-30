@@ -24,3 +24,18 @@ void HorizontalLayoutContainer::resized()
 	Component* components[] = { left_, right_ };
 	layout_.layOutComponents(components, 2, area.getX(), area.getY(), area.getWidth(), area.getHeight(), false, true);
 }
+
+void HorizontalLayoutContainer::setComponents(Component *left, Component *right)
+{
+	if (left != left_) {
+		delete left_;
+		left_ = left;
+		addAndMakeVisible(left);
+	}
+	if (right != right_) {
+		delete right_;
+		right_ = right;
+		addAndMakeVisible(right);
+	}
+	resized();
+}

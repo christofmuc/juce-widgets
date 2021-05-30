@@ -40,7 +40,7 @@ void CategoryButtons::setCategories(std::vector<Category> const &categories)
 		Button *button;
 		if (useCheckboxes_) {
 			if (colouredButtons_) {
-				button = new ColouredCheckbox(c.category, c.color.darker());
+				button = new ColouredCheckbox(c.category, c.color);
 			}
 			else {
 				button = new ToggleButton(c.category);
@@ -48,10 +48,7 @@ void CategoryButtons::setCategories(std::vector<Category> const &categories)
 		}
 		else {
 			button = new TextButton(c.category);
-			button->setColour(TextButton::ColourIds::buttonOnColourId, colouredButtons_ ? c.color : c.color.darker());
-			if (colouredButtons_) {
-				button->setColour(TextButton::ColourIds::buttonColourId, c.color.darker());
-			}
+			button->setColour(TextButton::ColourIds::buttonOnColourId, c.color);
 			button->setClickingTogglesState(true);
 		}
 		button->addListener(this);

@@ -39,6 +39,7 @@ set(Sources
 	ProgressHandlerWindow.cpp ProgressHandlerWindow.h
 	PropertyEditor.cpp PropertyEditor.h
 	SimpleTable.h
+	SplitteredComponent.cpp SplitteredComponent.h
 	SynthList.cpp SynthList.h
 	Thumbnail.cpp Thumbnail.h
 	README.md
@@ -53,7 +54,7 @@ set_source_files_properties(
 
 # Setup library
 add_library(juce-widgets ${Sources})
-target_link_libraries(juce-widgets juce-utils ${APPLE_BOOST})
+target_link_libraries(juce-widgets juce-utils gin ${APPLE_BOOST})
 target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${boost_SOURCE_DIR})
 
 # Pedantic about warnings

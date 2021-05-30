@@ -1,3 +1,9 @@
+/*
+   Copyright (c) 2020 Christof Ruch. All rights reserved.
+
+   Dual licensed: Distributed under Affero GPL license by default, an MIT license is available for purchase
+*/
+
 #pragma once
 
 #include "JuceHeader.h"
@@ -14,6 +20,8 @@ public:
 
 	void setProperties(TProperties const &props);
 	void clear();
+
+	static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
 
 private:
 	PropertyPanel propertyPanel_;

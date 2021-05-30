@@ -10,20 +10,22 @@
 
 #include <boost/format.hpp>
 
-LogView::LogView() : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
+LogView::LogView(bool showClear, bool showSave) : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
 	addAndMakeVisible(logBox_);
 	logBox_.setReadOnly(true);
 	document_->setNewLineCharacters("\n");
 	buttons_ = std::make_unique<LambdaButtonStrip>(101, LambdaButtonStrip::Direction::Horizontal);
 	addAndMakeVisible(*buttons_);
-	LambdaButtonStrip::TButtonMap lambdas = {
-		{ "clearLog",{ 0, "Clear log", [this]() {
+	LambdaButtonStrip::TButtonMap lambdas;
+	if (showClear) {
+		lambdas.push_back({ "clearLog", { "Clear log", [this]() {
 			clearLog();
-		} , 0x4C /* L on Windows */, ModifierKeys::ctrlModifier } },
-		{ "saveLog", { 1, "Save log...", [this]() {
+	} , 0x4C /* L on Windows */, ModifierKeys::ctrlModifier } });
+	}
+	if (showSave) {
+		lambdas.push_back({ "saveLog", { "Save log...", [this]() {
 			saveLog();
-		}}
-		}
+		} } });
 	};
 	buttons_->setButtonDefinitions(lambdas);
 }
@@ -47,7 +49,7 @@ void LogView::addMessageToListWithoutTimestamp(String const &message)
 void LogView::addMessageToList(String const &message)
 {
 	auto time = Time::getCurrentTime();
-	String midiMessageString = (boost::format("%s: %s\n") % time.formatted("%H:%M:%S")%	message).str();
+	String midiMessageString = (boost::format("%s: %s\n") % time.formatted("%H:%M:%S") % message).str();
 	addMessageToListWithoutTimestamp(midiMessageString);
 }
 
