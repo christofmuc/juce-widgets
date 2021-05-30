@@ -39,6 +39,7 @@ set(Sources
 	ProgressHandlerWindow.cpp ProgressHandlerWindow.h
 	PropertyEditor.cpp PropertyEditor.h
 	SimpleTable.h
+	SplitteredComponent.cpp SplitteredComponent.h
 	SynthList.cpp SynthList.h
 	Thumbnail.cpp Thumbnail.h
 	README.md
