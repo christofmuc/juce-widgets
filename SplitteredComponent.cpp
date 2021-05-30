@@ -1,6 +1,9 @@
 #include "SplitteredComponent.h"
 
-SplitteredComponent::SplitteredComponent(SplitteredEntry first, SplitteredEntry second, bool isVertical) : first_(first.component), second_(second.component), isVertical_(isVertical)
+#include "Settings.h"
+
+SplitteredComponent::SplitteredComponent(std::string const &componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical) 
+	: componentName_(componentName), first_(first.component), second_(second.component), isVertical_(isVertical), didLoad_(false)
 {
 	auto resizer = new StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
 	resizerBars_.add(resizer);
@@ -20,8 +23,8 @@ SplitteredComponent::SplitteredComponent(SplitteredEntry first, SplitteredEntry 
 	componentOrder_[2] = second_;
 }
 
-SplitteredComponent::SplitteredComponent(SplitteredEntry first, SplitteredEntry second, SplitteredEntry third, bool isVertical)
-	: first_(first.component), second_(second.component), third_(third.component), isVertical_(isVertical)
+SplitteredComponent::SplitteredComponent(std::string const& componentName, SplitteredEntry first, SplitteredEntry second, SplitteredEntry third, bool isVertical)
+	: componentName_(componentName), first_(first.component), second_(second.component), third_(third.component), isVertical_(isVertical), didLoad_(false)
 {
 	auto resizer1 = new StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
 	auto resizer2 = new StretchableLayoutResizerBar(&stretchableManager_, 3, isVertical);
@@ -51,6 +54,11 @@ SplitteredComponent::SplitteredComponent(SplitteredEntry first, SplitteredEntry 
 
 SplitteredComponent::~SplitteredComponent()
 {
+	// Store the position(s)
+	Settings::instance().set(componentName_ + "-pos1", String(stretchableManager_.getItemCurrentPosition(1)).toStdString());
+	if (nComponents_ > 3) {
+		Settings::instance().set(componentName_ + "-pos2", String(stretchableManager_.getItemCurrentPosition(3)).toStdString());
+	}
 	delete componentOrder_;
 }
 
@@ -60,4 +68,19 @@ void SplitteredComponent::resized()
 	stretchableManager_.layOutComponents(componentOrder_, 5,
 		area.getX(), area.getY(), area.getWidth(), area.getHeight(),
 		!isVertical_, true);
+
+	if (!didLoad_) {
+		// Lazy loading of position, can do this only after one successful layout run
+		if (Settings::instance().keyIsSet(componentName_ + "-pos1")) {
+			auto storedPos = Settings::instance().get(componentName_ + "-pos1", "0");
+			stretchableManager_.setItemPosition(1, atoi(storedPos.c_str()));
+		}
+		if (Settings::instance().keyIsSet(componentName_ + "-pos2")) {
+			auto storedPos = Settings::instance().get(componentName_ + "-pos2", "0");
+			stretchableManager_.setItemPosition(3, atoi(storedPos.c_str()));
+		}
+		didLoad_ = true;
+		resized();
+	}
+
 }

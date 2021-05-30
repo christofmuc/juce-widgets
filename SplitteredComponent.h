@@ -12,13 +12,14 @@ struct SplitteredEntry {
 class SplitteredComponent : public Component
 {
 public:
-	SplitteredComponent(SplitteredEntry first, SplitteredEntry second, bool isVertical);
-	SplitteredComponent(SplitteredEntry first, SplitteredEntry second, SplitteredEntry third, bool isVertical);
+	SplitteredComponent(std::string const& componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical);
+	SplitteredComponent(std::string const& componentName, SplitteredEntry first, SplitteredEntry second, SplitteredEntry third, bool isVertical);
 	virtual ~SplitteredComponent();
 
 	virtual void resized();
 
 private:
+	std::string componentName_;
 	Component* first_;
 	Component* second_;
 	Component* third_;
@@ -28,5 +29,6 @@ private:
 	OwnedArray<StretchableLayoutResizerBar> resizerBars_;
 	int nComponents_;
 	Component** componentOrder_;
+	bool didLoad_;
 };
 
