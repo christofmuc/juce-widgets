@@ -41,6 +41,7 @@ set(Sources
 	SimpleTable.h
 	SplitteredComponent.cpp SplitteredComponent.h
 	SynthList.cpp SynthList.h
+	TextSearchBox.cpp TextSearchBox.h
 	Thumbnail.cpp Thumbnail.h
 	README.md
 	LICENSE
