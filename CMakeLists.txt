@@ -29,6 +29,7 @@ set(Sources
 	InsetBox.cpp InsetBox.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
 	LambdaMenuModel.cpp LambdaMenuModel.h
+	LayoutConstants.h
 	LogView.cpp LogView.h
 	MidiChannelEntry.cpp MidiChannelEntry.h
 	MidiChannelPropertyEditor.cpp MidiChannelPropertyEditor.h
