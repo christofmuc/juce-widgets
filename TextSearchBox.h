@@ -12,12 +12,13 @@ class TextSearchBox : public Component {
 public:
 	TextSearchBox(std::function<void()> updateHandler);
 
+	void setFontSize(float fontSize);
+
 	virtual void resized() override;
-	//virtual void paintOverChildren(Graphics& g) override;
+	void paint(Graphics& g) override;
 
 	String searchText() const;
-
-	void paint(Graphics& g) override;
+	
 private:
 	std::function<void()> updateHandler_;
 	TextEditor nameSearchText_;

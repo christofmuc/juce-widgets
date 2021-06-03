@@ -11,7 +11,6 @@
 TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandler_(updateHandler)
 {
 	// We do not want an outline by the box itself, because we will draw the outline ourselves also around the clear button
-	nameSearchText_.setOpaque(false);
 	nameSearchText_.setColour(TextEditor::backgroundColourId, Colours::transparentBlack);
 	nameSearchText_.setColour(TextEditor::outlineColourId, Colours::transparentBlack);
 	nameSearchText_.setColour(TextEditor::focusedOutlineColourId, Colours::transparentBlack);
@@ -33,6 +32,13 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
 	addAndMakeVisible(nameSearchText_);
 	addAndMakeVisible(clearNameSearch_);
 	clearNameSearch_->setVisible(false);
+}
+
+void TextSearchBox::setFontSize(float fontSize)
+{
+	Font biggerFont;
+	biggerFont.setHeight(fontSize);
+	nameSearchText_.setFont(biggerFont);
 }
 
 void TextSearchBox::resized()
@@ -59,7 +65,7 @@ void TextSearchBox::paint(Graphics& g) {
 		{
 			g.setColour(getLookAndFeel().findColour(TextEditor::focusedOutlineColourId));
 			g.drawRect(0, 0, getWidth(), getHeight(), 2);
-			SimpleLogger::instance()->postMessage("Painting at " + String(g.getClipBounds().getWidth()) + " but wanted to " + String(getWidth()));
+			//SimpleLogger::instance()->postMessage("Painting at " + String(g.getClipBounds().getWidth()) + " but wanted to " + String(getWidth()));
 		}
 		else
 		{
