@@ -121,6 +121,11 @@ void CategoryButtons::buttonClicked(Button* button)
 	}
 }
 
+int CategoryButtons::numCategories() const
+{
+	return categoryFilter_.size();
+}
+
 void CategoryButtons::setActive(std::set<Category> const &activeCategories)
 {
 	for (auto button : categoryFilter_) {

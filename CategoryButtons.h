@@ -34,6 +34,8 @@ public:
 	// Implement button listener
 	void buttonClicked(Button*) override;
 
+	int numCategories() const;
+
 private:
 	bool useCheckboxes_;
 	bool colouredButtons_;
