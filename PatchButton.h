@@ -40,7 +40,7 @@ public:
 
 private:
 	std::function<void(int)> clicked_;
-	TextButton button_;
+	std::unique_ptr<TextButton> button_;
 	Thumbnail thumbnail_;
 	ImageComponent favoriteIcon_;
 	ImageComponent hiddenIcon_;

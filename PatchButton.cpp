@@ -9,11 +9,54 @@
 #include "BinaryResources.h"
 #include "IconHelper.h"
 
+class TextButtonFixedFont : public TextButton {
+public:
+	using TextButton::TextButton;
+
+	void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+	{
+		auto& lf = getLookAndFeel();
+
+		lf.drawButtonBackground(g, *this,
+			findColour(getToggleState() ? buttonOnColourId : buttonColourId),
+			shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+
+		drawButtonText(lf, g, *this, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+	}
+
+	void drawButtonText(LookAndFeel &lf, Graphics& g, TextButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+	{
+		ignoreUnused(shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
+
+		Font font(lf.getTextButtonFont(button, button.getHeight()));
+		g.setFont(font);
+		g.setColour(button.findColour(button.getToggleState() ? TextButton::textColourOnId
+			: TextButton::textColourOffId)
+			.withMultipliedAlpha(button.isEnabled() ? 1.0f : 0.5f));
+
+		const int yIndent = jmin(4, button.proportionOfHeight(0.3f));
+		const int cornerSize = jmin(button.getHeight(), button.getWidth()) / 2;
+
+		const int fontHeight = roundToInt(font.getHeight() * 0.6f);
+		const int leftIndent = jmin(fontHeight, 2 + cornerSize / (button.isConnectedOnLeft() ? 4 : 2));
+		const int rightIndent = jmin(fontHeight, 2 + cornerSize / (button.isConnectedOnRight() ? 4 : 2));
+		const int textWidth = button.getWidth() - leftIndent - rightIndent;
+
+		if (textWidth > 0) {
+			g.drawText(button.getButtonText(),
+				leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
+				Justification::centred, true);
+		}
+	}
+
+};
+
 PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
 {
-	addAndMakeVisible(button_);
-	button_.addListener(this);
-	button_.setClickingTogglesState(isToggle);
+	button_ = std::make_unique<TextButtonFixedFont>();
+	addAndMakeVisible(button_.get());
+	button_->addListener(this);
+	button_->setClickingTogglesState(isToggle);
 	IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size);
 	IconHelper::setupIcon(this ,hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
 	addAndMakeVisible(thumbnail_);
@@ -27,7 +70,7 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 void PatchButton::setActive(bool active)
 {
 	active_ = active;
-	button_.setToggleState(active, dontSendNotification);
+	button_->setToggleState(active, dontSendNotification);
 	repaint();
 }
 
@@ -35,7 +78,7 @@ void PatchButton::resized()
 {
 	Rectangle<int> area(getLocalBounds());
 	auto upperRight = area;
-	button_.setBounds(area.reduced(2));
+	button_->setBounds(area.reduced(2));
 	favoriteIcon_.setBounds(area);
 	synthName_.setBounds(area.reduced(4));
 	favoriteIcon_.setImagePlacement(RectanglePlacement::xRight | RectanglePlacement::yTop | RectanglePlacement::onlyReduceInSize);
@@ -45,28 +88,28 @@ void PatchButton::resized()
 
 	// Calculate font size
 	Font font = synthName_.getFont();
-	font.setHeight(button_.getHeight() / 4.0f);
+	font.setHeight(button_->getHeight() / 4.0f);
 	synthName_.setFont(font);
 }
 
 void PatchButton::setColour(int colourId, Colour newColour)
 {
-	button_.setColour(colourId, newColour);
+	button_->setColour(colourId, newColour);
 }
 
 String PatchButton::getButtonText() const
 {
-	return button_.getButtonText();
+	return button_->getButtonText();
 }
 
 void PatchButton::setButtonText(const String& text)
 {
-	button_.setButtonText(text);
+	button_->setButtonText(text);
 }
 
 void PatchButton::setButtonText(const String& line1, const String &line2)
 {
-	button_.setButtonText(line1 + "\n" + line2);
+	button_->setButtonText(line1 + "\n" + line2);
 }
 
 void PatchButton::setSubtitle(const String &text)
@@ -105,7 +148,7 @@ void PatchButton::clearThumbnailFile()
 
 void PatchButton::setToggleState(bool state)
 {
-	button_.setToggleState(state, dontSendNotification);
+	button_->setToggleState(state, dontSendNotification);
 }
 
 void PatchButton::buttonClicked(Button*)
@@ -115,5 +158,5 @@ void PatchButton::buttonClicked(Button*)
 
 bool PatchButton::getToggleState() const
 {
-	return button_.getToggleState();
+	return button_->getToggleState();
 }
