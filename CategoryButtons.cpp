@@ -17,7 +17,8 @@ public:
 protected:
 	void paintButton(Graphics &g, bool b, bool c) override
 	{
-		g.fillAll(colour_);
+		g.setFillType(FillType(colour_));
+		g.fillRoundedRectangle(getLocalBounds().toFloat(), 4.0f);
 		ToggleButton::paintButton(g, b, c);
 	}
 
