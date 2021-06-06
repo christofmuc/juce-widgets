@@ -43,9 +43,15 @@ public:
 		const int textWidth = button.getWidth() - leftIndent - rightIndent;
 
 		if (textWidth > 0) {
-			g.drawText(button.getButtonText(),
-				leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
-				Justification::centred, true);
+			String multilineText= button.getButtonText();
+			if (multilineText.containsAnyOf("\r\n")) {
+				g.drawFittedText(multilineText, leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
+					Justification::centred, 2, 1.0f);
+			} else {
+				g.drawText(multilineText,
+					leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
+					Justification::centred, true);
+			}
 		}
 	}
 
@@ -87,8 +93,8 @@ void PatchButton::resized()
 	thumbnail_.setBounds(area.reduced(4));
 
 	// Calculate font size
-	Font font = synthName_.getFont();
-	font.setHeight(button_->getHeight() / 4.0f);
+	Font font = getLookAndFeel().getTextButtonFont(*button_, button_->getHeight());
+	font.setHeight(font.getHeight() * 0.8f);
 	synthName_.setFont(font);
 }
 
