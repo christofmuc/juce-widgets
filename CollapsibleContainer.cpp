@@ -1,4 +1,12 @@
+/*
+   Copyright (c) 2021 Christof Ruch. All rights reserved.
+
+   Dual licensed: Distributed under Affero GPL license by default, an MIT license is available for purchase
+*/
+
 #include "CollapsibleContainer.h"
+
+#include "LayoutConstants.h"
 
 CollapseButton::CollapseButton(bool defaultOpen) : Button("open")
 {
@@ -22,8 +30,8 @@ CollapseHeader::CollapseHeader(String const &title, bool defaultOpen) : text_("h
 void CollapseHeader::resized()
 {
 	auto area = getLocalBounds();
-	collapse_.setBounds(area.removeFromLeft(16).withHeight(16));
-	text_.setBounds(area.withTrimmedLeft(16).withHeight(16));
+	collapse_.setBounds(area.removeFromLeft(LAYOUT_TINY_ICON_WIDTH).withHeight(LAYOUT_TINY_ICON_HEIGHT));
+	text_.setBounds(area.withTrimmedLeft(LAYOUT_INSET_NORMAL).withHeight(LAYOUT_TINY_ICON_HEIGHT)); //TODO I think this is a bug, and the collapsible header overlaps somewhere
 }
 
 bool CollapseHeader::isOpen() const
@@ -41,6 +49,7 @@ CollapsibleContainer::CollapsibleContainer(String const &title, Component *colla
 {
 	addAndMakeVisible(collapseHeader_);
 	addAndMakeVisible(collapsible_);
+	collapsible_->setVisible(defaultOpen);
 	collapseHeader_.addChangeListener(this);
 }
 
@@ -52,8 +61,8 @@ CollapsibleContainer::~CollapsibleContainer()
 void CollapsibleContainer::resized()
 {
 	auto area = getLocalBounds();
-	collapseHeader_.setBounds(area.removeFromTop(16));
-	collapsible_->setBounds(area.withTrimmedTop(8));
+	collapseHeader_.setBounds(area.removeFromTop(LAYOUT_TINY_ICON_HEIGHT));
+	collapsible_->setBounds(area.withTrimmedTop(LAYOUT_INSET_NORMAL));
 }
 
 bool CollapsibleContainer::isOpen() const

@@ -26,7 +26,7 @@ private:
 };
 
 CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes) 
-	: updateHandler_(updated), useCheckboxes_(useCheckboxes), colouredButtons_(colouredButtons)
+	: updateHandler_(updated), useCheckboxes_(useCheckboxes), colouredButtons_(colouredButtons), usedHeight_(0)
 {
 	setCategories(categories);
 }
@@ -83,32 +83,21 @@ std::vector<CategoryButtons::Category> CategoryButtons::selectedCategories() con
 
 void CategoryButtons::resized()
 {
-	if (false) {
-		// One row grid for the filter buttons
-		juce::Grid grid;
-		grid.setGap(4_px);
-		using Track = juce::Grid::TrackInfo;
-		grid.templateRows.add(Track(1_fr));
-		for (int i = 0; i < categoryFilter_.size(); i++) grid.templateColumns.add(Track(1_fr));
-		for (auto filterbutton : categoryFilter_) {
-			grid.items.add(juce::GridItem(*filterbutton));
-		}
-		grid.performLayout(getLocalBounds());
+	// Using Flex Box as we need an overflow
+	FlexBox fb;
+	fb.flexWrap = FlexBox::Wrap::wrap;
+	fb.flexDirection = FlexBox::Direction::row;
+	fb.justifyContent = FlexBox::JustifyContent::center;
+	//fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
+	fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
+	for (auto filterbutton : categoryFilter_) {
+		filterbutton->setSize(LAYOUT_CHECKBOX_WIDTH, LAYOUT_LINE_HEIGHT);
+		((ToggleButton*)filterbutton)->changeWidthToFitText();
+		fb.items.add(FlexItem(*filterbutton).withMinWidth((float) filterbutton->getWidth() + 20.0f).withMinHeight(LAYOUT_LINE_HEIGHT).withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
 	}
-	else {
-		// Using Flex Box as we need an overflow
-		FlexBox fb;
-		fb.flexWrap = FlexBox::Wrap::wrap;
-		fb.flexDirection = FlexBox::Direction::row;
-		fb.justifyContent = FlexBox::JustifyContent::center;
-		//fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
-		fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
-		for (auto filterbutton : categoryFilter_) {
-			filterbutton->setSize(LAYOUT_CHECKBOX_WIDTH, LAYOUT_LINE_HEIGHT);
-			((ToggleButton*)filterbutton)->changeWidthToFitText();
-			fb.items.add(FlexItem(*filterbutton).withMinWidth((float) filterbutton->getWidth() + 20.0f).withMinHeight(LAYOUT_LINE_HEIGHT).withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
-		}
-		fb.performLayout(getLocalBounds().toFloat());
+	fb.performLayout(getLocalBounds().toFloat());
+	if (getNumChildComponents() > 0) {
+		usedHeight_ = getChildComponent(getNumChildComponents() - 1)->getBottom();
 	}
 }
 
@@ -125,6 +114,11 @@ void CategoryButtons::buttonClicked(Button* button)
 int CategoryButtons::numCategories() const
 {
 	return categoryFilter_.size();
+}
+
+int CategoryButtons::usedHeight() const
+{
+	return usedHeight_;
 }
 
 void CategoryButtons::setActive(std::set<Category> const &activeCategories)
