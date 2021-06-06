@@ -8,6 +8,8 @@
 
 #include "JuceHeader.h"
 
+#include "LayoutConstants.h"
+
 template<class P>
 class PatchButtonGrid : public Component {
 public:
@@ -29,7 +31,7 @@ public:
 		Rectangle<int> area(getLocalBounds());
 
 		juce::Grid grid;
-		grid.setGap(8_px);
+		grid.setGap(juce::Grid::Px(LAYOUT_INSET_SMALL));
 		using Track = juce::Grid::TrackInfo;
 		for (int i = 0; i < rows_; i++) grid.templateRows.add(Track(1_fr));
 		for (int i = 0; i < columns_; i++) grid.templateColumns.add(Track(1_fr));
