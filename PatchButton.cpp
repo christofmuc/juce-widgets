@@ -7,32 +7,21 @@
 #include "PatchButton.h"
 
 #include "BinaryResources.h"
+#include "IconHelper.h"
 
 PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
 {
 	addAndMakeVisible(button_);
 	button_.addListener(this);
 	button_.setClickingTogglesState(isToggle);
-	setupIcon(favoriteIcon_, heart_32_png, heart_32_png_size);
-	setupIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
+	IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size);
+	IconHelper::setupIcon(this ,hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
 	addAndMakeVisible(thumbnail_);
 	thumbnail_.setAlpha(0.3f);
 	thumbnail_.setInterceptsMouseClicks(false, false);
 	addAndMakeVisible(synthName_);
 	synthName_.setInterceptsMouseClicks(false, false);
 	synthName_.setJustificationType(Justification::bottomLeft);
-}
-
-void PatchButton::setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize) {
-	PNGImageFormat reader;
-	MemoryInputStream memStream(icondata, iconsize, false);
-	auto im = reader.decodeImage(memStream);
-	auto smaller = im.rescaled(16, 16);
-	icon.setImage(smaller);
-	icon.setInterceptsMouseClicks(false, false);
-	addAndMakeVisible(icon);
-	icon.setVisible(false);
-	icon.toFront(false);
 }
 
 void PatchButton::setActive(bool active)

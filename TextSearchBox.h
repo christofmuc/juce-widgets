@@ -21,6 +21,7 @@ public:
 	
 private:
 	std::function<void()> updateHandler_;
-	TextEditor nameSearchText_;
-	Button* clearNameSearch_;
+	std::unique_ptr<TextEditor> nameSearchText_;
+	ImageComponent lookingGlass_;
+	std::unique_ptr<Button> clearNameSearch_;
 };

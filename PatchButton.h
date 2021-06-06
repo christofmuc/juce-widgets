@@ -39,8 +39,6 @@ public:
 	virtual void buttonClicked(Button*) override;
 
 private:
-	void setupIcon(ImageComponent &icon, const unsigned char *icondata, size_t iconsize);
-
 	std::function<void(int)> clicked_;
 	TextButton button_;
 	Thumbnail thumbnail_;

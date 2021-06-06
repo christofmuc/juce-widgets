@@ -9,6 +9,7 @@ project(juce-widgets)
 set(RESOURCE_FILES 
 	resources/heart-32.png
 	resources/blind-symbol-of-an-opened-eye-with-a-slash.png
+	resources/iconmonstr-magnifier-6-64.png
 )
 
 add_custom_command(OUTPUT ${CMAKE_CURRENT_LIST_DIR}/BinaryResources.h
@@ -25,6 +26,7 @@ set(Sources
 	CollapsibleContainer.cpp CollapsibleContainer.h
 	ColourHelpers.cpp ColourHelpers.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
+	IconHelper.cpp IconHelper.h
 	InfoText.cpp InfoText.h
 	InsetBox.cpp InsetBox.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
