@@ -1,4 +1,12 @@
+/*
+   Copyright (c) 2020 Christof Ruch. All rights reserved.
+
+   Dual licensed: Distributed under Affero GPL license by default, an MIT license is available for purchase
+*/
+
 #include "SynthList.h"
+
+#include "LayoutConstants.h"
 
 void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback)
 {
@@ -35,16 +43,18 @@ void SynthList::setActiveListItem(std::string const &active)
 
 void SynthList::resized() {
 	Rectangle<int> area(getLocalBounds());
-	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), 150) : 0;
+	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), LAYOUT_BUTTON_WIDTH + LAYOUT_INSET_NORMAL) : 0;
 
 	auto activeArea = area.removeFromRight(width * buttons_.size());
 	
 	// Horizontal layout
 	auto bottomrow = activeArea.removeFromBottom(20);
-	auto toprow = activeArea;
+	auto toprow = activeArea.removeFromTop(LAYOUT_LARGE_LINE_HEIGHT);
 	for (int i = 0; i < buttons_.size(); i++) {
-		buttons_[i]->setBounds(toprow.removeFromLeft(width).withTrimmedRight(8));
-		labels_[i]->setBounds(bottomrow.removeFromLeft(width).withTrimmedRight(8).reduced(8));
+		int rightMargin = 0;
+		if (i != buttons_.size() - 1) rightMargin = LAYOUT_INSET_NORMAL;
+		buttons_[i]->setBounds(toprow.removeFromLeft(width).withTrimmedRight(rightMargin));
+		labels_[i]->setBounds(bottomrow.removeFromLeft(width).withTrimmedRight(rightMargin).reduced(LAYOUT_INSET_NORMAL));
 	}
 }
 

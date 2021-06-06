@@ -7,6 +7,7 @@
 #include "SplitteredComponent.h"
 
 #include "Settings.h"
+#include "LayoutConstants.h"
 
 SplitteredComponent::SplitteredComponent(std::string const &componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical) 
 	: componentName_(componentName), first_(first.component), second_(second.component), isVertical_(isVertical), didLoad_(false)
@@ -44,9 +45,9 @@ SplitteredComponent::SplitteredComponent(std::string const& componentName, Split
 	addAndMakeVisible(resizer2);
 
 	stretchableManager_.setItemLayout(0, -first.minimumPercentage / 100.0f, -first.maximumPercentage / 100.0f, -first.desiredPercentage / 100.0f);
-	stretchableManager_.setItemLayout(1, 5, 5, 5);  // Left resizer, hard-coded to 5 pixels
+	stretchableManager_.setItemLayout(1, LAYOUT_INSET_SMALL, LAYOUT_INSET_SMALL, LAYOUT_INSET_SMALL);  // Left resizer, hard-coded size
 	stretchableManager_.setItemLayout(2, -second.minimumPercentage / 100.0f, -second.maximumPercentage / 100.0f, -second.desiredPercentage / 100.0f);
-	stretchableManager_.setItemLayout(3, 5, 5, 5);  // Right resizer, hard-coded to 5 pixels
+	stretchableManager_.setItemLayout(3, LAYOUT_INSET_SMALL, LAYOUT_INSET_SMALL, LAYOUT_INSET_SMALL);  // Right resizer, hard-coded size
 	stretchableManager_.setItemLayout(4, -third.minimumPercentage / 100.0f, -third.maximumPercentage / 100.0f, -third.desiredPercentage / 100.0f);
 	nComponents_ = 5;
 

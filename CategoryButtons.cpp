@@ -7,6 +7,7 @@
 #include "CategoryButtons.h"
 
 #include "ColourHelpers.h"
+#include "LayoutConstants.h"
 
 class ColouredCheckbox : public ToggleButton {
 public:
@@ -103,9 +104,9 @@ void CategoryButtons::resized()
 		//fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
 		fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
 		for (auto filterbutton : categoryFilter_) {
-			filterbutton->setSize(100, 20);
+			filterbutton->setSize(LAYOUT_CHECKBOX_WIDTH, LAYOUT_LINE_HEIGHT);
 			((ToggleButton*)filterbutton)->changeWidthToFitText();
-			fb.items.add(FlexItem(*filterbutton).withMinWidth((float) filterbutton->getWidth() + 20.0f).withMinHeight(20.0f).withMargin(4)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
+			fb.items.add(FlexItem(*filterbutton).withMinWidth((float) filterbutton->getWidth() + 20.0f).withMinHeight(LAYOUT_LINE_HEIGHT).withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
 		}
 		fb.performLayout(getLocalBounds().toFloat());
 	}
