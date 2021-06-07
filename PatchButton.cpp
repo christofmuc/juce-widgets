@@ -110,17 +110,17 @@ String PatchButton::getButtonText() const
 
 void PatchButton::setButtonText(const String& text)
 {
-	button_->setButtonText(text);
+	button_->setButtonText(text.trim());
 }
 
 void PatchButton::setButtonText(const String& line1, const String &line2)
 {
-	button_->setButtonText(line1 + "\n" + line2);
+	button_->setButtonText(line1.trim() + "\n" + line2.trim());
 }
 
 void PatchButton::setSubtitle(const String &text)
 {
-	synthName_.setText(text, dontSendNotification);
+	synthName_.setText(text.trim(), dontSendNotification);
 }
 
 void PatchButton::setFavorite(bool isFavorite)
