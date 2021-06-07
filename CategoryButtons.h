@@ -34,6 +34,8 @@ public:
 	// Implement button listener
 	void buttonClicked(Button*) override;
 
+	Rectangle<float> determineMinimumSize(Component *parent, Rectangle<int> const& bounds);
+
 	int numCategories() const;
 	int usedHeight() const;
 
