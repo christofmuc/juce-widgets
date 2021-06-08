@@ -8,6 +8,7 @@
 
 #include "ColourHelpers.h"
 #include "LayoutConstants.h"
+#include "FlexBoxHelper.h"
 
 class ColouredCheckbox : public ToggleButton {
 public:
@@ -112,44 +113,9 @@ void CategoryButtons::buttonClicked(Button* button)
 	}
 }
 
-/**
-	Computes the size needed to avoid an overflow, but not smaller than the
-	given absolute minimums.
-*/
-Rectangle<float> computeMinimumSize(FlexBox box)
+juce::Rectangle<float> CategoryButtons::determineSubAreaForButtonLayout(Component* parent, Rectangle<int> const& bounds)
 {
-	RectangleList<float> layout;
-
-	for (auto& item : box.items)
-	{
-		layout.add(item.currentBounds
-			.withTrimmedLeft(-item.margin.left)
-			.withTrimmedRight(-item.margin.right)
-			.withTrimmedTop(-item.margin.top)
-			.withTrimmedBottom(-item.margin.bottom));
-	}
-	return layout.getBounds();
-}
-
-
-Rectangle<float> CategoryButtons::determineMinimumSize(Component *parent, Rectangle<int> const& bounds)
-{
-	// Using Flex Box as we need an overflow
-	FlexBox fb;
-	fb.flexWrap = FlexBox::Wrap::wrap;
-	fb.flexDirection = FlexBox::Direction::row;
-	fb.justifyContent = FlexBox::JustifyContent::center;
-	//fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
-	fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
-	for (auto filterbutton : categoryFilter_) {
-		filterbutton->setSize(LAYOUT_CHECKBOX_WIDTH, LAYOUT_LINE_HEIGHT);
-		((ToggleButton*)filterbutton)->changeWidthToFitText();
-		fb.items.add(FlexItem(*filterbutton).withMinWidth((float)filterbutton->getWidth() + 20.0f).withMinHeight(LAYOUT_LINE_HEIGHT).withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
-	}
-	auto newBounds = getLocalArea(parent, bounds); // Need to work in local coordinates
-	fb.performLayout(newBounds);
-	auto minSize = computeMinimumSize(fb);
-	return parent->getLocalArea(this, minSize); // Back into parent coordinates
+	return FlexBoxHelper::determineSizeForButtonLayout(this, parent, categoryFilter_, bounds);
 }
 
 int CategoryButtons::numCategories() const
