@@ -29,6 +29,7 @@ set(Sources
 	IconHelper.cpp IconHelper.h
 	InfoText.cpp InfoText.h
 	InsetBox.cpp InsetBox.h
+	FlexBoxHelper.cpp FlexBoxHelper.h
 	LambdaButtonStrip.cpp LambdaButtonStrip.h
 	LambdaMenuModel.cpp LambdaMenuModel.h
 	LayoutConstants.h
