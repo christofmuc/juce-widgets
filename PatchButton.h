@@ -23,8 +23,8 @@ public:
 
 	void setColour(int colourId, Colour newColour);
 	String getButtonText() const;
-	void setButtonText(const String& text);
-	void setButtonText(const String& line1, const String &line2);
+	void setButtonData(const String& text, const String& dragInfo);
+	void setButtonData(const String& line1, const String &line2, const String& dragInfo);
 	void setSubtitle(const String &text);
 
 	void setFavorite(bool isFavorite);

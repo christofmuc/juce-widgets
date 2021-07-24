@@ -9,9 +9,13 @@
 #include "BinaryResources.h"
 #include "IconHelper.h"
 
-class TextButtonFixedFont : public TextButton {
+class PatchTextButtonFixedFontDraggable : public TextButton {
 public:
 	using TextButton::TextButton;
+
+	void setDragStartInfo(String dragInfo) {
+		dragInfo_ = dragInfo;
+	}
 
 	void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 	{
@@ -24,7 +28,7 @@ public:
 		drawButtonText(lf, g, *this, shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
 	}
 
-	void drawButtonText(LookAndFeel &lf, Graphics& g, TextButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+	void drawButtonText(LookAndFeel& lf, Graphics& g, TextButton& button, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 	{
 		ignoreUnused(shouldDrawButtonAsHighlighted, shouldDrawButtonAsDown);
 
@@ -43,11 +47,12 @@ public:
 		const int textWidth = button.getWidth() - leftIndent - rightIndent;
 
 		if (textWidth > 0) {
-			String multilineText= button.getButtonText();
+			String multilineText = button.getButtonText();
 			if (multilineText.containsAnyOf("\r\n")) {
 				g.drawFittedText(multilineText, leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
 					Justification::centred, 2, 1.0f);
-			} else {
+			}
+			else {
 				g.drawText(multilineText,
 					leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
 					Justification::centred, true);
@@ -55,16 +60,34 @@ public:
 		}
 	}
 
+	void mouseDrag(const MouseEvent& event) override
+	{
+		ignoreUnused(event);
+		if (dragInfo_.isNotEmpty()) {
+			// If a drag info has been set and we are located in a drag container, start dragging with the info given!
+			auto dragContainer = juce::DragAndDropContainer::findParentDragContainerFor(this);
+			if (dragContainer) {
+				if (!dragContainer->isDragAndDropActive())
+				{
+					dragContainer->startDragging(dragInfo_, this);
+				}
+			}
+		}
+		TextButton::mouseDrag(event);
+	}
+
+private:
+	String dragInfo_;
 };
 
 PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler) : clicked_(clickHandler), id_(id), active_(false)
 {
-	button_ = std::make_unique<TextButtonFixedFont>();
+	button_ = std::make_unique<PatchTextButtonFixedFontDraggable>();
 	addAndMakeVisible(button_.get());
 	button_->addListener(this);
 	button_->setClickingTogglesState(isToggle);
 	IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size);
-	IconHelper::setupIcon(this ,hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
+	IconHelper::setupIcon(this, hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
 	addAndMakeVisible(thumbnail_);
 	thumbnail_.setAlpha(0.3f);
 	thumbnail_.setInterceptsMouseClicks(false, false);
@@ -108,17 +131,20 @@ String PatchButton::getButtonText() const
 	return button_->getButtonText();
 }
 
-void PatchButton::setButtonText(const String& text)
+void PatchButton::setButtonData(const String& text, const String& dragInfo)
 {
 	button_->setButtonText(text.trim());
+	//TODO - ugly, but kind of impl pattern
+	dynamic_cast<PatchTextButtonFixedFontDraggable*>(button_.get())->setDragStartInfo(dragInfo);
 }
 
-void PatchButton::setButtonText(const String& line1, const String &line2)
+void PatchButton::setButtonData(const String& line1, const String& line2, const String& dragInfo)
 {
 	button_->setButtonText(line1.trim() + "\n" + line2.trim());
+	dynamic_cast<PatchTextButtonFixedFontDraggable*>(button_.get())->setDragStartInfo(dragInfo);
 }
 
-void PatchButton::setSubtitle(const String &text)
+void PatchButton::setSubtitle(const String& text)
 {
 	synthName_.setText(text.trim(), dontSendNotification);
 }
@@ -132,7 +158,7 @@ void PatchButton::setHidden(bool isHidden) {
 	hiddenIcon_.setVisible(isHidden);
 }
 
-void PatchButton::setThumbnailFile(const String &filename, const String &cacheFileName)
+void PatchButton::setThumbnailFile(const String& filename, const String& cacheFileName)
 {
 	if (filename.isNotEmpty()) {
 		thumbnail_.loadFromFile(filename.toStdString(), cacheFileName.toStdString());
@@ -142,7 +168,7 @@ void PatchButton::setThumbnailFile(const String &filename, const String &cacheFi
 	}
 }
 
-void PatchButton::setThumbnailFromCache(const Thumbnail::CacheInfo &cacheInfo)
+void PatchButton::setThumbnailFromCache(const Thumbnail::CacheInfo& cacheInfo)
 {
 	thumbnail_.loadFromCache(cacheInfo);
 }
