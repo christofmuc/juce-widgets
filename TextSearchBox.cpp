@@ -38,14 +38,14 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
 	nameSearchText_->setColour(TextEditor::focusedOutlineColourId, Colours::transparentBlack);
 	nameSearchText_->setOpaque(false);
 	nameSearchText_->onTextChange = [this]() { 
-		clearNameSearch_->setVisible(!nameSearchText_->getText().isEmpty());
+		refreshClearButton();
 		updateHandler_(); 
 	};
 	nameSearchText_->onEscapeKey = [this]() {
 		nameSearchText_->setText("", true);		
 	};
 	nameSearchText_->onFocusLost = [this]() {
-		lookingGlass_.setVisible(nameSearchText_->getText().isEmpty());  
+		refreshClearButton();
 		repaint();
 	};
 	dynamic_cast<FocusReportingTextEditor*>(nameSearchText_.get())->onFocusGained = [this]() { 
@@ -91,10 +91,17 @@ juce::String TextSearchBox::searchText() const
 	return nameSearchText_->getText();
 }
 
-void TextSearchBox::paint(Graphics& g) {
-	/*g.setColour(Colours::red);
-	g.fillRect(getLocalBounds());*/
+void TextSearchBox::setSearchText(String const& searchText)
+{
+	nameSearchText_->setText(searchText, false);
+	refreshClearButton();
+}
 
+void TextSearchBox::refreshClearButton() {
+	clearNameSearch_->setVisible(!nameSearchText_->getText().isEmpty());
+}
+
+void TextSearchBox::paint(Graphics& g) {
 	// Draw an outline box around the text box and the clear button!
 	if (nameSearchText_->isEnabled())
 	{

@@ -18,8 +18,11 @@ public:
 	void paint(Graphics& g) override;
 
 	String searchText() const;
+	void setSearchText(String const &searchText);
 	
 private:
+	void refreshClearButton();
+
 	std::function<void()> updateHandler_;
 	std::unique_ptr<TextEditor> nameSearchText_;
 	ImageComponent lookingGlass_;
