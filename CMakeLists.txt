@@ -47,6 +47,7 @@ set(Sources
 	SynthList.cpp SynthList.h
 	TextSearchBox.cpp TextSearchBox.h
 	Thumbnail.cpp Thumbnail.h
+	TreeViewNode.h TreeViewNode.cpp
 	README.md
 	LICENSE
 	${RESOURCE_FILES}
