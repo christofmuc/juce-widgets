@@ -75,12 +75,7 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, st
 void SynthList::setActiveListItem(std::string const &active)
 {
 	for (auto button : buttons_) {
-		if (button->name() == active) {
-			button->setToggleState(true);
-		}
-		else {
-			button->setToggleState(false);
-		}
+		button->setToggleState(button->name() == active);
 	}
 }
 
