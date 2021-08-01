@@ -40,10 +40,7 @@ std::string SynthButtonWithActiveLight::name() const
 
 void SynthButtonWithActiveLight::setToggleState(bool toggleState)
 {
-	if (toggleState)
-		button_.setToggleState(toggleState, dontSendNotification);
-	else
-		button_.setToggleState(toggleState, dontSendNotification);
+	button_.setToggleState(toggleState, dontSendNotification);
 }
 
 void SynthButtonWithActiveLight::setActiveState(bool activeState)
