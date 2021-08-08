@@ -114,6 +114,14 @@ void TreeViewNode::itemDropped(const DragAndDropTarget::SourceDetails& dragSourc
 	onItemDropped(dragSourceDetails.description);
 }
 
+juce::var TreeViewNode::getDragSourceDescription()
+{
+	if (onItemDragged) {
+		return onItemDragged();
+	}
+	return {};
+}
+
 juce::String TreeViewNode::id() const
 {
 	return id_;

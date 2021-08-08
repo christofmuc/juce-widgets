@@ -13,6 +13,7 @@ public:
 	typedef std::function<std::vector<TreeViewItem*>()> TChildGenerator;
 	typedef std::function<void(String)>  TClickedHandler;
 	typedef std::function<void(juce::var)>  TDropHandler;
+	typedef std::function<var()> TDragStartHandler;
 
 	TreeViewNode(String text, String id);
 
@@ -21,6 +22,7 @@ public:
 	TClickedHandler onSingleClick;
 	TClickedHandler onDoubleClick;
 	TDropHandler    onItemDropped;
+	TDragStartHandler onItemDragged;
 
 	String id() const;
 	String text() const;
@@ -40,6 +42,8 @@ public:
 	virtual void itemDoubleClicked(const MouseEvent&) override;
 	virtual bool isInterestedInDragSource(const DragAndDropTarget::SourceDetails&) override;
 	virtual void itemDropped(const DragAndDropTarget::SourceDetails& dragSourceDetails, int insertIndex) override;
+
+	virtual var getDragSourceDescription() override;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TreeViewNode)
 
