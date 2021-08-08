@@ -12,6 +12,7 @@ class TreeViewNode : public TreeViewItem {
 public:
 	typedef std::function<std::vector<TreeViewItem*>()> TChildGenerator;
 	typedef std::function<void(String)>  TClickedHandler;
+	typedef std::function<bool(juce::var)>  TAcceptHandler;
 	typedef std::function<void(juce::var)>  TDropHandler;
 	typedef std::function<var()> TDragStartHandler;
 
@@ -21,6 +22,7 @@ public:
 	TClickedHandler onSelected;
 	TClickedHandler onSingleClick;
 	TClickedHandler onDoubleClick;
+	TAcceptHandler acceptsItem;
 	TDropHandler    onItemDropped;
 	TDragStartHandler onItemDragged;
 

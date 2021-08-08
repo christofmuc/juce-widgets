@@ -103,9 +103,9 @@ void TreeViewNode::itemDoubleClicked(const MouseEvent&)
 	}
 }
 
-bool TreeViewNode::isInterestedInDragSource(const DragAndDropTarget::SourceDetails&)
+bool TreeViewNode::isInterestedInDragSource(const DragAndDropTarget::SourceDetails& source)
 {
-	return onItemDropped != nullptr;
+	return onItemDropped != nullptr && (acceptsItem == nullptr || acceptsItem(source.description));
 }
 
 void TreeViewNode::itemDropped(const DragAndDropTarget::SourceDetails& dragSourceDetails, int insertIndex)
