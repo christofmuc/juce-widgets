@@ -6,11 +6,11 @@
 
 #include "IconHelper.h"
 
-void IconHelper::setupIcon(Component *parent, ImageComponent& icon, const unsigned char* icondata, size_t iconsize) {
+void IconHelper::setupIcon(Component *parent, ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize) {
 	PNGImageFormat reader;
 	MemoryInputStream memStream(icondata, iconsize, false);
 	auto im = reader.decodeImage(memStream);
-	auto smaller = im.rescaled(16, 16);
+	auto smaller = im.rescaled(destSize, destSize);
 	icon.setImage(smaller);
 	icon.setInterceptsMouseClicks(false, false);
 	parent->addAndMakeVisible(icon);

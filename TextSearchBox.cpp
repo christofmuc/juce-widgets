@@ -53,7 +53,7 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
 	};
 
 	// Create an Icon that shows this is a search box
-	IconHelper::setupIcon(this, lookingGlass_, iconmonstr_magnifier_6_64_png, iconmonstr_magnifier_6_64_png_size);
+	IconHelper::setupIcon(this, lookingGlass_, iconmonstr_magnifier_6_64_png, iconmonstr_magnifier_6_64_png_size, 16);
 	lookingGlass_.setVisible(true);
 
 	// Create a lookAndFeel based clear button

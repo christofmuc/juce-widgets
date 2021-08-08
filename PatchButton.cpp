@@ -86,8 +86,8 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 	addAndMakeVisible(button_.get());
 	button_->addListener(this);
 	button_->setClickingTogglesState(isToggle);
-	IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size);
-	IconHelper::setupIcon(this, hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size);
+	IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size, 16);
+	IconHelper::setupIcon(this, hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size, 16);
 	addAndMakeVisible(thumbnail_);
 	thumbnail_.setAlpha(0.3f);
 	thumbnail_.setInterceptsMouseClicks(false, false);

@@ -42,6 +42,7 @@ set(Sources
 	PatchButtonGrid.h
 	ProgressHandlerWindow.cpp ProgressHandlerWindow.h
 	PropertyEditor.cpp PropertyEditor.h
+	RecycleBin.cpp RecycleBin.h
 	SimpleTable.h
 	SplitteredComponent.cpp SplitteredComponent.h
 	SynthList.cpp SynthList.h

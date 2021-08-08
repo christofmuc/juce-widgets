@@ -11,6 +11,6 @@
 class IconHelper
 {
 public:
-	static void setupIcon(Component* parent, ImageComponent& icon, const unsigned char* icondata, size_t iconsize);
+	static void setupIcon(Component* parent, ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize);
 };
 
