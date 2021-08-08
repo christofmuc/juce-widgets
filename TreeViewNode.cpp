@@ -75,6 +75,7 @@ void TreeViewNode::regenerate()
 		for (auto c : children) {
 			addSubItem(c);
 		}
+		treeHasChanged();
 	}
 }
 
