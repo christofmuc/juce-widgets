@@ -8,7 +8,7 @@
 
 #include "Settings.h"
 
-#include <boost/format.hpp>
+#include "fmt/core.h"
 
 LogView::LogView() : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
 	addAndMakeVisible(logBox_);
@@ -47,7 +47,7 @@ void LogView::addMessageToListWithoutTimestamp(String const &message)
 void LogView::addMessageToList(String const &message)
 {
 	auto time = Time::getCurrentTime();
-	String midiMessageString = (boost::format("%s: %s\n") % time.formatted("%H:%M:%S")%	message).str();
+	String midiMessageString = fmt::format("{}: {}\n", time.formatted("%H:%M:%S").toStdString(), message.toStdString());
 	addMessageToListWithoutTimestamp(midiMessageString);
 }
 
