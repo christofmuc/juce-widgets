@@ -10,9 +10,10 @@
 
 #include "fmt/core.h"
 
-LogView::LogView() : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
+LogView::LogView(bool showLineNumbers /* = true */) : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
 	addAndMakeVisible(logBox_);
 	logBox_.setReadOnly(true);
+	logBox_.setLineNumbersShown(showLineNumbers);
 	document_->setNewLineCharacters("\n");
 	buttons_ = std::make_unique<LambdaButtonStrip>(101, LambdaButtonStrip::Direction::Horizontal);
 	addAndMakeVisible(*buttons_);

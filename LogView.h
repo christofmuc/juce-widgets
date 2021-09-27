@@ -15,7 +15,7 @@
 
 class LogView : public Component {
 public:
-	LogView();
+	explicit LogView(bool showLineNumbers = true);
 
 	void addMessageToList(String const &message);
 	void addMessageToListWithoutTimestamp(String const &message);
