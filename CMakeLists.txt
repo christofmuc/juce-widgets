@@ -24,6 +24,7 @@ set(Sources
 	CategoryButtons.cpp CategoryButtons.h
 	CollapsibleContainer.cpp CollapsibleContainer.h
 	ColourHelpers.cpp ColourHelpers.h
+	CustomizedRotary.cpp CustomizedRotary.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	InfoText.cpp InfoText.h
 	InsetBox.cpp InsetBox.h
@@ -41,6 +42,7 @@ set(Sources
 	SimpleTable.h
 	SynthList.cpp SynthList.h
 	Thumbnail.cpp Thumbnail.h
+	TwoLabelSlider.cpp TwoLabelSlider.h
 	README.md
 	LICENSE
 	${RESOURCE_FILES}
