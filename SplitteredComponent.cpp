@@ -1,15 +1,33 @@
 /*
-   Copyright (c) 2021 Christof Ruch. All rights reserved.
-
-   Dual licensed: Distributed under Affero GPL license by default, an MIT license is available for purchase
-*/
+ * MIT License
+ *
+ * Copyright (c) 2019-2021 Christof Ruch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
 #include "SplitteredComponent.h"
 
 #include "Settings.h"
 #include "LayoutConstants.h"
 
-SplitteredComponent::SplitteredComponent(std::string const &componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical) 
+SplitteredComponent::SplitteredComponent(std::string const &componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical)
 	: componentName_(componentName), first_(first.component), second_(second.component), isVertical_(isVertical), didLoad_(false)
 {
 	auto resizer = new StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
@@ -19,7 +37,7 @@ SplitteredComponent::SplitteredComponent(std::string const &componentName, Split
 	addAndMakeVisible(second_);
 	addAndMakeVisible(resizer);
 
-	stretchableManager_.setItemLayout(0, -first.minimumPercentage/100.0f, -first.maximumPercentage/100.0f, -first.desiredPercentage/100.0f); 
+	stretchableManager_.setItemLayout(0, -first.minimumPercentage/100.0f, -first.maximumPercentage/100.0f, -first.desiredPercentage/100.0f);
 	stretchableManager_.setItemLayout(1, 5, 5, 5);  // Left resizer, hard-coded to 5 pixels
 	stretchableManager_.setItemLayout(2, -second.minimumPercentage / 100.0f, -second.maximumPercentage / 100.0f, -second.desiredPercentage / 100.0f);
 	nComponents_ = 3;

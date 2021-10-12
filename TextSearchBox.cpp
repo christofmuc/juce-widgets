@@ -1,8 +1,26 @@
 /*
-   Copyright (c) 2021 Christof Ruch. All rights reserved.
-
-   Dual licensed: Distributed under Affero GPL license by default, an MIT license is available for purchase
-*/
+ * MIT License
+ *
+ * Copyright (c) 2019-2021 Christof Ruch
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
 #include "TextSearchBox.h"
 
@@ -30,26 +48,26 @@ public:
 TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandler_(updateHandler)
 {
 	nameSearchText_ = std::make_unique<FocusReportingTextEditor>();
-	
+
 
 	// We do not want an outline by the box itself, because we will draw the outline ourselves also around the clear button
 	nameSearchText_->setColour(TextEditor::backgroundColourId, Colours::transparentBlack);
 	nameSearchText_->setColour(TextEditor::outlineColourId, Colours::transparentBlack);
 	nameSearchText_->setColour(TextEditor::focusedOutlineColourId, Colours::transparentBlack);
 	nameSearchText_->setOpaque(false);
-	nameSearchText_->onTextChange = [this]() { 
+	nameSearchText_->onTextChange = [this]() {
 		refreshClearButton();
-		updateHandler_(); 
+		updateHandler_();
 	};
 	nameSearchText_->onEscapeKey = [this]() {
-		nameSearchText_->setText("", true);		
+		nameSearchText_->setText("", true);
 	};
 	nameSearchText_->onFocusLost = [this]() {
 		refreshClearButton();
 		repaint();
 	};
-	dynamic_cast<FocusReportingTextEditor*>(nameSearchText_.get())->onFocusGained = [this]() { 
-		lookingGlass_.setVisible(false);  repaint();  
+	dynamic_cast<FocusReportingTextEditor*>(nameSearchText_.get())->onFocusGained = [this]() {
+		lookingGlass_.setVisible(false);  repaint();
 	};
 
 	// Create an Icon that shows this is a search box

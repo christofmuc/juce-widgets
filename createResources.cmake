@@ -23,4 +23,3 @@ foreach(bin ${bins})
 	# Append data to output file
 	file(APPEND ${output} "const unsigned char ${filename}[] = {${filedata}};\nconst unsigned ${filename}_size = sizeof(${filename});\n")
 endforeach()
-

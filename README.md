@@ -1,3 +1,26 @@
+<!--
+MIT License
+
+Copyright (c) 2019-2021 Christof Ruch
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
 # juce-widgets
 An unsorted bunch of useful widgets build for the JUCE cross-platform library
 
@@ -5,13 +28,9 @@ An unsorted bunch of useful widgets build for the JUCE cross-platform library
 ## Usage
 
 This repository is meant to be included as a git submodule in a main project, see for instance [JammerNetz](https://github.com/christofmuc/JammerNetz) for an example how this is used.
-In order to build this library standalone, which is what the CI server should be doing, there is a separate little repository that you can use. 
+In order to build this library standalone, which is what the CI server should be doing, there is a separate little repository that you can use.
 
 For what is in this library, please use the header files to see the utility functions, I am busy with my main projects and can't add more documentation right now.
-
-## Licensing
-
-As some substantial work has gone into the development of this and related software, I decided to offer a dual license - AGPL, see the LICENSE.md file for the details, for everybody interested in how this works and willing to spend some time her- or himself on this, and a commercial MIT license available from me on request. Thus I can help the OpenSource community without blocking possible commercial applications.
 
 ## Attributing
 
@@ -21,8 +40,8 @@ If you use the PatchButton class with the icons, make sure to attribute the icon
 
 ## Contributing
 
-All pull requests and issues welcome, I will try to get back to you as soon as I can. Due to the dual licensing please be aware that I will need to request transfer of copyright on accepting a PR. 
+All pull requests and issues welcome, I will try to get back to you as soon as I can.
 
 ## About the author
 
-Christof is a lifelong software developer having worked in various industries, and can't stop his programming hobby anyway. 
+Christof is a lifelong software developer having worked in various industries, and can't stop his programming hobby anyway.
