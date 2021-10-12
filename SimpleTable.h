@@ -44,6 +44,14 @@ public:
 		
 	}
 
+	void selectRow(int rowNum) {
+		table_.selectRow(rowNum);
+	}
+
+	void clearSelection() {
+		table_.deselectAllRows();
+	}
+
 	// Implementing the TableListBoxModel
 	virtual int getNumRows() override {
 		return (int) items_.size();
