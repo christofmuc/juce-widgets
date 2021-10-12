@@ -6,6 +6,9 @@
 
 project(juce-widgets)
 
+# If you also use https://github.com/FigBug/Gin, turn this on
+OPTION(GIN_AVAILABLE "Is the Gin library available and included into CMake" OFF)
+
 set(RESOURCE_FILES 
 	resources/heart-32.png
 	resources/blind-symbol-of-an-opened-eye-with-a-slash.png
@@ -61,9 +64,13 @@ set_source_files_properties(
 	PROPERTIES GENERATED TRUE
 )
 
+IF(GIN_AVAILABLE)
+	SET(GIN_LINK_TARGET gin)
+ENDIF()
+
 # Setup library
 add_library(juce-widgets ${Sources})
-target_link_libraries(juce-widgets juce-utils gin ${APPLE_BOOST} fmt::fmt)
+target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} ${APPLE_BOOST} fmt::fmt)
 target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
 # Pedantic about warnings

@@ -1,7 +1,9 @@
 #include "PropertyEditor.h"
 
+#ifdef GIN_AVAILABLE
 #define JUCE_MODULE_AVAILABLE_gin
 #include "gin/gin.h"
+#endif
 
 PropertyEditor::PropertyEditor()
 {
@@ -36,8 +38,10 @@ PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamedValue>
 		return new BooleanPropertyComponent(Value(property->value()), property->name(), "On/Off");
 	case ValueType::String:
 		return new TextPropertyComponent(Value(property->value()), property->name(), property->maxValue(), false, property->enabled());
+#ifdef GIN_AVAILABLE
 	case ValueType::Color:
 		return new gin::ColourPropertyComponent(Value(property->value()), property->name(), false);
+#endif
 	default:
 		// Type needs to be implemented
 		jassert(false);
