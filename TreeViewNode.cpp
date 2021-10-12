@@ -18,14 +18,14 @@ void TreeViewNode::toggleOpenness()
 	auto open = getOpenness();
 	switch (open) {
 	case Openness::opennessClosed:
-		setOpenness(TreeViewItem::opennessOpen);
+		setOpenness(TreeViewItem::Openness::opennessOpen);
 		break;
 	case Openness::opennessOpen:
-		setOpenness(TreeViewItem::opennessClosed);
+		setOpenness(TreeViewItem::Openness::opennessClosed);
 		break;
 	case Openness::opennessDefault:
 		// This only works as expected when the TreeView has default openness = closed
-		setOpenness(TreeViewItem::opennessOpen);
+		setOpenness(TreeViewItem::Openness::opennessOpen);
 		break;
 	}
 }
