@@ -25,6 +25,7 @@ set(Sources
 	CategoryButtons.cpp CategoryButtons.h
 	CollapsibleContainer.cpp CollapsibleContainer.h
 	ColourHelpers.cpp ColourHelpers.h
+	CustomizedRotary.cpp CustomizedRotary.h
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	IconHelper.cpp IconHelper.h
 	InfoText.cpp InfoText.h
@@ -49,6 +50,7 @@ set(Sources
 	TextSearchBox.cpp TextSearchBox.h
 	Thumbnail.cpp Thumbnail.h
 	TreeViewNode.h TreeViewNode.cpp
+	TwoLabelSlider.cpp TwoLabelSlider.h
 	README.md
 	LICENSE
 	${RESOURCE_FILES}
@@ -61,8 +63,8 @@ set_source_files_properties(
 
 # Setup library
 add_library(juce-widgets ${Sources})
-target_link_libraries(juce-widgets juce-utils gin ${APPLE_BOOST})
-target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} PRIVATE ${boost_SOURCE_DIR})
+target_link_libraries(juce-widgets juce-utils gin ${APPLE_BOOST} fmt::fmt)
+target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
 # Pedantic about warnings
 if (MSVC)

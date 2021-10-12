@@ -16,7 +16,7 @@ template <class T>
 class SimpleTable : public Component, public TableListBoxModel {
 public:
 
-	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandler) : items_(data), rowSelectedHandler_(rowSelectedHandler) {
+	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam) : items_(data), rowSelectedHandler(rowSelectedHandlerParam) {
 		addAndMakeVisible(table_);
 
 		numColumns_ = 1;
@@ -42,6 +42,14 @@ public:
 			table_.repaint();
 		});
 		
+	}
+
+	void selectRow(int rowNum) {
+		table_.selectRow(rowNum);
+	}
+
+	void clearSelection() {
+		table_.deselectAllRows();
 	}
 
 	// Implementing the TableListBoxModel
@@ -73,7 +81,9 @@ public:
 	}
 
 	virtual void selectedRowsChanged(int lastRowSelected) override {
-		rowSelectedHandler_(lastRowSelected);
+		if (rowSelectedHandler) {
+			rowSelectedHandler(lastRowSelected);
+		}
 	}
 
 	void resized() override
@@ -94,11 +104,12 @@ public:
 		return widest + 8;
 	}
 
+	std::function<void(int)> rowSelectedHandler;
+
 
 private:
 	TableListBox table_;
 	T items_;
 	int numColumns_;
-	std::function<void(int)> rowSelectedHandler_;
 };
 

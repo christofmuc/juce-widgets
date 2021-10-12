@@ -8,11 +8,12 @@
 
 #include "Settings.h"
 
-#include <boost/format.hpp>
+#include "fmt/core.h"
 
-LogView::LogView(bool showClear, bool showSave) : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
+LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true */) : Component(), document_(new CodeDocument), logBox_(*document_, nullptr) {
 	addAndMakeVisible(logBox_);
 	logBox_.setReadOnly(true);
+	logBox_.setLineNumbersShown(showLineNumbers);
 	document_->setNewLineCharacters("\n");
 	buttons_ = std::make_unique<LambdaButtonStrip>(101, LambdaButtonStrip::Direction::Horizontal);
 	addAndMakeVisible(*buttons_);
@@ -49,7 +50,7 @@ void LogView::addMessageToListWithoutTimestamp(String const &message)
 void LogView::addMessageToList(String const &message)
 {
 	auto time = Time::getCurrentTime();
-	String midiMessageString = (boost::format("%s: %s\n") % time.formatted("%H:%M:%S") % message).str();
+	String midiMessageString = fmt::format("{}: {}\n", time.formatted("%H:%M:%S").toStdString(), message.toStdString());
 	addMessageToListWithoutTimestamp(midiMessageString);
 }
 
