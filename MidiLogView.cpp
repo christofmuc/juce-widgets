@@ -49,9 +49,10 @@ void MidiLogView::addMessageToList(double time, const String& description, const
     const int seconds = ((int) time) % 60;
     const int millis = ((int) (time * 1000.0)) % 1000;
 
-	std::string timecode = fmt::format("{:02d}:{:02d}:{:02d}.{:03d}", hours, minutes, seconds, millis);
+    std::string timecode = fmt::format("{:02d}:{:02d}:{:02d}.{:03d}", hours, minutes, seconds, millis);
 
-	const std::string direction = isOut ? "Out" : "In ";
-	String midiMessageString = fmt::format("{:s}: {:s} {:s} {:s} [{:s}]\n", timecode, direction, source.toStdString(), description.toStdString(), bytes.toStdString());
-	addMessageToListWithoutTimestamp(midiMessageString);
+    const std::string direction = isOut ? "Out" : "In ";
+    String midiMessageString =
+        fmt::format("{:s}: {:s} {:s} {:s} [{:s}]\n", timecode, direction, source.toStdString(), description.toStdString(), bytes.toStdString());
+    addMessageToListWithoutTimestamp(midiMessageString);
 }
