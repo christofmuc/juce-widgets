@@ -28,16 +28,15 @@
 
 #include "ProgressHandler.h"
 
-class ProgressHandlerWindow : public ThreadWithProgressWindow, public ProgressHandler
-{
+class ProgressHandlerWindow : public ThreadWithProgressWindow, public ProgressHandler {
 public:
-	ProgressHandlerWindow(std::string const &title, std::string const &message);
+    ProgressHandlerWindow(std::string const &title, std::string const &message);
 
-	void run() override;
+    void run() override;
 
-	bool shouldAbort() const override;
-	void setProgressPercentage(double zeroToOne) override;
-	void setMessage(std::string const &title) override;
-	void onSuccess() override;
-	void onCancel() override;
+    bool shouldAbort() const override;
+    void setProgressPercentage(double zeroToOne) override;
+    void setMessage(std::string const &title) override;
+    void onSuccess() override;
+    void onCancel() override;
 };

@@ -26,23 +26,23 @@
 
 TwoLabelSlider::TwoLabelSlider(String left, String right, int labelWidth) : labelWidth_(labelWidth)
 {
-	leftLabel_.setText(left, dontSendNotification);
-	rightLabel_.setText(right, dontSendNotification);
+    leftLabel_.setText(left, dontSendNotification);
+    rightLabel_.setText(right, dontSendNotification);
 
-	addAndMakeVisible(leftLabel_);
-	addAndMakeVisible(rightLabel_);
-	addAndMakeVisible(slider_);
+    addAndMakeVisible(leftLabel_);
+    addAndMakeVisible(rightLabel_);
+    addAndMakeVisible(slider_);
 }
 
 juce::Slider& TwoLabelSlider::slider()
 {
-	return slider_;
+    return slider_;
 }
 
 void TwoLabelSlider::resized()
 {
-	auto area = getLocalBounds();
-	leftLabel_.setBounds(area.removeFromLeft(labelWidth_));
-	rightLabel_.setBounds(area.removeFromRight(labelWidth_));
-	slider_.setBounds(area.withTrimmedLeft(8).withTrimmedRight(8));
+    auto area = getLocalBounds();
+    leftLabel_.setBounds(area.removeFromLeft(labelWidth_));
+    rightLabel_.setBounds(area.removeFromRight(labelWidth_));
+    slider_.setBounds(area.withTrimmedLeft(8).withTrimmedRight(8));
 }

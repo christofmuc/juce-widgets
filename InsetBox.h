@@ -26,16 +26,15 @@
 
 #include "JuceHeader.h"
 
-class InsetBox : public Component
-{
+class InsetBox : public Component {
 public:
-	InsetBox(Component *content, BorderSize<int> borders);
+    InsetBox(Component *content, BorderSize<int> borders);
 
-	void resized() override;
+    void resized() override;
 
 private:
-	Component *content_;
-	BorderSize<int> borders_;
+    Component *content_;
+    BorderSize<int> borders_;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InsetBox)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InsetBox)
 };

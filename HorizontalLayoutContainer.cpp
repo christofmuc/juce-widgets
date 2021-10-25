@@ -27,33 +27,33 @@
 #include "InsetBox.h"
 
 HorizontalLayoutContainer::HorizontalLayoutContainer(Component *left, Component *right, double leftSize, double rightSize) :
-	left_(new InsetBox(left, BorderSize<int>(0, 0, 0, 4))), right_(new InsetBox(right, BorderSize<int>(0, 4, 0, 0)))
+    left_(new InsetBox(left, BorderSize<int>(0, 0, 0, 4))), right_(new InsetBox(right, BorderSize<int>(0, 4, 0, 0)))
 {
-	addAndMakeVisible(left_);
-	addAndMakeVisible(right_);
+    addAndMakeVisible(left_);
+    addAndMakeVisible(right_);
 
-	layout_.setItemLayout(0, leftSize, leftSize, leftSize);
-	layout_.setItemLayout(1, rightSize, rightSize, rightSize);
+    layout_.setItemLayout(0, leftSize, leftSize, leftSize);
+    layout_.setItemLayout(1, rightSize, rightSize, rightSize);
 }
 
 void HorizontalLayoutContainer::resized()
 {
-	Rectangle<int> area(getLocalBounds());
-	Component* components[] = { left_, right_ };
-	layout_.layOutComponents(components, 2, area.getX(), area.getY(), area.getWidth(), area.getHeight(), false, true);
+    Rectangle<int> area(getLocalBounds());
+    Component *components[] = { left_, right_ };
+    layout_.layOutComponents(components, 2, area.getX(), area.getY(), area.getWidth(), area.getHeight(), false, true);
 }
 
 void HorizontalLayoutContainer::setComponents(Component *left, Component *right)
 {
-	if (left != left_) {
-		delete left_;
-		left_ = left;
-		addAndMakeVisible(left);
-	}
-	if (right != right_) {
-		delete right_;
-		right_ = right;
-		addAndMakeVisible(right);
-	}
-	resized();
+    if (left != left_) {
+        delete left_;
+        left_ = left;
+        addAndMakeVisible(left);
+    }
+    if (right != right_) {
+        delete right_;
+        right_ = right;
+        addAndMakeVisible(right);
+    }
+    resized();
 }

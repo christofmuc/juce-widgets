@@ -28,15 +28,15 @@
 
 class RecycleBin : public Component, public DragAndDropTarget {
 public:
-	RecycleBin();
+    RecycleBin();
 
-	virtual void resized() override;
+    virtual void resized() override;
 
-	bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
-	void itemDropped(const SourceDetails& dragSourceDetails) override;
+    bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
+    void itemDropped(const SourceDetails& dragSourceDetails) override;
 
-	std::function<void(var)> onItemDropped;
+    std::function<void(var)> onItemDropped;
 
 private:
-	ImageComponent wasteBin_;
+    ImageComponent wasteBin_;
 };

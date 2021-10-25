@@ -28,14 +28,15 @@
 
 class MouseUpAndDownButton : public TextButton {
 public:
-	MouseUpAndDownButton(std::function<void(TextButton *button)> handler) : handler_(handler) {}
+    MouseUpAndDownButton(std::function<void(TextButton *button)> handler) : handler_(handler) {}
 
-	virtual void buttonStateChanged() override {
-		if (isDown()) {
-			handler_(this);
-		}
-	}
+    virtual void buttonStateChanged() override
+    {
+        if (isDown()) {
+            handler_(this);
+        }
+    }
 
 private:
-	std::function<void(TextButton *button)> handler_;
+    std::function<void(TextButton *button)> handler_;
 };

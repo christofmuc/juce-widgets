@@ -27,106 +27,92 @@
 #include "JuceHeader.h"
 
 // Implement this function for your data type, effectively providing the descriptive text for the column of the data item
-template <typename I>
-void visit(I const &dataItem, int column, std::function<void(std::string const &)> visitor);
+template <typename I> void visit(I const &dataItem, int column, std::function<void(std::string const &)> visitor);
 
-template <class T>
-class SimpleTable : public Component, public TableListBoxModel {
+template <class T> class SimpleTable : public Component, public TableListBoxModel {
 public:
+    SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam) :
+        items_(data), rowSelectedHandler(rowSelectedHandlerParam)
+    {
+        addAndMakeVisible(table_);
 
-	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam) : items_(data), rowSelectedHandler(rowSelectedHandlerParam) {
-		addAndMakeVisible(table_);
+        numColumns_ = 1;
+        for (const auto &column : columnHeader) {
+            table_.getHeader().addColumn(column, numColumns_++, 200, 50, -1);
+        }
 
-		numColumns_ = 1;
-		for (const auto& column : columnHeader) {
-			table_.getHeader().addColumn(column,
-				numColumns_++,
-				200,
-				50,
-				-1);
-		}
+        table_.setColour(ListBox::outlineColourId, Colours::grey);
+        table_.setOutlineThickness(1);
+        table_.setModel(this);
+    }
 
-		table_.setColour(ListBox::outlineColourId, Colours::grey);
-		table_.setOutlineThickness(1);
-		table_.setModel(this);
-	}
+    // Update data
+    void updateData(T const &newData)
+    {
+        items_ = newData;
+        MessageManager::callAsync([this]() {
+            table_.updateContent();
+            table_.autoSizeAllColumns();
+            table_.repaint();
+        });
+    }
 
-	// Update data
-	void updateData(T const &newData) {
-		items_ = newData;
-		MessageManager::callAsync([this]() {
-			table_.updateContent();
-			table_.autoSizeAllColumns();
-			table_.repaint();
-		});
+    void selectRow(int rowNum) { table_.selectRow(rowNum); }
 
-	}
+    void clearSelection() { table_.deselectAllRows(); }
 
-	void selectRow(int rowNum) {
-		table_.selectRow(rowNum);
-	}
+    // Implementing the TableListBoxModel
+    virtual int getNumRows() override { return (int) items_.size(); }
 
-	void clearSelection() {
-		table_.deselectAllRows();
-	}
+    virtual void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override
+    {
+        auto alternateColour =
+            getLookAndFeel().findColour(ListBox::backgroundColourId).interpolatedWith(getLookAndFeel().findColour(ListBox::textColourId), 0.03f);
+        if (rowIsSelected) {
+            g.fillAll(Colours::lightblue);
+        }
+        else if (rowNumber % 2) {
+            g.fillAll(alternateColour);
+        }
+    }
 
-	// Implementing the TableListBoxModel
-	virtual int getNumRows() override {
-		return (int) items_.size();
-	}
+    virtual void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override
+    {
+        g.setColour(rowIsSelected ? Colours::darkblue : getLookAndFeel().findColour(ListBox::textColourId));
+        // g.setFont(font);
 
-	virtual void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override {
-		auto alternateColour = getLookAndFeel().findColour(ListBox::backgroundColourId).interpolatedWith(getLookAndFeel().findColour(ListBox::textColourId), 0.03f);
-		if (rowIsSelected) {
-			g.fillAll(Colours::lightblue);
-		}
-		else if (rowNumber % 2) {
-			g.fillAll(alternateColour);
-		}
-	}
+        visit(items_[rowNumber], columnId,
+            [&](std::string const &text) { g.drawText(text, 2, 0, width - 4, height, Justification::centredLeft, true); });
 
-	virtual void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override {
-		g.setColour(rowIsSelected ? Colours::darkblue : getLookAndFeel().findColour(ListBox::textColourId));
-		//g.setFont(font);
+        // Draw separator line
+        g.setColour(getLookAndFeel().findColour(ListBox::backgroundColourId));
+        g.fillRect(width - 1, 0, 1, height);
+    }
 
-		visit(items_[rowNumber], columnId, [&](std::string const &text) {
-			g.drawText(text, 2, 0, width - 4, height, Justification::centredLeft, true);
-		});
+    virtual void selectedRowsChanged(int lastRowSelected) override
+    {
+        if (rowSelectedHandler) {
+            rowSelectedHandler(lastRowSelected);
+        }
+    }
 
-		// Draw separator line
-		g.setColour(getLookAndFeel().findColour(ListBox::backgroundColourId));
-		g.fillRect(width - 1, 0, 1, height);
-	}
+    void resized() override { table_.setBounds(getLocalBounds()); }
 
-	virtual void selectedRowsChanged(int lastRowSelected) override {
-		if (rowSelectedHandler) {
-			rowSelectedHandler(lastRowSelected);
-		}
-	}
+    int getColumnAutoSizeWidth(int columnId) override
+    {
+        Font defaultFont;
+        int widest = defaultFont.getStringWidth(table_.getHeader().getColumnName(columnId));
+        for (auto rowNumber = getNumRows(); --rowNumber >= 0;) {
+            visit(items_[rowNumber], columnId, [&](std::string const &text) { widest = jmax(widest, defaultFont.getStringWidth(text)); });
+        }
+        return widest + 8;
+    }
 
-	void resized() override
-	{
-		table_.setBounds(getLocalBounds());
-	}
-
-	int getColumnAutoSizeWidth(int columnId) override
-	{
-		Font defaultFont;
-		int widest = defaultFont.getStringWidth(table_.getHeader().getColumnName(columnId));
-		for (auto rowNumber = getNumRows(); --rowNumber >= 0;)
-		{
-			visit(items_[rowNumber], columnId, [&](std::string const &text) {
-				widest = jmax(widest, defaultFont.getStringWidth(text));
-			});
-		}
-		return widest + 8;
-	}
-
-	std::function<void(int)> rowSelectedHandler;
+    std::function<void(int)> rowSelectedHandler;
 
 
 private:
-	TableListBox table_;
-	T items_;
-	int numColumns_;
+    TableListBox table_;
+    T items_;
+    int numColumns_;
 };

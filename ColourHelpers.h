@@ -28,5 +28,5 @@
 
 class ColourHelpers {
 public:
-	static Colour getUIColour(Component *component, LookAndFeel_V4::ColourScheme::UIColour colourToGet);
+    static Colour getUIColour(Component *component, LookAndFeel_V4::ColourScheme::UIColour colourToGet);
 };

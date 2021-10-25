@@ -30,24 +30,24 @@
 
 class LambdaMenuModel : public MenuBarModel {
 public:
-	struct MenuEntry {
-		std::string name;
-		bool hasSubmenu;
-		int baseItemID;
-		std::function<PopupMenu()> getMenu;
-		std::function<void(int)> subitemSelected;
-		int subItemNo; // Automatically calculated
-	};
-	typedef std::map<int, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
+    struct MenuEntry {
+        std::string name;
+        bool hasSubmenu;
+        int baseItemID;
+        std::function<PopupMenu()> getMenu;
+        std::function<void(int)> subitemSelected;
+        int subItemNo; // Automatically calculated
+    };
+    typedef std::map<int, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
 
-	LambdaMenuModel(TMenuStructure const &menuStructure, ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons);
+    LambdaMenuModel(TMenuStructure const &menuStructure, ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons);
 
-	StringArray getMenuBarNames() override;
-	PopupMenu getMenuForIndex(int topLevelMenuIndex, const String& menuName) override;
-	void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
+    StringArray getMenuBarNames() override;
+    PopupMenu getMenuForIndex(int topLevelMenuIndex, const String &menuName) override;
+    void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
 
 private:
-	TMenuStructure menuStructure_;
-	ApplicationCommandManager *commandManager_;
-	LambdaButtonStrip *lambdaButtons_;
+    TMenuStructure menuStructure_;
+    ApplicationCommandManager *commandManager_;
+    LambdaButtonStrip *lambdaButtons_;
 };

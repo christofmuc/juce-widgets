@@ -28,8 +28,8 @@
 
 InfoText::InfoText()
 {
-	setMultiLine(true);
-	setReadOnly(true);
-	setColour(TextEditor::ColourIds::outlineColourId, ColourHelpers::getUIColour(this, LookAndFeel_V4::ColourScheme::windowBackground));
-	setColour(TextEditor::ColourIds::backgroundColourId, ColourHelpers::getUIColour(this, LookAndFeel_V4::ColourScheme::windowBackground));
+    setMultiLine(true);
+    setReadOnly(true);
+    setColour(TextEditor::ColourIds::outlineColourId, ColourHelpers::getUIColour(this, LookAndFeel_V4::ColourScheme::windowBackground));
+    setColour(TextEditor::ColourIds::backgroundColourId, ColourHelpers::getUIColour(this, LookAndFeel_V4::ColourScheme::windowBackground));
 }

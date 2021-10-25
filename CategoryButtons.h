@@ -28,45 +28,43 @@
 
 #include <set>
 
-class CategoryButtons : public Component,
-	private ToggleButton::Listener
-{
+class CategoryButtons : public Component, private ToggleButton::Listener {
 public:
-	class Category {
-	public:
-		Category(std::string const &c, Colour o) : category(c), color(o) {}
-		std::string category;
-		Colour color;
-	};
+    class Category {
+    public:
+        Category(std::string const &c, Colour o) : category(c), color(o) {}
+        std::string category;
+        Colour color;
+    };
 
-	CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
+    CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
 
-	void setCategories(std::vector<Category> const &categories);
+    void setCategories(std::vector<Category> const &categories);
 
-	bool isAtLeastOne() const;
-	std::vector<Category> selectedCategories() const;
-	void setActive(std::set<Category> const &activeCategories);
+    bool isAtLeastOne() const;
+    std::vector<Category> selectedCategories() const;
+    void setActive(std::set<Category> const &activeCategories);
 
-	// Override Component method
-	void resized() override;
-	// Implement button listener
-	void buttonClicked(Button*) override;
+    // Override Component method
+    void resized() override;
+    // Implement button listener
+    void buttonClicked(Button *) override;
 
-	Rectangle<float> determineSubAreaForButtonLayout(Component* parent, Rectangle<int> const& bounds);
+    Rectangle<float> determineSubAreaForButtonLayout(Component *parent, Rectangle<int> const &bounds);
 
-	int numCategories() const;
-	int usedHeight() const;
+    int numCategories() const;
+    int usedHeight() const;
 
 private:
-	bool useCheckboxes_;
-	bool colouredButtons_;
-	std::vector<Category> categories_;
-	OwnedArray<Button> categoryFilter_;
-	std::function<void(Category)> updateHandler_;
-	int usedHeight_; // Cache layout result on how much y space we need on screen
+    bool useCheckboxes_;
+    bool colouredButtons_;
+    std::vector<Category> categories_;
+    OwnedArray<Button> categoryFilter_;
+    std::function<void(Category)> updateHandler_;
+    int usedHeight_; // Cache layout result on how much y space we need on screen
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CategoryButtons)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CategoryButtons)
 };
 
 // To allow storing a set of these categories
-bool operator <(CategoryButtons::Category const &left, CategoryButtons::Category const &right);
+bool operator<(CategoryButtons::Category const &left, CategoryButtons::Category const &right);

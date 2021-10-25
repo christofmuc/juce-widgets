@@ -28,16 +28,16 @@
 
 class TwoLabelSlider : public Component {
 public:
-	TwoLabelSlider(String left, String right, int labelWidth);
+    TwoLabelSlider(String left, String right, int labelWidth);
 
-	Slider& slider();
+    Slider& slider();
 
-	virtual void resized() override;
+    virtual void resized() override;
 
 private:
-	int labelWidth_;
+    int labelWidth_;
 
-	Label leftLabel_;
-	Label rightLabel_;
-	Slider slider_;
+    Label leftLabel_;
+    Label rightLabel_;
+    Slider slider_;
 };

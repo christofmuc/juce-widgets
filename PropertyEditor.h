@@ -30,19 +30,19 @@
 
 class PropertyEditor : public Component {
 public:
-	typedef std::vector<std::shared_ptr<TypedNamedValue>> TProperties;
-	PropertyEditor();
-	PropertyEditor(TProperties &properties);
+    typedef std::vector<std::shared_ptr<TypedNamedValue>> TProperties;
+    PropertyEditor();
+    PropertyEditor(TProperties &properties);
 
-	virtual void resized() override;
+    virtual void resized() override;
 
-	void setProperties(TProperties const &props);
-	void clear();
+    void setProperties(TProperties const &props);
+    void clear();
 
-	static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
+    static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
 
 private:
-	PropertyPanel propertyPanel_;
+    PropertyPanel propertyPanel_;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PropertyEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PropertyEditor)
 };

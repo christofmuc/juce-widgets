@@ -28,21 +28,21 @@
 
 class TextSearchBox : public Component {
 public:
-	TextSearchBox(std::function<void()> updateHandler);
+    TextSearchBox(std::function<void()> updateHandler);
 
-	void setFontSize(float fontSize);
+    void setFontSize(float fontSize);
 
-	virtual void resized() override;
-	void paint(Graphics& g) override;
+    virtual void resized() override;
+    void paint(Graphics& g) override;
 
-	String searchText() const;
-	void setSearchText(String const &searchText);
+    String searchText() const;
+    void setSearchText(String const& searchText);
 
 private:
-	void refreshClearButton();
+    void refreshClearButton();
 
-	std::function<void()> updateHandler_;
-	std::unique_ptr<TextEditor> nameSearchText_;
-	ImageComponent lookingGlass_;
-	std::unique_ptr<Button> clearNameSearch_;
+    std::function<void()> updateHandler_;
+    std::unique_ptr<TextEditor> nameSearchText_;
+    ImageComponent lookingGlass_;
+    std::unique_ptr<Button> clearNameSearch_;
 };

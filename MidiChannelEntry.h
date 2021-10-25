@@ -28,22 +28,20 @@
 
 #include "MidiChannel.h"
 
-class MidiChannelEntry : public Component,
-	private Slider::Listener
-{
+class MidiChannelEntry : public Component, private Slider::Listener {
 public:
-	typedef std::function<void(MidiChannel newChannel)> TSetMidiChannelCallback;
+    typedef std::function<void(MidiChannel newChannel)> TSetMidiChannelCallback;
 
-	MidiChannelEntry(TSetMidiChannelCallback callback);
+    MidiChannelEntry(TSetMidiChannelCallback callback);
 
-	// Call this to set the MidiChannel
-	void setValue(MidiChannel newChannel);
+    // Call this to set the MidiChannel
+    void setValue(MidiChannel newChannel);
 
-	// Implementation of behavior
-	virtual void sliderValueChanged(Slider* slider) override;
-	virtual void resized() override;
+    // Implementation of behavior
+    virtual void sliderValueChanged(Slider* slider) override;
+    virtual void resized() override;
 
 private:
-	TSetMidiChannelCallback callback_;
-	std::unique_ptr<Slider> slider_;
+    TSetMidiChannelCallback callback_;
+    std::unique_ptr<Slider> slider_;
 };

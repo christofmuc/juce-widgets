@@ -28,16 +28,16 @@
 
 class HorizontalLayoutContainer : public Component {
 public:
-	HorizontalLayoutContainer(Component *left, Component *right, double leftSize, double rightSize);
+    HorizontalLayoutContainer(Component *left, Component *right, double leftSize, double rightSize);
 
-	void resized() override;
+    void resized() override;
 
-	void setComponents(Component *left, Component *right);
+    void setComponents(Component *left, Component *right);
 
 private:
-	Component *left_;
-	Component *right_;
-	StretchableLayoutManager layout_;
+    Component *left_;
+    Component *right_;
+    StretchableLayoutManager layout_;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HorizontalLayoutContainer)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HorizontalLayoutContainer)
 };

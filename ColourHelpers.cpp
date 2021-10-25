@@ -26,12 +26,12 @@
 
 juce::Colour ColourHelpers::getUIColour(Component *component, LookAndFeel_V4::ColourScheme::UIColour colourToGet)
 {
-	auto lAF = &component->getLookAndFeel();
-	auto v4 = dynamic_cast<LookAndFeel_V4 *>(lAF);
-	if (v4) {
-		auto colorScheme = v4->getCurrentColourScheme();
-		return colorScheme.getUIColour(colourToGet);
-	}
-	jassertfalse;
-	return Colours::black;
+    auto lAF = &component->getLookAndFeel();
+    auto v4 = dynamic_cast<LookAndFeel_V4 *>(lAF);
+    if (v4) {
+        auto colorScheme = v4->getCurrentColourScheme();
+        return colorScheme.getUIColour(colourToGet);
+    }
+    jassertfalse;
+    return Colours::black;
 }

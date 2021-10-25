@@ -22,28 +22,28 @@
  * SOFTWARE.
  */
 
-#pragma  once
+#pragma once
 
 #include "JuceHeader.h"
 
-#include "TypedNamedValue.h"
 #include "MidiChannel.h"
+#include "TypedNamedValue.h"
 
 #include <set>
 
 class MidiChannelPropertyEditor : public TypedNamedValue {
 public:
-	MidiChannelPropertyEditor(std::string const &title, std::string const &sectionName);
-	void setValue(MidiChannel channel);
+    MidiChannelPropertyEditor(std::string const &title, std::string const &sectionName);
+    void setValue(MidiChannel channel);
 };
 
-class MidiDevicePropertyEditor: public TypedNamedValue {
+class MidiDevicePropertyEditor : public TypedNamedValue {
 public:
-	MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
+    MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
 
-	void refreshDeviceList();
-	void refreshDropdownList(std::vector<std::string> const &deviceList);
+    void refreshDeviceList();
+    void refreshDropdownList(std::vector<std::string> const &deviceList);
 
 private:
-	bool inputInsteadOfOutput_;
+    bool inputInsteadOfOutput_;
 };

@@ -24,32 +24,31 @@
 
 #include "ProgressHandlerWindow.h"
 
-ProgressHandlerWindow::ProgressHandlerWindow(std::string const &title, std::string const &message)
-	: ThreadWithProgressWindow(title, true, true)
+ProgressHandlerWindow::ProgressHandlerWindow(std::string const &title, std::string const &message) : ThreadWithProgressWindow(title, true, true)
 {
-	setMessage(message);
+    setMessage(message);
 }
 
 void ProgressHandlerWindow::run()
 {
-	while (!threadShouldExit()) {
-		Thread::sleep(100);
-	}
+    while (!threadShouldExit()) {
+        Thread::sleep(100);
+    }
 }
 
 bool ProgressHandlerWindow::shouldAbort() const
 {
-	return threadShouldExit();
+    return threadShouldExit();
 }
 
 void ProgressHandlerWindow::setProgressPercentage(double zeroToOne)
 {
-	setProgress(zeroToOne);
+    setProgress(zeroToOne);
 }
 
 void ProgressHandlerWindow::setMessage(std::string const &title)
 {
-	setStatusMessage(title);
+    setStatusMessage(title);
 }
 
 void ProgressHandlerWindow::onSuccess()
@@ -58,5 +57,5 @@ void ProgressHandlerWindow::onSuccess()
 
 void ProgressHandlerWindow::onCancel()
 {
-	signalThreadShouldExit();
+    signalThreadShouldExit();
 }

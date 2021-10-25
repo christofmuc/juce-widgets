@@ -30,5 +30,5 @@
 
 class CustomizedRotary : public Slider {
 public:
-	CustomizedRotary();
+    CustomizedRotary();
 };

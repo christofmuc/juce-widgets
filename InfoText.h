@@ -28,5 +28,5 @@
 
 class InfoText : public TextEditor {
 public:
-	InfoText();
+    InfoText();
 };

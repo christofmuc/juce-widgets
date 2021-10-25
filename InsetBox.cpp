@@ -26,12 +26,12 @@
 
 InsetBox::InsetBox(Component *content, BorderSize<int> borders) : content_(content), borders_(borders)
 {
-	addAndMakeVisible(content_);
+    addAndMakeVisible(content_);
 }
 
 void InsetBox::resized()
 {
-	if (content_) {
-		content_->setBoundsInset(borders_);
-	}
+    if (content_) {
+        content_->setBoundsInset(borders_);
+    }
 }
