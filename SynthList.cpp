@@ -74,10 +74,10 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, st
 	for (auto synth : synths_) {
 		auto button = new SynthButtonWithActiveLight(synth->getName(), synth->getColour(), synth->isActive());
 		button->onSynthSelected = [this](std::string const &name) {
-			for (auto synth : synths_) {
-				if (name == synth->getName()) {
+			for (auto s : synths_) {
+				if (name == s->getName()) {
 					setActiveListItem(name);
-					synthSwitchCallback_(synth);
+					synthSwitchCallback_(s);
 					return;
 				}
 			}

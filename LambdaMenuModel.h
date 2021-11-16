@@ -38,7 +38,7 @@ public:
 		std::function<void(int)> subitemSelected;
 		int subItemNo; // Automatically calculated
 	};
-	typedef std::map<int, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
+	typedef std::map<size_t, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
 
 	LambdaMenuModel(TMenuStructure const &menuStructure, ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons);
 

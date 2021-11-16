@@ -53,7 +53,7 @@ private:
 class CollapsibleContainer : public Component, private ChangeListener {
 public:
 	CollapsibleContainer(String const &title, Component *collapsible, bool defaultOpen);
-	virtual ~CollapsibleContainer();
+	virtual ~CollapsibleContainer() override;
 
 	virtual void resized() override;
 

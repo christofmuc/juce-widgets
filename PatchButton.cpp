@@ -35,7 +35,7 @@ public:
 		dragInfo_ = dragInfo;
 	}
 
-	void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+	void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override
 	{
 		auto& lf = getLookAndFeel();
 
@@ -124,7 +124,6 @@ void PatchButton::setActive(bool active)
 void PatchButton::resized()
 {
 	Rectangle<int> area(getLocalBounds());
-	auto upperRight = area;
 	button_->setBounds(area.reduced(2));
 	favoriteIcon_.setBounds(area);
 	synthName_.setBounds(area.reduced(4));

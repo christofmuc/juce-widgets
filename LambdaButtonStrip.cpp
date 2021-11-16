@@ -24,7 +24,7 @@
 
 #include "LambdaButtonStrip.h"
 
-LambdaButtonStrip::LambdaButtonStrip(int commandBaseIndex, Direction dir /*= Vertical*/) : dir_(dir), commandBaseIndex_(commandBaseIndex)
+LambdaButtonStrip::LambdaButtonStrip(int commandBaseIndex, Direction dir /*= Vertical*/) : commandBaseIndex_(commandBaseIndex), dir_(dir)
 {
 }
 
@@ -107,18 +107,26 @@ void LambdaButtonStrip::getAllCommands(Array<CommandID>& commands)
 void LambdaButtonStrip::getCommandInfo(CommandID commandID, ApplicationCommandInfo& result)
 {
 	int index = ((int)commandID) - commandBaseIndex_;
-	auto id = buttons_[index].first;
-	result.setInfo(id, buttons_[index].second->getButtonText(), "General Category", 0);
-	result.addDefaultKeypress(buttonDefinitions_[index].second.defaultKeycode, buttonDefinitions_[index].second.defaultModifiers);
-	bool active = buttonDefinitions_[index].second.canFire ? buttonDefinitions_[index].second.canFire() : true;
-	result.setActive(active);
-	buttons_[index].second->setEnabled(active);
+    if (index >= 0) {
+        size_t arrayindex = (size_t) index;
+        auto id = buttons_[arrayindex].first;
+        result.setInfo(id, buttons_[arrayindex].second->getButtonText(), "General Category", 0);
+        result.addDefaultKeypress(buttonDefinitions_[arrayindex].second.defaultKeycode,
+                                  buttonDefinitions_[arrayindex].second.defaultModifiers);
+        bool active = !buttonDefinitions_[arrayindex].second.canFire || buttonDefinitions_[arrayindex].second.canFire();
+        result.setActive(active);
+        buttons_[arrayindex].second->setEnabled(active);
+    }
 }
 
 bool LambdaButtonStrip::perform(const InvocationInfo& info)
 {
 	int index = ((int)info.commandID) - commandBaseIndex_;
-	auto id = buttons_[index].first;
-	buttonDefinitions_[index].second.functor();
-	return true;
+    if (index >= 0) {
+        size_t arrayindex = (size_t) index;
+        auto id = buttons_[arrayindex].first;
+        buttonDefinitions_[arrayindex].second.functor();
+        return true;
+    }
+    return false;
 }

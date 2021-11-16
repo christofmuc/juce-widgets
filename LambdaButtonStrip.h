@@ -29,9 +29,9 @@
 #include <map>
 
 struct ButtonDefinition {
-	ButtonDefinition(std::string const &text, std::function<void()> functor) : buttonText(text), functor(functor), defaultKeycode(0), defaultModifiers(0)  {}
-	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode) : buttonText(text), functor(functor) , defaultKeycode(defaultKeycode), defaultModifiers(0) {}
-	ButtonDefinition(std::string const &text, std::function<void()> functor, int defaultKeycode, ModifierKeys modifiers) : buttonText(text), functor(functor), defaultKeycode(defaultKeycode), defaultModifiers(modifiers) {}
+	ButtonDefinition(std::string const &text, std::function<void()> ftor) : buttonText(text), functor(ftor), defaultKeycode(0), defaultModifiers(0)  {}
+	ButtonDefinition(std::string const &text, std::function<void()> ftor, int defKeycode) : buttonText(text), functor(ftor) , defaultKeycode(defKeycode), defaultModifiers(0) {}
+	ButtonDefinition(std::string const &text, std::function<void()> ftor, int defKeycode, ModifierKeys modifiers) : buttonText(text), functor(ftor), defaultKeycode(defKeycode), defaultModifiers(modifiers) {}
 	ButtonDefinition(std::string const &text, std::function<void()> function, std::function<bool()> isEnabled) : buttonText(text), functor(function), defaultKeycode(0), defaultModifiers(0), canFire(isEnabled) {}
 
 	std::string buttonText;
@@ -50,7 +50,7 @@ public:
 	typedef std::vector<std::pair<std::string, ButtonDefinition>> TButtonMap;
 
 	LambdaButtonStrip(int commandBaseIndex, Direction dir = Direction::Vertical);
-	virtual ~LambdaButtonStrip();
+	virtual ~LambdaButtonStrip() override;
 
 	void setButtonDefinitions(TButtonMap const &definitions);
 

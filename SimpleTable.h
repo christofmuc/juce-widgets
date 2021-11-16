@@ -34,7 +34,8 @@ template <class T>
 class SimpleTable : public Component, public TableListBoxModel {
 public:
 
-	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam) : items_(data), rowSelectedHandler(rowSelectedHandlerParam) {
+	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam)
+        : rowSelectedHandler(rowSelectedHandlerParam), items_(data) {
 		addAndMakeVisible(table_);
 
 		numColumns_ = 1;
@@ -76,6 +77,7 @@ public:
 	}
 
 	virtual void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override {
+        ignoreUnused(width, height);
 		auto alternateColour = getLookAndFeel().findColour(ListBox::backgroundColourId).interpolatedWith(getLookAndFeel().findColour(ListBox::textColourId), 0.03f);
 		if (rowIsSelected) {
 			g.fillAll(Colours::lightblue);

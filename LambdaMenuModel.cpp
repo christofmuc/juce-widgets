@@ -33,7 +33,7 @@ LambdaMenuModel::LambdaMenuModel(TMenuStructure const &menuStructure, Applicatio
 StringArray LambdaMenuModel::getMenuBarNames()
 {
 	StringArray result;
-	for (int i = 0; i < menuStructure_.size(); i++) {
+	for (size_t i = 0; i < menuStructure_.size(); i++) {
 		result.add(menuStructure_[i].first);
 	}
 	return result;
@@ -43,7 +43,11 @@ PopupMenu LambdaMenuModel::getMenuForIndex(int topLevelMenuIndex, const String& 
 {
 	ignoreUnused(menuName);
 	PopupMenu menu;
-	for (auto &item : menuStructure_[topLevelMenuIndex].second) {
+    if (topLevelMenuIndex < 0) {
+        return menu;
+    }
+
+	for (auto &item : menuStructure_[(size_t) topLevelMenuIndex].second) {
 		if (item.hasSubmenu) {
 			// Found!
 			PopupMenu submenu = item.getMenu();
@@ -70,8 +74,11 @@ PopupMenu LambdaMenuModel::getMenuForIndex(int topLevelMenuIndex, const String& 
 
 void LambdaMenuModel::menuItemSelected(int menuItemID, int topLevelMenuIndex)
 {
+    if (topLevelMenuIndex < 0) {
+        return;
+    }
 	// Commands will fire automatically, but submenus need special treatment here
-	for (auto const &item : menuStructure_[topLevelMenuIndex].second) {
+	for (auto const &item : menuStructure_[(size_t) topLevelMenuIndex].second) {
 		if (item.hasSubmenu && menuItemID >= item.baseItemID && item.baseItemID < (menuItemID + item.subItemNo)) {
 			item.subitemSelected(menuItemID - item.baseItemID);
 		}
