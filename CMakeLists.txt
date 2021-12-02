@@ -93,7 +93,7 @@ target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
 
 target_precompile_headers(juce-widgets 
-PUBLIC
+PRIVATE
 	<JuceHeader.h>
 	<memory>
 	<map>
