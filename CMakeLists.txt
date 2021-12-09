@@ -91,20 +91,18 @@ add_library(juce-widgets ${Sources})
 target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} ${APPLE_BOOST} fmt::fmt)
 target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
-
-target_precompile_headers(juce-widgets 
-PRIVATE
-	<JuceHeader.h>
-	<memory>
-	<map>
-	<set>
-	<string>
-)
-
-# Pedantic about warnings
+# Pedantic about warnings and precompiled headers
 if (MSVC)
     # warning level 4 and all warnings as errors
     target_compile_options(juce-widgets PRIVATE /W4 /WX)
+	target_precompile_headers(juce-widgets 
+		PRIVATE
+			<JuceHeader.h>
+			<memory>
+			<map>
+			<set>
+			<string>
+		)	    
 else()
     # lots of warnings and all warnings as errors
     #target_compile_options(juce-widgets PRIVATE -Wall -Wextra -pedantic -Werror)
