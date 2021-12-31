@@ -49,3 +49,11 @@ void RecycleBin::itemDropped(const SourceDetails& dragSourceDetails)
 {
     if (onItemDropped) onItemDropped(dragSourceDetails.description);
 }
+
+void RecycleBin::mouseUp(const MouseEvent& event)
+{
+    ignoreUnused(event);
+    if (onClicked) {
+        onClicked();
+    }
+}

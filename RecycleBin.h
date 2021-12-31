@@ -36,6 +36,9 @@ public:
     void itemDropped(const SourceDetails& dragSourceDetails) override;
 
     std::function<void(var)> onItemDropped;
+    std::function<void()> onClicked;
+
+    virtual void mouseUp(const MouseEvent& event) override;
 
 private:
     ImageComponent wasteBin_;
