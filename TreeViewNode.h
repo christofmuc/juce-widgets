@@ -31,7 +31,7 @@ public:
     typedef std::function<std::vector<TreeViewItem*>()> TChildGenerator;
     typedef std::function<void(String)> TClickedHandler;
     typedef std::function<bool(juce::var)> TAcceptHandler;
-    typedef std::function<void(juce::var)> TDropHandler;
+    typedef std::function<void(juce::var, int)> TDropHandler;
     typedef std::function<var()> TDragStartHandler;
 
     TreeViewNode(String text, String id);

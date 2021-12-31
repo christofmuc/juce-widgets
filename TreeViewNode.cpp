@@ -126,10 +126,9 @@ bool TreeViewNode::isInterestedInDragSource(const DragAndDropTarget::SourceDetai
 
 void TreeViewNode::itemDropped(const DragAndDropTarget::SourceDetails& dragSourceDetails, int insertIndex)
 {
-    ignoreUnused(insertIndex);
     String name = dragSourceDetails.description;
     // SimpleLogger::instance()->postMessage("Item dropped: " + name + " at " + String(insertIndex));
-    onItemDropped(dragSourceDetails.description);
+    onItemDropped(dragSourceDetails.description, insertIndex);
 }
 
 juce::var TreeViewNode::getDragSourceDescription()
