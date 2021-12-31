@@ -48,27 +48,6 @@ std::map<int, std::string> sMidiChannelLookup = {
     { 18, "Invalid" },
 };
 
-std::vector<std::string> currentOutputDevices()
-{
-    std::vector<std::string> outputs;
-    auto devices = MidiOutput::getAvailableDevices();
-    for (const auto &device : devices) {
-        outputs.push_back(device.name.toStdString());
-    }
-    return outputs;
-}
-
-// TODO this should go into MidiController
-std::vector<std::string> currentInputDevices()
-{
-    std::vector<std::string> inputs;
-    auto devices = MidiInput::getAvailableDevices();
-    for (const auto &device : devices) {
-        inputs.push_back(device.name.toStdString());
-    }
-    return inputs;
-}
-
 MidiChannelPropertyEditor::MidiChannelPropertyEditor(std::string const &title, std::string const &sn) :
     TypedNamedValue(title, sn, 18, sMidiChannelLookup)
 {
@@ -98,22 +77,44 @@ MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std
 void MidiDevicePropertyEditor::refreshDeviceList()
 {
     if (inputInsteadOfOutput_) {
-        refreshDropdownList(currentInputDevices());
+        refreshDropdownList(juce::MidiInput::getAvailableDevices());
     }
     else {
-        refreshDropdownList(currentOutputDevices());
+        refreshDropdownList(juce::MidiOutput::getAvailableDevices());
     }
     // Need to call this to calculate minimum and maximum value. Smell!
     setLookup(lookup_);
 }
 
-void MidiDevicePropertyEditor::refreshDropdownList(std::vector<std::string> const &deviceList)
+void MidiDevicePropertyEditor::refreshDropdownList(juce::Array<juce::MidiDeviceInfo> deviceList)
 {
     int i = 0;
     lookup_.clear();
+    identifierPerRow_.clear();
     for (const auto &device : deviceList) {
-        lookup_[++i] = device;
+        lookup_[++i] = device.name.toStdString();
+        identifierPerRow_[i] = device.identifier;
+        devices_[device.identifier] = device;
     }
     // Need to call this to calculate minimum and maximum value. Smell!
     setLookup(lookup_);
+}
+
+juce::MidiDeviceInfo MidiDevicePropertyEditor::selectedDevice() const
+{
+    int rowSelected = int(value_.getValue());
+    auto id = identifierPerRow_.find(rowSelected);
+    String selected = id->second;
+    return devices_.find(selected)->second;
+}
+
+void MidiDevicePropertyEditor::setSelectedDevice(juce::MidiDeviceInfo const& device)
+{
+    for (auto row : identifierPerRow_) {
+        if (row.second == device.identifier) {
+            value() = row.first;
+            return;
+        }
+    }
+    jassertfalse;
 }
