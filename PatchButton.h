@@ -66,3 +66,19 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchButton)
 };
+
+class PatchButtonWithDropTarget : public PatchButton, public juce::DragAndDropTarget {
+public:
+    using PatchButton::PatchButton;
+
+    typedef std::function<bool(juce::var)> TAcceptHandler;
+    typedef std::function<void(juce::var)> TDropHandler;
+
+    TAcceptHandler acceptsItem;
+    TDropHandler onItemDropped;
+
+    // DragAndDropTarget implementation
+    bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
+    void itemDropped(const SourceDetails& dragSourceDetails) override;
+
+};

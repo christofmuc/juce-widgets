@@ -26,6 +26,7 @@
 
 #include "BinaryResources.h"
 #include "IconHelper.h"
+#include "Logger.h"
 
 class PatchTextButtonFixedFontDraggable : public TextButton {
 public:
@@ -202,4 +203,16 @@ void PatchButton::buttonClicked(Button*)
 bool PatchButton::getToggleState() const
 {
     return button_->getToggleState();
+}
+
+bool PatchButtonWithDropTarget::isInterestedInDragSource(const SourceDetails& dragSourceDetails)
+{
+    return onItemDropped != nullptr && (acceptsItem == nullptr || acceptsItem(dragSourceDetails.description));
+}
+
+void PatchButtonWithDropTarget::itemDropped(const SourceDetails& dragSourceDetails)
+{
+    String name = dragSourceDetails.description;
+    SimpleLogger::instance()->postMessage("Item dropped: " + name);
+    onItemDropped(dragSourceDetails.description);
 }
