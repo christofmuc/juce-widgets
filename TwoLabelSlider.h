@@ -34,6 +34,8 @@ public:
 
 	virtual void resized() override;
 
+	void setTextLabels(String const& left, String const& right);
+
 private:
 	int labelWidth_;
 

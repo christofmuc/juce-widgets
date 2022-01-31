@@ -46,3 +46,9 @@ void TwoLabelSlider::resized()
 	rightLabel_.setBounds(area.removeFromRight(labelWidth_));
 	slider_.setBounds(area.withTrimmedLeft(8).withTrimmedRight(8));
 }
+
+void TwoLabelSlider::setTextLabels(String const& left, String const& right)
+{
+	leftLabel_.setText(left, dontSendNotification);
+	rightLabel_.setText(right, dontSendNotification);
+}
