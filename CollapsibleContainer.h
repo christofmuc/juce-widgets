@@ -29,39 +29,39 @@
 
 class CollapseButton : public Button {
 public:
-    CollapseButton(bool defaultOpen);
+	CollapseButton(bool defaultOpen);
 
 protected:
-    void paintButton(Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+	void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 };
 
 class CollapseHeader : public Component, public ChangeBroadcaster, private Button::Listener {
 public:
-    CollapseHeader(String const &title, bool defaultOpen);
+	CollapseHeader(String const &title, bool defaultOpen);
 
-    virtual void resized() override;
+	virtual void resized() override;
 
-    bool isOpen() const;
+	bool isOpen() const;
 
 private:
-    void buttonClicked(Button *) override;
+	void buttonClicked(Button*) override;
 
-    Label text_;
-    CollapseButton collapse_;
+	Label text_;
+	CollapseButton collapse_;
 };
 
 class CollapsibleContainer : public Component, private ChangeListener {
 public:
-    CollapsibleContainer(String const &title, Component *collapsible, bool defaultOpen);
-    virtual ~CollapsibleContainer();
+	CollapsibleContainer(String const &title, Component *collapsible, bool defaultOpen);
+	virtual ~CollapsibleContainer() override;
 
-    virtual void resized() override;
+	virtual void resized() override;
 
-    bool isOpen() const;
+	bool isOpen() const;
 
 private:
-    void changeListenerCallback(ChangeBroadcaster *source) override;
+	void changeListenerCallback(ChangeBroadcaster* source) override;
 
-    CollapseHeader collapseHeader_;
-    Component *collapsible_;
+	CollapseHeader collapseHeader_;
+	Component *collapsible_;
 };
