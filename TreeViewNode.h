@@ -34,7 +34,9 @@ public:
     typedef std::function<void(juce::var, int)> TDropHandler;
     typedef std::function<var()> TDragStartHandler;
 
-    TreeViewNode(String text, String id);
+    TreeViewNode(String text, String id, bool editable = false);
+
+    Value textValue;
 
     TChildGenerator onGenerateChildren;
     TClickedHandler onSelected;
@@ -65,9 +67,12 @@ public:
 
     virtual var getDragSourceDescription() override;
 
+    virtual Component* createItemComponent() override;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TreeViewNode)
 
 private:
     String text_;
     String id_;
+    bool editable_;
 };

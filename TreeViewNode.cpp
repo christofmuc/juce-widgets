@@ -24,15 +24,30 @@
 
 #include "TreeViewNode.h"
 
+class EditOnDoubleClickLabel : public Label {
+public:
+    using Label::Label;
 
-TreeViewNode::TreeViewNode(String text, String id) : text_(text), id_(id)
+    virtual void mouseDown(const MouseEvent& event) override
+    {
+        // Pass to parent
+        auto parent = getParentComponent();
+        if (parent) {
+            parent->mouseDown(event.getEventRelativeTo(parent));
+        }
+        Label::mouseDown(event);
+    }
+};
+
+
+TreeViewNode::TreeViewNode(String text, String id, bool editable /* = false */) : text_(text), id_(id), editable_(editable)
 {
+    textValue = text;
 }
 
 void TreeViewNode::toggleOpenness()
 {
-    auto open = getOpenness();
-    switch (open) {
+    switch (getOpenness()) {
     case Openness::opennessClosed:
         setOpenness(TreeViewItem::Openness::opennessOpen);
         break;
@@ -60,6 +75,10 @@ void TreeViewNode::itemOpennessChanged(bool isNowOpen)
 
 void TreeViewNode::paintItem(Graphics& g, int width, int height)
 {
+    if (editable_) {
+        // Editable items have a custom component and don't paint themselves
+        return;
+    }
     auto& lf = LookAndFeel::getDefaultLookAndFeel();
     g.setColour(lf.findColour(Label::textColourId));
     g.drawText(text_, 0, 0, width, height, Justification::centredLeft);
@@ -114,8 +133,10 @@ void TreeViewNode::itemClicked(const MouseEvent&)
 
 void TreeViewNode::itemDoubleClicked(const MouseEvent&)
 {
-    if (onDoubleClick) {
-        onDoubleClick(id_);
+    if (!editable_) {
+        if (onDoubleClick) {
+            onDoubleClick(id_);
+        }
     }
 }
 
@@ -137,6 +158,17 @@ juce::var TreeViewNode::getDragSourceDescription()
         return onItemDragged();
     }
     return {};
+}
+
+Component* TreeViewNode::createItemComponent()
+{
+    if (editable_) {
+        auto labelCreated = new EditOnDoubleClickLabel(id_, text_);
+        labelCreated->setEditable(false, true, true);
+        labelCreated->getTextValue().referTo(textValue);
+        return labelCreated;
+    }
+    return nullptr;
 }
 
 juce::String TreeViewNode::id() const
