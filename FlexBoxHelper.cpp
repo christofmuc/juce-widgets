@@ -40,16 +40,16 @@ juce::Rectangle<float> FlexBoxHelper::computeFlexBoxSize(FlexBox box)
 }
 
 juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(Component* component, Component* parent, OwnedArray<Button>& buttons,
-    Rectangle<int> const& bounds)
+    Rectangle<int> const& bounds, int buttonWidth, int buttonHeight)
 {
     std::vector<Component*> components;
     for (auto button : buttons)
         components.push_back(button);
-    return determineSizeForButtonLayout(component, parent, components, bounds);
+    return determineSizeForButtonLayout(component, parent, components, bounds, buttonWidth, buttonHeight);
 }
 
 juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(Component* component, Component* parent, std::vector<Component*> components,
-    Rectangle<int> const& bounds)
+    Rectangle<int> const& bounds, int buttonWidth, int buttonHeight)
 {
     // Using Flex Box as we need an overflow
     FlexBox fb;
@@ -59,11 +59,11 @@ juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(Component* co
     // fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
     fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
     for (auto filterbutton : components) {
-        filterbutton->setSize(LAYOUT_CHECKBOX_WIDTH, LAYOUT_LINE_HEIGHT);
+        filterbutton->setSize(buttonWidth, buttonHeight);
         ((ToggleButton*) filterbutton)->changeWidthToFitText();
         fb.items.add(FlexItem(*filterbutton)
                          .withMinWidth((float) filterbutton->getWidth() + 20.0f)
-                         .withMinHeight(LAYOUT_LINE_HEIGHT)
+                         .withMinHeight(static_cast<float>(buttonHeight))
                          .withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
     }
     auto newBounds = component->getLocalArea(parent, bounds); // Need to work in local coordinates

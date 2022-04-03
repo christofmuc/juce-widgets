@@ -26,12 +26,14 @@
 
 #include "JuceHeader.h"
 
+#include "LayoutConstants.h"
+
 class FlexBoxHelper {
 public:
     static Rectangle<float> computeFlexBoxSize(FlexBox box);
 
     static Rectangle<float> determineSizeForButtonLayout(Component* component, Component* parent, std::vector<Component*> components,
-        Rectangle<int> const& bounds);
+        Rectangle<int> const& bounds, int buttonWidth = LAYOUT_BUTTON_WIDTH, int buttonHeight = LAYOUT_LINE_HEIGHT);
     static Rectangle<float> determineSizeForButtonLayout(Component* component, Component* parent, OwnedArray<Button>& buttons,
-        Rectangle<int> const& bounds);
+        Rectangle<int> const& bounds, int buttonWidth = LAYOUT_BUTTON_WIDTH, int buttonHeight = LAYOUT_LINE_HEIGHT);
 };

@@ -54,6 +54,7 @@ public:
 
     int numCategories() const;
     int usedHeight() const;
+    void setButtonSize(int width, int height);
 
 private:
     bool useCheckboxes_;
@@ -61,6 +62,8 @@ private:
     std::vector<Category> categories_;
     OwnedArray<Button> categoryFilter_;
     std::function<void(Category)> updateHandler_;
+    int buttonWidth_;
+    int buttonHeight_;
     int usedHeight_; // Cache layout result on how much y space we need on screen
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CategoryButtons)

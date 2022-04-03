@@ -45,9 +45,11 @@ private:
 };
 
 CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons,
-    bool useCheckboxes) :
-    updateHandler_(updated),
-    useCheckboxes_(useCheckboxes), colouredButtons_(colouredButtons), usedHeight_(0)
+    bool useCheckboxes) : updateHandler_(updated)
+    , useCheckboxes_(useCheckboxes)
+    , colouredButtons_(colouredButtons)
+    , usedHeight_(0)
+    , buttonWidth_(LAYOUT_BUTTON_WIDTH), buttonHeight_(LAYOUT_LINE_HEIGHT)
 {
     setCategories(categories);
 }
@@ -112,11 +114,11 @@ void CategoryButtons::resized()
     // fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
     fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
     for (auto filterbutton : categoryFilter_) {
-        filterbutton->setSize(LAYOUT_CHECKBOX_WIDTH, LAYOUT_LINE_HEIGHT);
+        filterbutton->setSize(buttonWidth_, buttonHeight_);
         ((ToggleButton *) filterbutton)->changeWidthToFitText();
         fb.items.add(FlexItem(*filterbutton)
                          .withMinWidth((float) filterbutton->getWidth() + 20.0f)
-                         .withMinHeight(LAYOUT_LINE_HEIGHT)
+                         .withMinHeight(static_cast<float>(buttonHeight_))
                          .withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)
     }
     fb.performLayout(getLocalBounds().toFloat());
@@ -137,7 +139,7 @@ void CategoryButtons::buttonClicked(Button *button)
 
 juce::Rectangle<float> CategoryButtons::determineSubAreaForButtonLayout(Component *parent, Rectangle<int> const &bounds)
 {
-    return FlexBoxHelper::determineSizeForButtonLayout(this, parent, categoryFilter_, bounds);
+    return FlexBoxHelper::determineSizeForButtonLayout(this, parent, categoryFilter_, bounds, buttonWidth_, buttonHeight_);
 }
 
 int CategoryButtons::numCategories() const
@@ -148,6 +150,13 @@ int CategoryButtons::numCategories() const
 int CategoryButtons::usedHeight() const
 {
     return usedHeight_;
+}
+
+void CategoryButtons::setButtonSize(int width, int height) 
+{
+    buttonWidth_ = width;
+    buttonHeight_ = height;
+    resized();
 }
 
 void CategoryButtons::setActive(std::set<Category> const &activeCategories)
