@@ -95,14 +95,16 @@ target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 if (MSVC)
     # warning level 4 and all warnings as errors
     target_compile_options(juce-widgets PRIVATE /W4 /WX)
-	target_precompile_headers(juce-widgets 
-		PRIVATE
-			<JuceHeader.h>
-			<memory>
-			<map>
-			<set>
-			<string>
-		)	    
+	if(REALLY_USE_PRECOMPILED_HEADERS)
+		target_precompile_headers(juce-widgets 
+			PRIVATE
+				<JuceHeader.h>
+				<memory>
+				<map>
+				<set>
+				<string>
+			)	    
+	endif()
 else()
     # lots of warnings and all warnings as errors
     #target_compile_options(juce-widgets PRIVATE -Wall -Wextra -pedantic -Werror)
