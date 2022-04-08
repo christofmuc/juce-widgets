@@ -44,6 +44,11 @@ void PropertyEditor::resized()
     propertyPanel_.setBounds(area);
 }
 
+int PropertyEditor::getTotalContentHeight()
+{
+    return propertyPanel_.getTotalContentHeight();
+}
+
 PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamedValue> property)
 {
     switch (property->valueType()) {

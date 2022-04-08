@@ -36,6 +36,8 @@ public:
 
     virtual void resized() override;
 
+    int getTotalContentHeight();
+
     void setProperties(TProperties const &props);
     void clear();
 
