@@ -44,6 +44,9 @@ public:
 
     static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
 
+    String getLayout();
+    void fromLayout(String layout);
+
 private:
     virtual void mouseUp(const MouseEvent &event) override;
 

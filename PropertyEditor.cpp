@@ -119,6 +119,21 @@ void PropertyEditor::clear()
     propertyPanel_.clear();
 }
 
+String PropertyEditor::getLayout()
+{
+    MemoryOutputStream output(512);
+    propertyPanel_.getOpennessState()->writeTo(output);
+    return output.toUTF8();
+}
+
+void PropertyEditor::fromLayout(String layout)
+{
+    auto element = XmlDocument::parse(layout);
+    if (element) {
+        propertyPanel_.restoreOpennessState(*element);
+    }
+}
+
 void PropertyEditor::mouseUp(const MouseEvent &)
 {
     auto resizeThis = getParentComponent();
