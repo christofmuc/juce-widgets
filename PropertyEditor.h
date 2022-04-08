@@ -31,8 +31,9 @@
 class PropertyEditor : public Component {
 public:
     typedef std::vector<std::shared_ptr<TypedNamedValue>> TProperties;
-    PropertyEditor();
-    PropertyEditor(TProperties &properties);
+    explicit PropertyEditor(bool dynamicLayout = false);
+    PropertyEditor(TProperties &properties, bool dynamicLayout = false);
+    virtual ~PropertyEditor() override;
 
     virtual void resized() override;
 
@@ -44,6 +45,9 @@ public:
     static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
 
 private:
+    virtual void mouseUp(const MouseEvent &event) override;
+
+    bool dynamicLayout_;
     PropertyPanel propertyPanel_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PropertyEditor)

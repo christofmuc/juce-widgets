@@ -28,14 +28,24 @@
 #include "gin/gin.h"
 #endif
 
-PropertyEditor::PropertyEditor()
+PropertyEditor::PropertyEditor(bool dynamicLayout /* = false*/) : dynamicLayout_(dynamicLayout)
 {
     addAndMakeVisible(propertyPanel_);
+    if (dynamicLayout_) {
+        propertyPanel_.addMouseListener(this, true);
+    }
 }
 
-PropertyEditor::PropertyEditor(TProperties &properties) : PropertyEditor()
+PropertyEditor::PropertyEditor(TProperties &properties, bool dynamicLayout /* = false */) : PropertyEditor(dynamicLayout)
 {
     setProperties(properties);
+}
+
+PropertyEditor::~PropertyEditor()
+{
+    if (dynamicLayout_) {
+        propertyPanel_.removeMouseListener(this);
+    }
 }
 
 void PropertyEditor::resized()
@@ -107,4 +117,10 @@ void PropertyEditor::setProperties(TProperties const &props)
 void PropertyEditor::clear()
 {
     propertyPanel_.clear();
+}
+
+void PropertyEditor::mouseUp(const MouseEvent &)
+{
+    auto resizeThis = getParentComponent();
+    MessageManager::callAsync([resizeThis]() { resizeThis->resized(); });
 }
