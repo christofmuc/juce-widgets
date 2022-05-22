@@ -27,6 +27,8 @@
 #include "BinaryResources.h"
 #include "IconHelper.h"
 
+#include "Logger.h"
+
 class PatchTextButtonFixedFontDraggable : public TextButton {
 public:
 	using TextButton::TextButton;
