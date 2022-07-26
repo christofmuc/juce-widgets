@@ -116,6 +116,11 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 	synthName_.setJustificationType(Justification::bottomLeft);
 }
 
+void PatchButton::updateId(int id)
+{
+    id_ = id;
+}
+
 void PatchButton::setActive(bool active)
 {
 	active_ = active;

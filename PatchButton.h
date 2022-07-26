@@ -54,6 +54,9 @@ public:
 
     virtual void buttonClicked(Button *) override;
 
+    // This is required when using the PatchButton with a scrollable list model, which reuses the buttons
+    void updateId(int id);
+
 private:
     std::function<void(int)> clicked_;
     std::unique_ptr<TextButton> button_;
