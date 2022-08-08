@@ -67,7 +67,7 @@ public:
 
     virtual var getDragSourceDescription() override;
 
-    virtual Component* createItemComponent() override;
+    virtual std::unique_ptr<Component> createItemComponent() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TreeViewNode)
 

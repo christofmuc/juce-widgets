@@ -160,10 +160,10 @@ juce::var TreeViewNode::getDragSourceDescription()
     return {};
 }
 
-Component* TreeViewNode::createItemComponent()
+std::unique_ptr<Component> TreeViewNode::createItemComponent()
 {
     if (editable_) {
-        auto labelCreated = new EditOnDoubleClickLabel(id_, text_);
+        auto labelCreated = std::make_unique<EditOnDoubleClickLabel>(id_, text_);
         labelCreated->setEditable(false, true, true);
         labelCreated->getTextValue().referTo(textValue);
         return labelCreated;
