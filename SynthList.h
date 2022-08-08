@@ -53,6 +53,8 @@ private:
 
 class SynthList : public Component, public ChangeListener {
 public:
+    SynthList();
+
     void setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback);
     void setActiveListItem(std::string const &active);
 
@@ -64,5 +66,5 @@ public:
 private:
     std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback_;
     std::vector<std::shared_ptr<ActiveListItem>> synths_;
-    OwnedArray<SynthButtonWithActiveLight> buttons_;
+    std::unique_ptr<TabbedButtonBar> synthButtons_;
 };

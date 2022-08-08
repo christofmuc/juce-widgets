@@ -66,49 +66,64 @@ void SynthButtonWithActiveLight::setActiveState(bool activeState)
 	label_.setColour(Label::ColourIds::backgroundColourId, activeState ? Colours::darkgreen : Colours::darkgrey);
 }
 
+class TabsWithListener : public TabbedButtonBar
+{
+public:
+    using TabbedButtonBar::TabbedButtonBar;
+
+    virtual void currentTabChanged (int newCurrentTabIndex, const String& newCurrentTabName) override
+    {
+        ignoreUnused(newCurrentTabIndex);
+        if (synthClicked)
+        {
+            synthClicked(newCurrentTabName.toStdString());
+        }
+    }
+
+    std::function<void(std::string)> synthClicked;
+};
+
+SynthList::SynthList() : synthButtons_()
+{
+    std::unique_ptr<TabsWithListener> synthButtons = std::make_unique<TabsWithListener>(TabbedButtonBar::Orientation::TabsAtTop);
+    addAndMakeVisible(*synthButtons);
+    synthButtons->synthClicked = [this](std::string name) {
+        for (auto s : synths_) {
+            if (name == s->getName()) {
+                setActiveListItem(name);
+                synthSwitchCallback_(s);
+                return;
+            }
+        }
+        jassertfalse;
+    };
+    synthButtons_ = std::move(synthButtons);
+}
+
 void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback)
 {
-	buttons_.clear();
+    synthButtons_->clearTabs();
 	synths_ = synths;
 	synthSwitchCallback_ = synthSwitchCallback;
 	for (auto synth : synths_) {
-		auto button = new SynthButtonWithActiveLight(synth->getName(), synth->getColour(), synth->isActive());
-		button->onSynthSelected = [this](std::string const &name) {
-			for (auto s : synths_) {
-				if (name == s->getName()) {
-					setActiveListItem(name);
-					synthSwitchCallback_(s);
-					return;
-				}
-			}
-			jassertfalse;
-		};
-		button->setToggleState(buttons_.size() == 0);
-		buttons_.add(button);
-		addAndMakeVisible(button);
+        synthButtons_->addTab(synth->getName(), synth->getColour(), -1);
 	}
 	resized();
 }
 
 void SynthList::setActiveListItem(std::string const &active)
 {
-	for (auto button : buttons_) {
-		button->setToggleState(button->name() == active);
-	}
+    for (int i = 0; i < synthButtons_->getNumTabs(); i++)
+    {
+        if (synthButtons_->getTabNames()[i] == String(active)) {
+            synthButtons_->setCurrentTabIndex(i, false);
+        }
+    }
 }
 
 void SynthList::resized() {
 	Rectangle<int> area(getLocalBounds());
-	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), LAYOUT_BUTTON_WIDTH + LAYOUT_INSET_NORMAL) : 0;
-
-	auto activeArea = area.removeFromRight(width * buttons_.size());
-
-	// Horizontal layout
-	for (int i = 0; i < buttons_.size(); i++) {
-		int rightMargin = 0;
-		if (i != buttons_.size() - 1) rightMargin = LAYOUT_INSET_NORMAL;
-		buttons_[i]->setBounds(activeArea.removeFromLeft(width).withTrimmedRight(rightMargin));
-	}
+    synthButtons_->setBounds(area);
 }
 
 void SynthList::changeListenerCallback(ChangeBroadcaster*)
@@ -116,7 +131,8 @@ void SynthList::changeListenerCallback(ChangeBroadcaster*)
 	// Update the availability of the synths (not the list itself)
 	int i = 0;
 	for (auto synth : synths_) {
-		buttons_[i]->setActiveState(synth->isActive());
+        //TODO this should change the color of synth if available
+		//buttons_[i]->setActiveState(synth->isActive());
 		i++;
 	}
 }
