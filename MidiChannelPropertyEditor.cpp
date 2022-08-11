@@ -48,23 +48,23 @@ std::map<int, std::string> sMidiChannelLookup = {
     { 18, "Invalid" },
 };
 
-std::vector<std::string> currentOutputDevices()
+static std::vector<juce::MidiDeviceInfo> currentOutputDevices()
 {
-    std::vector<std::string> outputs;
+    std::vector<juce::MidiDeviceInfo> outputs;
     auto devices = MidiOutput::getAvailableDevices();
     for (const auto &device : devices) {
-        outputs.push_back(device.name.toStdString());
+        outputs.push_back(device);
     }
     return outputs;
 }
 
 // TODO this should go into MidiController
-std::vector<std::string> currentInputDevices()
+static std::vector<juce::MidiDeviceInfo> currentInputDevices()
 {
-    std::vector<std::string> inputs;
+    std::vector<juce::MidiDeviceInfo> inputs;
     auto devices = MidiInput::getAvailableDevices();
     for (const auto &device : devices) {
-        inputs.push_back(device.name.toStdString());
+        inputs.push_back(device);
     }
     return inputs;
 }
@@ -107,12 +107,12 @@ void MidiDevicePropertyEditor::refreshDeviceList()
     setLookup(lookup_);
 }
 
-void MidiDevicePropertyEditor::refreshDropdownList(std::vector<std::string> const &deviceList)
+void MidiDevicePropertyEditor::refreshDropdownList(std::vector<juce::MidiDeviceInfo> const &deviceList)
 {
     int i = 0;
     lookup_.clear();
     for (const auto &device : deviceList) {
-        lookup_[++i] = device;
+        lookup_[++i] = device.name.toStdString();
     }
     // Need to call this to calculate minimum and maximum value. Smell!
     setLookup(lookup_);
