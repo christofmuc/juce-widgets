@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@
 
 #include "InsetBox.h"
 
-HorizontalLayoutContainer::HorizontalLayoutContainer(Component *left, Component *right, double leftSize, double rightSize) :
-    left_(new InsetBox(left, BorderSize<int>(0, 0, 0, 4))), right_(new InsetBox(right, BorderSize<int>(0, 4, 0, 0)))
+HorizontalLayoutContainer::HorizontalLayoutContainer(juce::Component *left, juce::Component *right, double leftSize, double rightSize) :
+    left_(new InsetBox(left, juce::BorderSize<int>(0, 0, 0, 4))), right_(new InsetBox(right, juce::BorderSize<int>(0, 4, 0, 0)))
 {
     addAndMakeVisible(left_);
     addAndMakeVisible(right_);
@@ -38,12 +38,12 @@ HorizontalLayoutContainer::HorizontalLayoutContainer(Component *left, Component 
 
 void HorizontalLayoutContainer::resized()
 {
-    Rectangle<int> area(getLocalBounds());
-    Component *components[] = { left_, right_ };
+    juce::Rectangle<int> area(getLocalBounds());
+    juce::Component *components[] = { left_, right_ };
     layout_.layOutComponents(components, 2, area.getX(), area.getY(), area.getWidth(), area.getHeight(), false, true);
 }
 
-void HorizontalLayoutContainer::setComponents(Component *left, Component *right)
+void HorizontalLayoutContainer::setComponents(juce::Component *left, juce::Component *right)
 {
     if (left != left_) {
         delete left_;

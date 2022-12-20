@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,14 @@
 
 #include "ColourHelpers.h"
 
-juce::Colour ColourHelpers::getUIColour(Component *component, LookAndFeel_V4::ColourScheme::UIColour colourToGet)
+juce::Colour ColourHelpers::getUIColour(juce::Component *component, juce::LookAndFeel_V4::ColourScheme::UIColour colourToGet)
 {
     auto lAF = &component->getLookAndFeel();
-    auto v4 = dynamic_cast<LookAndFeel_V4 *>(lAF);
+    auto v4 = dynamic_cast<juce::LookAndFeel_V4 *>(lAF);
     if (v4) {
         auto colorScheme = v4->getCurrentColourScheme();
         return colorScheme.getUIColour(colourToGet);
     }
     jassertfalse;
-    return Colours::black;
+    return juce::Colours::black;
 }

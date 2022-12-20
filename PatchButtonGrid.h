@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "LayoutConstants.h"
 
-template <class P> class PatchButtonGrid : public Component {
+template <class P> class PatchButtonGrid : public juce::Component {
 public:
     PatchButtonGrid(int w, int h, std::function<void(int)> buttonClicked) : columns_(w), rows_(h)
     {
@@ -86,7 +86,7 @@ private:
 
     int columns_;
     int rows_;
-    OwnedArray<P> patchButtons_;
+    juce::OwnedArray<P> patchButtons_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchButtonGrid)
 };

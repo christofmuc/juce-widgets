@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "ProgressHandler.h"
 
-class ProgressHandlerWindow : public ThreadWithProgressWindow, public ProgressHandler {
+class ProgressHandlerWindow : public juce::ThreadWithProgressWindow, public ProgressHandler {
 public:
     ProgressHandlerWindow(std::string const &title, std::string const &message);
 

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,25 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-class TextSearchBox : public Component {
+class TextSearchBox : public juce::Component {
 public:
     TextSearchBox(std::function<void()> updateHandler);
 
     void setFontSize(float fontSize);
 
     virtual void resized() override;
-    void paint(Graphics& g) override;
+    void paint(juce::Graphics& g) override;
 
-    String searchText() const;
-    void setSearchText(String const& searchText);
+    juce::String searchText() const;
+    void setSearchText(juce::String const& searchText);
 
 private:
     void refreshClearButton();
 
     std::function<void()> updateHandler_;
-    std::unique_ptr<TextEditor> nameSearchText_;
-    ImageComponent lookingGlass_;
-    std::unique_ptr<Button> clearNameSearch_;
+    std::unique_ptr<juce::TextEditor> nameSearchText_;
+    juce::ImageComponent lookingGlass_;
+    std::unique_ptr<juce::Button> clearNameSearch_;
 };

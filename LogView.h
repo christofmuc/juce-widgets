@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,28 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_extra/juce_gui_extra.h>
 
 #include "LambdaButtonStrip.h"
 #include "Logger.h"
 
 #include <set>
 
-class LogView : public Component {
+class LogView : public juce::Component {
 public:
     LogView(bool showClear = true, bool showSave = true, bool showLineNumbers = true);
 
-    void addMessageToList(String const &message);
-    void addMessageToListWithoutTimestamp(String const &message);
+    void addMessageToList(juce::String const &message);
+    void addMessageToListWithoutTimestamp(juce::String const &message);
     void clearLog();
     void saveLog();
 
     virtual void resized() override;
 
 private:
-    std::unique_ptr<CodeDocument> document_;
+    std::unique_ptr<juce::CodeDocument> document_;
     std::unique_ptr<LambdaButtonStrip> buttons_;
-    CodeEditorComponent logBox_;
+    juce::CodeEditorComponent logBox_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LogView)
 };
@@ -54,8 +54,8 @@ class LogViewLogger : public SimpleLogger {
 public:
     LogViewLogger(LogView &logview) : logview_(logview) {}
 
-    virtual void postMessage(const String &message) override;
-    virtual void postMessageOncePerRun(const String &message) override;
+    virtual void postMessage(const juce::String &message) override;
+    virtual void postMessageOncePerRun(const juce::String &message) override;
 
 private:
     LogView &logview_;

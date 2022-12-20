@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "Thumbnail.h"
 
-class PatchButton : public Component, private TextButton::Listener {
+class PatchButton : public juce::Component, private juce::TextButton::Listener {
 public:
     PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler);
 
@@ -37,33 +37,33 @@ public:
     virtual void resized() override;
     // virtual void paint(Graphics& g) override;
 
-    void setColour(int colourId, Colour newColour);
-    String getButtonText() const;
-    void setButtonData(const String &text, const String &dragInfo);
-    void setButtonData(const String &line1, const String &line2, const String &dragInfo);
-    void setSubtitle(const String &text);
+    void setColour(int colourId, juce::Colour newColour);
+    juce::String getButtonText() const;
+    void setButtonData(const juce::String &text, const juce::String &dragInfo);
+    void setButtonData(const juce::String &line1, const juce::String &line2, const juce::String &dragInfo);
+    void setSubtitle(const juce::String &text);
 
     void setFavorite(bool isFavorite);
     void setHidden(bool isHidden);
-    void setThumbnailFile(const String &filename, const String &cacheFileName);
+    void setThumbnailFile(const juce::String &filename, const juce::String &cacheFileName);
     void setThumbnailFromCache(const Thumbnail::CacheInfo &cacheInfo);
     void clearThumbnailFile();
 
     void setToggleState(bool state);
     bool getToggleState() const;
 
-    virtual void buttonClicked(Button *) override;
+    virtual void buttonClicked(juce::Button *) override;
 
     // This is required when using the PatchButton with a scrollable list model, which reuses the buttons
     void updateId(int id);
 
 private:
     std::function<void(int)> clicked_;
-    std::unique_ptr<TextButton> button_;
+    std::unique_ptr<juce::TextButton> button_;
     Thumbnail thumbnail_;
-    ImageComponent favoriteIcon_;
-    ImageComponent hiddenIcon_;
-    Label synthName_;
+    juce::ImageComponent favoriteIcon_;
+    juce::ImageComponent hiddenIcon_;
+    juce::Label synthName_;
     int id_;
     bool active_;
 
@@ -81,7 +81,6 @@ public:
     TDropHandler onItemDropped;
 
     // DragAndDropTarget implementation
-    bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
-    void itemDropped(const SourceDetails& dragSourceDetails) override;
-
+    bool isInterestedInDragSource(const SourceDetails &dragSourceDetails) override;
+    void itemDropped(const SourceDetails &dragSourceDetails) override;
 };

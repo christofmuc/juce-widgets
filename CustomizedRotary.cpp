@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,31 +24,31 @@
 
 #include "CustomizedRotary.h"
 
-class CustomRotaryLookAndFeel : public LookAndFeel_V4 {
+class CustomRotaryLookAndFeel : public juce::LookAndFeel_V4 {
 
-    virtual void drawRotarySlider(Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle,
-        const float rotaryEndAngle, Slider& slider) override
+    virtual void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos, const float rotaryStartAngle,
+        const float rotaryEndAngle, juce::Slider& slider) override
     {
-        auto outline = slider.findColour(Slider::rotarySliderOutlineColourId);
-        auto fill = slider.findColour(Slider::rotarySliderFillColourId);
+        auto outline = slider.findColour(juce::Slider::rotarySliderOutlineColourId);
+        auto fill = slider.findColour(juce::Slider::rotarySliderFillColourId);
 
-        auto bounds = Rectangle<int>(x, y, width, height).toFloat().reduced(10);
+        auto bounds = juce::Rectangle<int>(x, y, width, height).toFloat().reduced(10);
 
-        auto radius = jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
+        auto radius = juce::jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
         auto toAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-        auto lineW = jmin(8.0f, radius * 0.5f);
+        auto lineW = juce::jmin(8.0f, radius * 0.5f);
         auto arcRadius = radius - lineW * 0.5f;
 
         const float rotaryMidAngle = 0.5f * (rotaryStartAngle + rotaryEndAngle);
 
-        Path backgroundArc;
+        juce::Path backgroundArc;
         backgroundArc.addCentredArc(bounds.getCentreX(), bounds.getCentreY(), arcRadius, arcRadius, 0.0f, rotaryStartAngle, rotaryEndAngle, true);
 
         g.setColour(outline);
-        g.strokePath(backgroundArc, PathStrokeType(lineW, PathStrokeType::curved, PathStrokeType::rounded));
+        g.strokePath(backgroundArc, juce::PathStrokeType(lineW, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 
         if (slider.isEnabled()) {
-            Path valueArc;
+            juce::Path valueArc;
             if (toAngle > rotaryMidAngle) {
                 valueArc.addCentredArc(bounds.getCentreX(), bounds.getCentreY(), arcRadius, arcRadius, 0.0f, rotaryMidAngle, toAngle, true);
             }
@@ -57,15 +57,15 @@ class CustomRotaryLookAndFeel : public LookAndFeel_V4 {
             }
 
             g.setColour(fill);
-            g.strokePath(valueArc, PathStrokeType(lineW, PathStrokeType::curved, PathStrokeType::rounded));
+            g.strokePath(valueArc, juce::PathStrokeType(lineW, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
         }
 
         auto thumbWidth = lineW * 2.0f;
-        Point<float> thumbPoint(bounds.getCentreX() + arcRadius * std::cos(toAngle - MathConstants<float>::halfPi),
-            bounds.getCentreY() + arcRadius * std::sin(toAngle - MathConstants<float>::halfPi));
+        juce::Point<float> thumbPoint(bounds.getCentreX() + arcRadius * std::cos(toAngle - juce::MathConstants<float>::halfPi),
+            bounds.getCentreY() + arcRadius * std::sin(toAngle - juce::MathConstants<float>::halfPi));
 
-        g.setColour(slider.findColour(Slider::thumbColourId));
-        g.fillEllipse(Rectangle<float>(thumbWidth, thumbWidth).withCentre(thumbPoint));
+        g.setColour(slider.findColour(juce::Slider::thumbColourId));
+        g.fillEllipse(juce::Rectangle<float>(thumbWidth, thumbWidth).withCentre(thumbPoint));
     }
 };
 

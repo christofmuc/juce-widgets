@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +24,16 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 struct SplitteredEntry {
-    Component* component;
+    juce::Component* component;
     int desiredPercentage;
     int minimumPercentage;
     int maximumPercentage;
 };
 
-class SplitteredComponent : public Component {
+class SplitteredComponent : public juce::Component {
 public:
     SplitteredComponent(std::string const& componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical);
     SplitteredComponent(std::string const& componentName, SplitteredEntry first, SplitteredEntry second, SplitteredEntry third, bool isVertical);
@@ -43,13 +43,13 @@ public:
 
 private:
     std::string componentName_;
-    Component* first_;
-    Component* second_;
-    Component* third_;
+    juce::Component* first_;
+    juce::Component* second_;
+    juce::Component* third_;
     bool isVertical_;
 
-    StretchableLayoutManager stretchableManager_;
-    OwnedArray<StretchableLayoutResizerBar> resizerBars_;
+    juce::StretchableLayoutManager stretchableManager_;
+    juce::OwnedArray<juce::StretchableLayoutResizerBar> resizerBars_;
     int nComponents_;
     Component** componentOrder_;
     bool didLoad_;

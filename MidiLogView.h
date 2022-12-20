@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_audio_basics/juce_audio_basics.h>
 
 #include "LogView.h"
 
@@ -32,8 +32,8 @@ class MidiLogView : public LogView {
 public:
     MidiLogView(bool showClear = true, bool showSave = true);
 
-    void addMessageToList(const MidiMessage& message, const String& source, bool isOut);
-    void addMessageToList(double time, const String& description, const String& bytes, const String& source, bool isOut);
+    void addMessageToList(const juce::MidiMessage& message, const juce::String& source, bool isOut);
+    void addMessageToList(double time, const juce::String& description, const juce::String& bytes, const juce::String& source, bool isOut);
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MidiLogView)

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "TypedNamedValue.h"
 
-class PropertyEditor : public Component {
+class PropertyEditor : public juce::Component {
 public:
     typedef std::vector<std::shared_ptr<TypedNamedValue>> TProperties;
     explicit PropertyEditor(bool dynamicLayout = false);
@@ -42,16 +42,16 @@ public:
     void setProperties(TProperties const &props);
     void clear();
 
-    static PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
+    static juce::PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
 
-    String getLayout();
-    void fromLayout(String layout);
+    juce::String getLayout();
+    void fromLayout(juce::String layout);
 
 private:
-    virtual void mouseUp(const MouseEvent &event) override;
+    virtual void mouseUp(const juce::MouseEvent &event) override;
 
     bool dynamicLayout_;
-    PropertyPanel propertyPanel_;
+    juce::PropertyPanel propertyPanel_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PropertyEditor)
 };

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,16 +24,18 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "LayoutConstants.h"
 
 class FlexBoxHelper {
 public:
-    static Rectangle<float> computeFlexBoxSize(FlexBox box);
+    static juce::Rectangle<float> computeFlexBoxSize(juce::FlexBox box);
 
-    static Rectangle<float> determineSizeForButtonLayout(Component* component, Component* parent, std::vector<Component*> components,
-        Rectangle<int> const& bounds, int buttonWidth = LAYOUT_BUTTON_WIDTH, int buttonHeight = LAYOUT_LINE_HEIGHT);
-    static Rectangle<float> determineSizeForButtonLayout(Component* component, Component* parent, OwnedArray<Button>& buttons,
-        Rectangle<int> const& bounds, int buttonWidth = LAYOUT_BUTTON_WIDTH, int buttonHeight = LAYOUT_LINE_HEIGHT);
+    static juce::Rectangle<float> determineSizeForButtonLayout(juce::Component* component, juce::Component* parent,
+        std::vector<juce::Component*> components, juce::Rectangle<int> const& bounds, int buttonWidth = LAYOUT_BUTTON_WIDTH,
+        int buttonHeight = LAYOUT_LINE_HEIGHT);
+    static juce::Rectangle<float> determineSizeForButtonLayout(juce::Component* component, juce::Component* parent,
+        juce::OwnedArray<juce::Button>& buttons, juce::Rectangle<int> const& bounds, int buttonWidth = LAYOUT_BUTTON_WIDTH,
+        int buttonHeight = LAYOUT_LINE_HEIGHT);
 };

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,14 +24,15 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_audio_utils/juce_audio_utils.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 
-class Thumbnail : public Component, public ChangeBroadcaster, private Timer {
+class Thumbnail : public juce::Component, public juce::ChangeBroadcaster, private juce::Timer {
 public:
     struct CacheInfo {
         int reductionFactor;
         float gainScale;
-        MemoryBlock cacheData;
+        juce::MemoryBlock cacheData;
     };
 
     Thumbnail();
@@ -40,22 +41,22 @@ public:
     void loadFromCache(CacheInfo const &cacheInfo);
     void clearThumbnail();
 
-    void paint(Graphics &g) override;
+    void paint(juce::Graphics &g) override;
 
-    void saveCacheInfo(File cacheFile);
-    static CacheInfo loadCacheInfo(File cacheFile);
+    void saveCacheInfo(juce::File cacheFile);
+    static CacheInfo loadCacheInfo(juce::File cacheFile);
 
 private:
     void initMemoryCache();
     void timerCallback() override;
 
-    static std::weak_ptr<AudioThumbnailCache>
+    static std::weak_ptr<juce::AudioThumbnailCache>
         sCache_; // This is a memory cache only, weak because then it will be released once the last thumbnail is gone and not leak
 
-    AudioFormatManager formatManager_;
-    std::shared_ptr<AudioThumbnailCache> memoryCache_;
-    std::unique_ptr<AudioThumbnail> audioThumbnail_;
+    juce::AudioFormatManager formatManager_;
+    std::shared_ptr<juce::AudioThumbnailCache> memoryCache_;
+    std::unique_ptr<juce::AudioThumbnail> audioThumbnail_;
     float gainScale_;
     CacheInfo cacheInfo_;
-    File cacheFile_;
+    juce::File cacheFile_;
 };

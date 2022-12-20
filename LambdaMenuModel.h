@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,30 +24,28 @@
 
 #pragma once
 
-#include "JuceHeader.h"
-
 #include "LambdaButtonStrip.h"
 
-class LambdaMenuModel : public MenuBarModel {
+class LambdaMenuModel : public juce::MenuBarModel {
 public:
-	struct MenuEntry {
-		std::string name;
-		bool hasSubmenu;
-		int baseItemID;
-		std::function<PopupMenu()> getMenu;
-		std::function<void(int)> subitemSelected;
-		int subItemNo; // Automatically calculated
-	};
-	typedef std::map<size_t, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
+    struct MenuEntry {
+        std::string name;
+        bool hasSubmenu;
+        int baseItemID;
+        std::function<juce::PopupMenu()> getMenu;
+        std::function<void(int)> subitemSelected;
+        int subItemNo; // Automatically calculated
+    };
+    typedef std::map<size_t, std::pair<std::string, std::vector<MenuEntry>>> TMenuStructure;
 
-	LambdaMenuModel(TMenuStructure const &menuStructure, ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons);
+    LambdaMenuModel(TMenuStructure const &menuStructure, juce::ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons);
 
-	StringArray getMenuBarNames() override;
-	PopupMenu getMenuForIndex(int topLevelMenuIndex, const String& menuName) override;
-	void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
+    juce::StringArray getMenuBarNames() override;
+    juce::PopupMenu getMenuForIndex(int topLevelMenuIndex, const juce::String &menuName) override;
+    void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
 
 private:
-	TMenuStructure menuStructure_;
-	ApplicationCommandManager *commandManager_;
-	LambdaButtonStrip *lambdaButtons_;
+    TMenuStructure menuStructure_;
+    juce::ApplicationCommandManager *commandManager_;
+    LambdaButtonStrip *lambdaButtons_;
 };

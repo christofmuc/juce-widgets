@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
  */
 
 #include "MidiChannelPropertyEditor.h"
+
+#include <juce_audio_devices/juce_audio_devices.h>
 
 std::map<int, std::string> sInputLookup;
 std::map<int, std::string> sOutputLookup;
@@ -51,7 +53,7 @@ std::map<int, std::string> sMidiChannelLookup = {
 std::vector<std::string> currentOutputDevices()
 {
     std::vector<std::string> outputs;
-    auto devices = MidiOutput::getAvailableDevices();
+    auto devices = juce::MidiOutput::getAvailableDevices();
     for (const auto &device : devices) {
         outputs.push_back(device.name.toStdString());
     }
@@ -62,7 +64,7 @@ std::vector<std::string> currentOutputDevices()
 std::vector<std::string> currentInputDevices()
 {
     std::vector<std::string> inputs;
-    auto devices = MidiInput::getAvailableDevices();
+    auto devices = juce::MidiInput::getAvailableDevices();
     for (const auto &device : devices) {
         inputs.push_back(device.name.toStdString());
     }
@@ -91,7 +93,7 @@ void MidiChannelPropertyEditor::setValue(MidiChannel channel)
 MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput) :
     TypedNamedValue(title, sn, 0, std::map<int, std::string>()), inputInsteadOfOutput_(inputInsteadOfOutput)
 {
-    value_ = Value(1);
+    value_ = juce::Value(1);
     refreshDeviceList();
 }
 

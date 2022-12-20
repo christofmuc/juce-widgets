@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@
  */
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 
-class RecycleBin : public Component, public DragAndDropTarget {
+class RecycleBin : public juce::Component, public juce::DragAndDropTarget {
 public:
     RecycleBin();
 
@@ -35,11 +35,11 @@ public:
     bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override;
     void itemDropped(const SourceDetails& dragSourceDetails) override;
 
-    std::function<void(var)> onItemDropped;
+    std::function<void(juce::var)> onItemDropped;
     std::function<void()> onClicked;
 
-    virtual void mouseUp(const MouseEvent& event) override;
+    virtual void mouseUp(const juce::MouseEvent& event) override;
 
 private:
-    ImageComponent wasteBin_;
+    juce::ImageComponent wasteBin_;
 };

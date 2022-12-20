@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,6 @@
 #define LAYOUT_BUTTON_WIDTH_MIN 64
 #define LAYOUT_BUTTON_HEIGHT LAYOUT_LINE_HEIGHT
 
-#define LAYOUT_TOUCHBUTTON_HEIGHT (2*LAYOUT_BUTTON_HEIGHT)
+#define LAYOUT_TOUCHBUTTON_HEIGHT (2 * LAYOUT_BUTTON_HEIGHT)
 
 #define LAYOUT_LARGE_FONT_SIZE 24.0f

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,20 +24,20 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-class HorizontalLayoutContainer : public Component {
+class HorizontalLayoutContainer : public juce::Component {
 public:
-    HorizontalLayoutContainer(Component *left, Component *right, double leftSize, double rightSize);
+    HorizontalLayoutContainer(juce::Component *left, juce::Component *right, double leftSize, double rightSize);
 
     void resized() override;
 
-    void setComponents(Component *left, Component *right);
+    void setComponents(juce::Component *left, juce::Component *right);
 
 private:
-    Component *left_;
-    Component *right_;
-    StretchableLayoutManager layout_;
+    juce::Component *left_;
+    juce::Component *right_;
+    juce::StretchableLayoutManager layout_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HorizontalLayoutContainer)
 };

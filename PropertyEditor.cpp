@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,27 +59,27 @@ int PropertyEditor::getTotalContentHeight()
     return propertyPanel_.getTotalContentHeight();
 }
 
-PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamedValue> property)
+juce::PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamedValue> property)
 {
     switch (property->valueType()) {
     case ValueType::Lookup: {
-        StringArray choices;
-        Array<var> values;
+        juce::StringArray choices;
+        juce::Array<juce::var> values;
         for (auto lookup : property->lookup()) {
             values.add(lookup.first);
             choices.add(lookup.second);
         }
-        return new ChoicePropertyComponent(Value(property->value()), property->name(), choices, values);
+        return new juce::ChoicePropertyComponent(juce::Value(property->value()), property->name(), choices, values);
     }
     case ValueType::Integer:
-        return new SliderPropertyComponent(Value(property->value()), property->name(), property->minValue(), property->maxValue(), 1.0);
+        return new juce::SliderPropertyComponent(juce::Value(property->value()), property->name(), property->minValue(), property->maxValue(), 1.0);
     case ValueType::Bool:
-        return new BooleanPropertyComponent(Value(property->value()), property->name(), "On/Off");
+        return new juce::BooleanPropertyComponent(juce::Value(property->value()), property->name(), "On/Off");
     case ValueType::String:
-        return new TextPropertyComponent(Value(property->value()), property->name(), property->maxValue(), false, property->enabled());
+        return new juce::TextPropertyComponent(juce::Value(property->value()), property->name(), property->maxValue(), false, property->enabled());
 #ifdef GIN_AVAILABLE
     case ValueType::Color:
-        return new gin::ColourPropertyComponent(Value(property->value()), property->name(), false);
+        return new gin::ColourPropertyComponent(juce::Value(property->value()), property->name(), false);
 #endif
     default:
         // Type needs to be implemented
@@ -92,8 +92,8 @@ void PropertyEditor::setProperties(TProperties const &props)
 {
     propertyPanel_.clear();
 
-    Array<PropertyComponent *> editors;
-    String activeSectionName = "";
+    juce::Array<juce::PropertyComponent *> editors;
+    juce::String activeSectionName = "";
     for (auto property : props) {
         // See if we need to close the previous section
         if (activeSectionName != property->sectionName()) {
@@ -104,7 +104,7 @@ void PropertyEditor::setProperties(TProperties const &props)
             activeSectionName = property->sectionName();
         }
 
-        PropertyComponent *editor = createEditor(property);
+        juce::PropertyComponent *editor = createEditor(property);
         if (editor) {
             editors.add(editor);
         }
@@ -119,23 +119,23 @@ void PropertyEditor::clear()
     propertyPanel_.clear();
 }
 
-String PropertyEditor::getLayout()
+juce::String PropertyEditor::getLayout()
 {
-    MemoryOutputStream output(512);
+    juce::MemoryOutputStream output(512);
     propertyPanel_.getOpennessState()->writeTo(output);
     return output.toUTF8();
 }
 
-void PropertyEditor::fromLayout(String layout)
+void PropertyEditor::fromLayout(juce::String layout)
 {
-    auto element = XmlDocument::parse(layout);
+    auto element = juce::XmlDocument::parse(layout);
     if (element) {
         propertyPanel_.restoreOpennessState(*element);
     }
 }
 
-void PropertyEditor::mouseUp(const MouseEvent &)
+void PropertyEditor::mouseUp(const juce::MouseEvent &)
 {
     auto resizeThis = getParentComponent();
-    MessageManager::callAsync([resizeThis]() { resizeThis->resized(); });
+    juce::MessageManager::callAsync([resizeThis]() { resizeThis->resized(); });
 }

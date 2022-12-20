@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@
 
 #include "LayoutConstants.h"
 
-juce::Rectangle<float> FlexBoxHelper::computeFlexBoxSize(FlexBox box)
+juce::Rectangle<float> FlexBoxHelper::computeFlexBoxSize(juce::FlexBox box)
 {
-    RectangleList<float> layout;
+    juce::RectangleList<float> layout;
 
     for (auto& item : box.items) {
         layout.add(item.currentBounds.withTrimmedLeft(-item.margin.left)
@@ -39,29 +39,29 @@ juce::Rectangle<float> FlexBoxHelper::computeFlexBoxSize(FlexBox box)
     return layout.getBounds();
 }
 
-juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(Component* component, Component* parent, OwnedArray<Button>& buttons,
-    Rectangle<int> const& bounds, int buttonWidth, int buttonHeight)
+juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(juce::Component* component, juce::Component* parent,
+    juce::OwnedArray<juce::Button>& buttons, juce::Rectangle<int> const& bounds, int buttonWidth, int buttonHeight)
 {
-    std::vector<Component*> components;
+    std::vector<juce::Component*> components;
     for (auto button : buttons)
         components.push_back(button);
     return determineSizeForButtonLayout(component, parent, components, bounds, buttonWidth, buttonHeight);
 }
 
-juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(Component* component, Component* parent, std::vector<Component*> components,
-    Rectangle<int> const& bounds, int buttonWidth, int buttonHeight)
+juce::Rectangle<float> FlexBoxHelper::determineSizeForButtonLayout(juce::Component* component, juce::Component* parent,
+    std::vector<juce::Component*> components, juce::Rectangle<int> const& bounds, int buttonWidth, int buttonHeight)
 {
     // Using Flex Box as we need an overflow
-    FlexBox fb;
-    fb.flexWrap = FlexBox::Wrap::wrap;
-    fb.flexDirection = FlexBox::Direction::row;
-    fb.justifyContent = FlexBox::JustifyContent::center;
-    // fb.alignItems = FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
-    fb.alignContent = FlexBox::AlignContent::flexStart; // This is cross axis, up
+    juce::FlexBox fb;
+    fb.flexWrap = juce::FlexBox::Wrap::wrap;
+    fb.flexDirection = juce::FlexBox::Direction::row;
+    fb.justifyContent = juce::FlexBox::JustifyContent::center;
+    // fb.alignItems = juce::FlexBox::AlignItems::flexEnd; // This is horizontal, but only works when align-self is auto
+    fb.alignContent = juce::FlexBox::AlignContent::flexStart; // This is cross axis, up
     for (auto filterbutton : components) {
         filterbutton->setSize(buttonWidth, buttonHeight);
-        ((ToggleButton*) filterbutton)->changeWidthToFitText();
-        fb.items.add(FlexItem(*filterbutton)
+        ((juce::ToggleButton*) filterbutton)->changeWidthToFitText();
+        fb.items.add(juce::FlexItem(*filterbutton)
                          .withMinWidth((float) filterbutton->getWidth() + 20.0f)
                          .withMinHeight(static_cast<float>(buttonHeight))
                          .withMargin(LAYOUT_INSET_SMALL)); // .withAlignSelf(FlexItem::AlignSelf::autoAlign)

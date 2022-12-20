@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "Logger.h"
 
-class TreeViewNode : public TreeViewItem {
+class TreeViewNode : public juce::TreeViewItem {
 public:
-    typedef std::function<std::vector<TreeViewItem*>()> TChildGenerator;
-    typedef std::function<void(String)> TClickedHandler;
+    typedef std::function<std::vector<juce::TreeViewItem*>()> TChildGenerator;
+    typedef std::function<void(juce::String)> TClickedHandler;
     typedef std::function<bool(juce::var)> TAcceptHandler;
     typedef std::function<void(juce::var, int)> TDropHandler;
-    typedef std::function<var()> TDragStartHandler;
+    typedef std::function<juce::var()> TDragStartHandler;
 
-    TreeViewNode(String text, String id, bool editable = false);
+    TreeViewNode(juce::String text, juce::String id, bool editable = false);
 
-    Value textValue;
+    juce::Value textValue;
 
     TChildGenerator onGenerateChildren;
     TClickedHandler onSelected;
@@ -46,33 +46,34 @@ public:
     TDropHandler onItemDropped;
     TDragStartHandler onItemDragged;
 
-    String id() const;
-    String text() const;
+    juce::String id() const;
+    juce::String text() const;
 
     void toggleOpenness();
     void regenerate();
 
     virtual bool mightContainSubItems() override;
     virtual void itemOpennessChanged(bool isNowOpen) override;
-    virtual void paintItem(Graphics& g, int width, int height) override;
-    virtual void paintOpenCloseButton(Graphics& g, const Rectangle<float>& area, Colour backgroundColour, bool isMouseOver) override;
+    virtual void paintItem(juce::Graphics& g, int width, int height) override;
+    virtual void paintOpenCloseButton(juce::Graphics& g, const juce::Rectangle<float>& area, juce::Colour backgroundColour,
+        bool isMouseOver) override;
     virtual bool canBeSelected() const override;
     virtual void itemSelectionChanged(bool isNowSelected) override;
 
-    virtual String getUniqueName() const override;
-    virtual void itemClicked(const MouseEvent&) override;
-    virtual void itemDoubleClicked(const MouseEvent&) override;
-    virtual bool isInterestedInDragSource(const DragAndDropTarget::SourceDetails&) override;
-    virtual void itemDropped(const DragAndDropTarget::SourceDetails& dragSourceDetails, int insertIndex) override;
+    virtual juce::String getUniqueName() const override;
+    virtual void itemClicked(const juce::MouseEvent&) override;
+    virtual void itemDoubleClicked(const juce::MouseEvent&) override;
+    virtual bool isInterestedInDragSource(const juce::DragAndDropTarget::SourceDetails&) override;
+    virtual void itemDropped(const juce::DragAndDropTarget::SourceDetails& dragSourceDetails, int insertIndex) override;
 
-    virtual var getDragSourceDescription() override;
+    virtual juce::var getDragSourceDescription() override;
 
-    virtual std::unique_ptr<Component> createItemComponent() override;
+    virtual std::unique_ptr<juce::Component> createItemComponent() override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TreeViewNode)
 
 private:
-    String text_;
-    String id_;
+    juce::String text_;
+    juce::String id_;
     bool editable_;
 };

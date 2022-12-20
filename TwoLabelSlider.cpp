@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,10 @@
 
 #include "TwoLabelSlider.h"
 
-TwoLabelSlider::TwoLabelSlider(String left, String right, int labelWidth) : labelWidth_(labelWidth)
+TwoLabelSlider::TwoLabelSlider(juce::String left, juce::String right, int labelWidth) : labelWidth_(labelWidth)
 {
-    leftLabel_.setText(left, dontSendNotification);
-    rightLabel_.setText(right, dontSendNotification);
+    leftLabel_.setText(left, juce::dontSendNotification);
+    rightLabel_.setText(right, juce::dontSendNotification);
 
     addAndMakeVisible(leftLabel_);
     addAndMakeVisible(rightLabel_);
@@ -47,8 +47,8 @@ void TwoLabelSlider::resized()
     slider_.setBounds(area.withTrimmedLeft(8).withTrimmedRight(8));
 }
 
-void TwoLabelSlider::setTextLabels(String const& left, String const& right)
+void TwoLabelSlider::setTextLabels(juce::String const& left, juce::String const& right)
 {
-	leftLabel_.setText(left, dontSendNotification);
-	rightLabel_.setText(right, dontSendNotification);
+    leftLabel_.setText(left, juce::dontSendNotification);
+    rightLabel_.setText(right, juce::dontSendNotification);
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,22 +24,22 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-class TwoLabelSlider : public Component {
+class TwoLabelSlider : public juce::Component {
 public:
-    TwoLabelSlider(String left, String right, int labelWidth);
+    TwoLabelSlider(juce::String left, juce::String right, int labelWidth);
 
-    Slider& slider();
+    juce::Slider& slider();
 
     virtual void resized() override;
 
-	void setTextLabels(String const& left, String const& right);
+    void setTextLabels(juce::String const& left, juce::String const& right);
 
 private:
     int labelWidth_;
 
-    Label leftLabel_;
-    Label rightLabel_;
-    Slider slider_;
+    juce::Label leftLabel_;
+    juce::Label rightLabel_;
+    juce::Slider slider_;
 };

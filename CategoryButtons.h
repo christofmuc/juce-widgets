@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,17 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include <set>
 
-class CategoryButtons : public Component, private ToggleButton::Listener {
+class CategoryButtons : public juce::Component, private juce::ToggleButton::Listener {
 public:
     class Category {
     public:
-        Category(std::string const &c, Colour o) : category(c), color(o) {}
+        Category(std::string const &c, juce::Colour o) : category(c), color(o) {}
         std::string category;
-        Colour color;
+        juce::Colour color;
     };
 
     CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
@@ -48,9 +48,9 @@ public:
     // Override Component method
     void resized() override;
     // Implement button listener
-    void buttonClicked(Button *) override;
+    void buttonClicked(juce::Button *) override;
 
-    Rectangle<float> determineSubAreaForButtonLayout(Component *parent, Rectangle<int> const &bounds);
+    juce::Rectangle<float> determineSubAreaForButtonLayout(juce::Component *parent, juce::Rectangle<int> const &bounds);
 
     int numCategories() const;
     int usedHeight() const;
@@ -60,7 +60,7 @@ private:
     bool useCheckboxes_;
     bool colouredButtons_;
     std::vector<Category> categories_;
-    OwnedArray<Button> categoryFilter_;
+    juce::OwnedArray<juce::Button> categoryFilter_;
     std::function<void(Category)> updateHandler_;
     int buttonWidth_;
     int buttonHeight_;

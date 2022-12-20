@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,51 +25,53 @@
 #include "LambdaMenuModel.h"
 
 
-LambdaMenuModel::LambdaMenuModel(TMenuStructure const &menuStructure, ApplicationCommandManager *commandManager, LambdaButtonStrip *lambdaButtons) :
-	menuStructure_(menuStructure), commandManager_(commandManager), lambdaButtons_(lambdaButtons)
+LambdaMenuModel::LambdaMenuModel(TMenuStructure const &menuStructure, juce::ApplicationCommandManager *commandManager,
+    LambdaButtonStrip *lambdaButtons) :
+    menuStructure_(menuStructure),
+    commandManager_(commandManager), lambdaButtons_(lambdaButtons)
 {
 }
 
-StringArray LambdaMenuModel::getMenuBarNames()
+juce::StringArray LambdaMenuModel::getMenuBarNames()
 {
-	StringArray result;
-	for (size_t i = 0; i < menuStructure_.size(); i++) {
-		result.add(menuStructure_[i].first);
-	}
-	return result;
+    juce::StringArray result;
+    for (size_t i = 0; i < menuStructure_.size(); i++) {
+        result.add(menuStructure_[i].first);
+    }
+    return result;
 }
 
-PopupMenu LambdaMenuModel::getMenuForIndex(int topLevelMenuIndex, const String& menuName)
+juce::PopupMenu LambdaMenuModel::getMenuForIndex(int topLevelMenuIndex, const juce::String &menuName)
 {
-	ignoreUnused(menuName);
-	PopupMenu menu;
+    ignoreUnused(menuName);
+    juce::PopupMenu menu;
     if (topLevelMenuIndex < 0) {
         return menu;
     }
 
-	for (auto &item : menuStructure_[(size_t) topLevelMenuIndex].second) {
-		if (item.hasSubmenu) {
-			// Found!
-			PopupMenu submenu = item.getMenu();
-			menu.addSubMenu(item.name, submenu);
-			item.subItemNo = submenu.getNumItems();
-		}
-		else {
-			// Ok, we want a command-based menu bar - for that, we need to search all commands in the lambdaButtons and fine one with the correct name
-			Array<int> commands;
-			lambdaButtons_->getAllCommands(commands);
-			for (auto command : commands) {
-				ApplicationCommandInfo info(command);
-				lambdaButtons_->getCommandInfo(command, info);
-				if (info.description == String(item.name)) {
-					// Found!
-					menu.addCommandItem(commandManager_, command);
-					break;
-				}
-			}
-		}
-	}
-	return menu;
+    for (auto &item : menuStructure_[(size_t) topLevelMenuIndex].second) {
+        if (item.hasSubmenu) {
+            // Found!
+            juce::PopupMenu submenu = item.getMenu();
+            menu.addSubMenu(item.name, submenu);
+            item.subItemNo = submenu.getNumItems();
+        }
+        else {
+            // Ok, we want a command-based menu bar - for that, we need to search all commands in the lambdaButtons and fine one with the correct name
+            juce::Array<int> commands;
+            lambdaButtons_->getAllCommands(commands);
+            for (auto command : commands) {
+                juce::ApplicationCommandInfo info(command);
+                lambdaButtons_->getCommandInfo(command, info);
+                if (info.description == juce::String(item.name)) {
+                    // Found!
+                    menu.addCommandItem(commandManager_, command);
+                    break;
+                }
+            }
+        }
+    }
+    return menu;
 }
 
 void LambdaMenuModel::menuItemSelected(int menuItemID, int topLevelMenuIndex)
@@ -77,10 +79,10 @@ void LambdaMenuModel::menuItemSelected(int menuItemID, int topLevelMenuIndex)
     if (topLevelMenuIndex < 0) {
         return;
     }
-	// Commands will fire automatically, but submenus need special treatment here
-	for (auto const &item : menuStructure_[(size_t) topLevelMenuIndex].second) {
-		if (item.hasSubmenu && menuItemID >= item.baseItemID && item.baseItemID < (menuItemID + item.subItemNo)) {
-			item.subitemSelected(menuItemID - item.baseItemID);
-		}
-	}
+    // Commands will fire automatically, but submenus need special treatment here
+    for (auto const &item : menuStructure_[(size_t) topLevelMenuIndex].second) {
+        if (item.hasSubmenu && menuItemID >= item.baseItemID && item.baseItemID < (menuItemID + item.subItemNo)) {
+            item.subitemSelected(menuItemID - item.baseItemID);
+        }
+    }
 }

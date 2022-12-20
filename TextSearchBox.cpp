@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,9 +30,9 @@
 #include "LayoutConstants.h"
 #include "Logger.h"
 
-class FocusReportingTextEditor : public TextEditor {
+class FocusReportingTextEditor : public juce::TextEditor {
 public:
-    using TextEditor::TextEditor;
+    using juce::TextEditor::TextEditor;
 
     virtual void focusGained(FocusChangeType cause) override
     {
@@ -51,9 +51,9 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
 
 
     // We do not want an outline by the box itself, because we will draw the outline ourselves also around the clear button
-    nameSearchText_->setColour(TextEditor::backgroundColourId, Colours::transparentBlack);
-    nameSearchText_->setColour(TextEditor::outlineColourId, Colours::transparentBlack);
-    nameSearchText_->setColour(TextEditor::focusedOutlineColourId, Colours::transparentBlack);
+    nameSearchText_->setColour(juce::TextEditor::backgroundColourId, juce::Colours::transparentBlack);
+    nameSearchText_->setColour(juce::TextEditor::outlineColourId, juce::Colours::transparentBlack);
+    nameSearchText_->setColour(juce::TextEditor::focusedOutlineColourId, juce::Colours::transparentBlack);
     nameSearchText_->setOpaque(false);
     nameSearchText_->onTextChange = [this]() {
         refreshClearButton();
@@ -74,7 +74,7 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
     lookingGlass_.setVisible(true);
 
     // Create a lookAndFeel based clear button
-    clearNameSearch_.reset(getLookAndFeel().createDocumentWindowButton(DocumentWindow::closeButton));
+    clearNameSearch_.reset(getLookAndFeel().createDocumentWindowButton(juce::DocumentWindow::closeButton));
     clearNameSearch_->onClick = [this]() { nameSearchText_->setText("", true); };
 
     addAndMakeVisible(nameSearchText_.get());
@@ -84,7 +84,7 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
 
 void TextSearchBox::setFontSize(float fontSize)
 {
-    Font biggerFont;
+    juce::Font biggerFont;
     biggerFont.setHeight(fontSize);
     nameSearchText_->setFont(biggerFont);
 }
@@ -98,7 +98,7 @@ void TextSearchBox::resized()
     clearNameSearch_->setBounds(right.reduced(2)); // We know 2 is the line thickness in the LookAndFeel_V4
     nameSearchText_->setBounds(area);
     lookingGlass_.setBounds(left.withTrimmedLeft(LAYOUT_INSET_NORMAL));
-    lookingGlass_.setImagePlacement(RectanglePlacement::xLeft | RectanglePlacement::yMid | RectanglePlacement::onlyReduceInSize);
+    lookingGlass_.setImagePlacement(juce::RectanglePlacement::xLeft | juce::RectanglePlacement::yMid | juce::RectanglePlacement::onlyReduceInSize);
 }
 
 juce::String TextSearchBox::searchText() const
@@ -106,7 +106,7 @@ juce::String TextSearchBox::searchText() const
     return nameSearchText_->getText();
 }
 
-void TextSearchBox::setSearchText(String const& searchText)
+void TextSearchBox::setSearchText(juce::String const& searchText)
 {
     nameSearchText_->setText(searchText, false);
     refreshClearButton();
@@ -117,17 +117,17 @@ void TextSearchBox::refreshClearButton()
     clearNameSearch_->setVisible(!nameSearchText_->getText().isEmpty());
 }
 
-void TextSearchBox::paint(Graphics& g)
+void TextSearchBox::paint(juce::Graphics& g)
 {
     // Draw an outline box around the text box and the clear button!
     if (nameSearchText_->isEnabled()) {
         if (nameSearchText_->hasKeyboardFocus(true) && !nameSearchText_->isReadOnly()) {
-            g.setColour(getLookAndFeel().findColour(TextEditor::focusedOutlineColourId));
+            g.setColour(getLookAndFeel().findColour(juce::TextEditor::focusedOutlineColourId));
             g.drawRect(0, 0, getWidth(), getHeight(), 2);
             // SimpleLogger::instance()->postMessage("Painting at " + String(g.getClipBounds().getWidth()) + " but wanted to " + String(getWidth()));
         }
         else {
-            g.setColour(getLookAndFeel().findColour(TextEditor::outlineColourId));
+            g.setColour(getLookAndFeel().findColour(juce::TextEditor::outlineColourId));
             g.drawRect(0, 0, getWidth(), getHeight());
         }
     }

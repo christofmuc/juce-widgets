@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ Thumbnail::Thumbnail()
 void Thumbnail::initMemoryCache()
 {
     if (sCache_.expired()) {
-        memoryCache_ = std::make_shared<AudioThumbnailCache>(1024);
+        memoryCache_ = std::make_shared<juce::AudioThumbnailCache>(1024);
         sCache_ = memoryCache_;
     }
     else {
@@ -43,7 +43,7 @@ void Thumbnail::initMemoryCache()
 
 void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &fullpathOfCacheFileToBeCreated)
 {
-    File inputFile(fullpath);
+    juce::File inputFile(fullpath);
 
     if (inputFile.existsAsFile()) {
         // We need the total length of the file and its sample rate
@@ -53,9 +53,9 @@ void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &ful
             inputFile.deleteFile();
             return;
         }
-        int64 length = reader->lengthInSamples;
+        juce::int64 length = reader->lengthInSamples;
         // double sampleRate = reader->sampleRate;
-        Range<float> results[1];
+        juce::Range<float> results[1];
         reader->readMaxLevels(0, length, results, 1);
         delete reader;
         gainScale_ = std::max(fabs(results[0].getStart()), fabs(results[0].getEnd()));
@@ -66,14 +66,14 @@ void Thumbnail::loadFromFile(std::string const &fullpath, std::string const &ful
         int reductionFactor = std::max((int) (length / 512), 1);
 
         initMemoryCache();
-        audioThumbnail_ = std::make_unique<AudioThumbnail>(reductionFactor, formatManager_, *memoryCache_);
-        audioThumbnail_->setSource(new FileInputSource(inputFile));
+        audioThumbnail_ = std::make_unique<juce::AudioThumbnail>(reductionFactor, formatManager_, *memoryCache_);
+        audioThumbnail_->setSource(new juce::FileInputSource(inputFile));
         startTimer(100);
 
         // Record the cache info we already have, when the file is fully loaded, we will also put the cache data in there
         cacheInfo_.reductionFactor = reductionFactor;
         cacheInfo_.gainScale = gainScale_;
-        cacheFile_ = File(fullpathOfCacheFileToBeCreated);
+        cacheFile_ = juce::File(fullpathOfCacheFileToBeCreated);
     }
     else {
         clearThumbnail();
@@ -85,8 +85,8 @@ void Thumbnail::loadFromCache(CacheInfo const &cacheInfo)
     cacheInfo_ = cacheInfo;
     gainScale_ = cacheInfo.gainScale;
     initMemoryCache();
-    audioThumbnail_ = std::make_unique<AudioThumbnail>(cacheInfo.reductionFactor, formatManager_, *memoryCache_);
-    MemoryInputStream input(cacheInfo.cacheData, false);
+    audioThumbnail_ = std::make_unique<juce::AudioThumbnail>(cacheInfo.reductionFactor, formatManager_, *memoryCache_);
+    juce::MemoryInputStream input(cacheInfo.cacheData, false);
     audioThumbnail_->loadFrom(input);
 }
 
@@ -95,10 +95,10 @@ void Thumbnail::clearThumbnail()
     audioThumbnail_.reset();
 }
 
-void Thumbnail::paint(Graphics &g)
+void Thumbnail::paint(juce::Graphics &g)
 {
     // g.fillAll(Colours::darkblue);
-    g.setColour(Colours::white);
+    g.setColour(juce::Colours::white);
 
     if (audioThumbnail_) {
         if (audioThumbnail_->isFullyLoaded()) {
@@ -107,20 +107,20 @@ void Thumbnail::paint(Graphics &g)
     }
 }
 
-void Thumbnail::saveCacheInfo(File cacheFile)
+void Thumbnail::saveCacheInfo(juce::File cacheFile)
 {
-    FileOutputStream output(cacheFile);
+    juce::FileOutputStream output(cacheFile);
     output.writeInt(cacheInfo_.reductionFactor);
     output.writeFloat(cacheInfo_.gainScale);
-    MemoryInputStream fromBlock(cacheInfo_.cacheData, false);
+    juce::MemoryInputStream fromBlock(cacheInfo_.cacheData, false);
     output.writeFromInputStream(fromBlock, cacheInfo_.cacheData.getSize());
 }
 
-Thumbnail::CacheInfo Thumbnail::loadCacheInfo(File cacheFile)
+Thumbnail::CacheInfo Thumbnail::loadCacheInfo(juce::File cacheFile)
 {
     CacheInfo cacheInfo;
     if (cacheFile.existsAsFile()) {
-        FileInputStream inputFile(cacheFile);
+        juce::FileInputStream inputFile(cacheFile);
 
         cacheInfo.reductionFactor = inputFile.readInt();
         cacheInfo.gainScale = inputFile.readFloat();
@@ -134,7 +134,7 @@ void Thumbnail::timerCallback()
     if (audioThumbnail_ && audioThumbnail_->isFullyLoaded()) {
         stopTimer();
         // Record cache info
-        MemoryOutputStream output(cacheInfo_.cacheData, false);
+        juce::MemoryOutputStream output(cacheInfo_.cacheData, false);
         audioThumbnail_->saveTo(output);
         saveCacheInfo(cacheFile_);
         // Notify the UI that the cache is ready and the thumbnail can be rendered
@@ -142,4 +142,4 @@ void Thumbnail::timerCallback()
     }
 }
 
-std::weak_ptr<AudioThumbnailCache> Thumbnail::sCache_;
+std::weak_ptr<juce::AudioThumbnailCache> Thumbnail::sCache_;

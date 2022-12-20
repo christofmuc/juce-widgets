@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,16 +29,16 @@
 CollapseButton::CollapseButton(bool defaultOpen) : Button("open")
 {
     setClickingTogglesState(true);
-    setToggleState(defaultOpen, dontSendNotification);
+    setToggleState(defaultOpen, juce::dontSendNotification);
 }
 
-void CollapseButton::paintButton(Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+void CollapseButton::paintButton(juce::Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
-    ignoreUnused(shouldDrawButtonAsDown);
-    getLookAndFeel().drawTreeviewPlusMinusBox(g, getLocalBounds().toFloat(), Colours::green, getToggleState(), shouldDrawButtonAsHighlighted);
+    juce::ignoreUnused(shouldDrawButtonAsDown);
+    getLookAndFeel().drawTreeviewPlusMinusBox(g, getLocalBounds().toFloat(), juce::Colours::green, getToggleState(), shouldDrawButtonAsHighlighted);
 }
 
-CollapseHeader::CollapseHeader(String const &title, bool defaultOpen) : text_("header", title), collapse_(defaultOpen)
+CollapseHeader::CollapseHeader(juce::String const &title, bool defaultOpen) : text_("header", title), collapse_(defaultOpen)
 {
     addAndMakeVisible(text_);
     addAndMakeVisible(collapse_);
@@ -58,12 +58,12 @@ bool CollapseHeader::isOpen() const
     return collapse_.getToggleState();
 }
 
-void CollapseHeader::buttonClicked(Button *)
+void CollapseHeader::buttonClicked(juce::Button *)
 {
     sendChangeMessage();
 }
 
-CollapsibleContainer::CollapsibleContainer(String const &title, Component *collapsible, bool defaultOpen) :
+CollapsibleContainer::CollapsibleContainer(juce::String const &title, Component *collapsible, bool defaultOpen) :
     collapseHeader_(title, defaultOpen), collapsible_(collapsible)
 {
     addAndMakeVisible(collapseHeader_);
@@ -89,7 +89,7 @@ bool CollapsibleContainer::isOpen() const
     return collapseHeader_.isOpen();
 }
 
-void CollapsibleContainer::changeListenerCallback(ChangeBroadcaster *)
+void CollapsibleContainer::changeListenerCallback(juce::ChangeBroadcaster *)
 {
     if (collapseHeader_.isOpen()) {
         collapsible_->setVisible(true);

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,44 +24,44 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 
-class CollapseButton : public Button {
+class CollapseButton : public juce::Button {
 public:
-	CollapseButton(bool defaultOpen);
+    CollapseButton(bool defaultOpen);
 
 protected:
-	void paintButton(Graphics& g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+    void paintButton(juce::Graphics &g, bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 };
 
-class CollapseHeader : public Component, public ChangeBroadcaster, private Button::Listener {
+class CollapseHeader : public juce::Component, public juce::ChangeBroadcaster, private juce::Button::Listener {
 public:
-	CollapseHeader(String const &title, bool defaultOpen);
+    CollapseHeader(juce::String const &title, bool defaultOpen);
 
-	virtual void resized() override;
+    virtual void resized() override;
 
-	bool isOpen() const;
+    bool isOpen() const;
 
 private:
-	void buttonClicked(Button*) override;
+    void buttonClicked(juce::Button *) override;
 
-	Label text_;
-	CollapseButton collapse_;
+    juce::Label text_;
+    CollapseButton collapse_;
 };
 
-class CollapsibleContainer : public Component, private ChangeListener {
+class CollapsibleContainer : public juce::Component, private juce::ChangeListener {
 public:
-	CollapsibleContainer(String const &title, Component *collapsible, bool defaultOpen);
-	virtual ~CollapsibleContainer() override;
+    CollapsibleContainer(juce::String const &title, juce::Component *collapsible, bool defaultOpen);
+    virtual ~CollapsibleContainer() override;
 
-	virtual void resized() override;
+    virtual void resized() override;
 
-	bool isOpen() const;
+    bool isOpen() const;
 
 private:
-	void changeListenerCallback(ChangeBroadcaster* source) override;
+    void changeListenerCallback(juce::ChangeBroadcaster *source) override;
 
-	CollapseHeader collapseHeader_;
-	Component *collapsible_;
+    CollapseHeader collapseHeader_;
+    juce::Component *collapsible_;
 };

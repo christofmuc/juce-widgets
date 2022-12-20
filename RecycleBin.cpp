@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ void RecycleBin::resized()
 {
     auto bounds = getLocalBounds();
     wasteBin_.setBounds(bounds);
-    wasteBin_.setImagePlacement(RectanglePlacement::xMid | RectanglePlacement::yMid | RectanglePlacement::onlyReduceInSize);
+    wasteBin_.setImagePlacement(juce::RectanglePlacement::xMid | juce::RectanglePlacement::yMid | juce::RectanglePlacement::onlyReduceInSize);
 }
 
 bool RecycleBin::isInterestedInDragSource(const SourceDetails& dragSourceDetails)
@@ -50,9 +50,9 @@ void RecycleBin::itemDropped(const SourceDetails& dragSourceDetails)
     if (onItemDropped) onItemDropped(dragSourceDetails.description);
 }
 
-void RecycleBin::mouseUp(const MouseEvent& event)
+void RecycleBin::mouseUp(const juce::MouseEvent& event)
 {
-    ignoreUnused(event);
+    juce::ignoreUnused(event);
     if (onClicked) {
         onClicked();
     }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
 SplitteredComponent::SplitteredComponent(std::string const& componentName, SplitteredEntry first, SplitteredEntry second, bool isVertical) :
     componentName_(componentName), first_(first.component), second_(second.component), isVertical_(isVertical), didLoad_(false)
 {
-    auto resizer = new StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
+    auto resizer = new juce::StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
     resizerBars_.add(resizer);
 
     addAndMakeVisible(first_);
@@ -53,8 +53,8 @@ SplitteredComponent::SplitteredComponent(std::string const& componentName, Split
     componentName_(componentName),
     first_(first.component), second_(second.component), third_(third.component), isVertical_(isVertical), didLoad_(false)
 {
-    auto resizer1 = new StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
-    auto resizer2 = new StretchableLayoutResizerBar(&stretchableManager_, 3, isVertical);
+    auto resizer1 = new juce::StretchableLayoutResizerBar(&stretchableManager_, 1, isVertical);
+    auto resizer2 = new juce::StretchableLayoutResizerBar(&stretchableManager_, 3, isVertical);
     resizerBars_.add(resizer1);
     resizerBars_.add(resizer2);
 
@@ -82,16 +82,16 @@ SplitteredComponent::SplitteredComponent(std::string const& componentName, Split
 SplitteredComponent::~SplitteredComponent()
 {
     // Store the position(s)
-    Settings::instance().set(componentName_ + "-pos1", String(stretchableManager_.getItemCurrentPosition(1)).toStdString());
+    Settings::instance().set(componentName_ + "-pos1", juce::String(stretchableManager_.getItemCurrentPosition(1)).toStdString());
     if (nComponents_ > 3) {
-        Settings::instance().set(componentName_ + "-pos2", String(stretchableManager_.getItemCurrentPosition(3)).toStdString());
+        Settings::instance().set(componentName_ + "-pos2", juce::String(stretchableManager_.getItemCurrentPosition(3)).toStdString());
     }
     delete componentOrder_;
 }
 
 void SplitteredComponent::resized()
 {
-    Rectangle<int> area(getLocalBounds());
+    juce::Rectangle<int> area(getLocalBounds());
     stretchableManager_.layOutComponents(componentOrder_, 5, area.getX(), area.getY(), area.getWidth(), area.getHeight(), !isVertical_, true);
 
     if (!didLoad_) {

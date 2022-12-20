@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 #include "MidiChannel.h"
 
-class MidiChannelEntry : public Component, private Slider::Listener {
+class MidiChannelEntry : public juce::Component, private juce::Slider::Listener {
 public:
     typedef std::function<void(MidiChannel newChannel)> TSetMidiChannelCallback;
 
@@ -38,10 +38,10 @@ public:
     void setValue(MidiChannel newChannel);
 
     // Implementation of behavior
-    virtual void sliderValueChanged(Slider* slider) override;
+    virtual void sliderValueChanged(juce::Slider* slider) override;
     virtual void resized() override;
 
 private:
     TSetMidiChannelCallback callback_;
-    std::unique_ptr<Slider> slider_;
+    std::unique_ptr<juce::Slider> slider_;
 };

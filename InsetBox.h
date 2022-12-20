@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,17 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
-class InsetBox : public Component {
+class InsetBox : public juce::Component {
 public:
-    InsetBox(Component *content, BorderSize<int> borders);
+    InsetBox(juce::Component *content, juce::BorderSize<int> borders);
 
     void resized() override;
 
 private:
-    Component *content_;
-    BorderSize<int> borders_;
+    juce::Component *content_;
+    juce::BorderSize<int> borders_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InsetBox)
 };

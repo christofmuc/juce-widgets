@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
 
 #include "MidiChannelEntry.h"
 
-class MidiChannelEntryWithSnap : public Slider {
+class MidiChannelEntryWithSnap : public juce::Slider {
 public:
     MidiChannelEntryWithSnap()
     {
-        setSliderStyle(Slider::IncDecButtons);
+        setSliderStyle(juce::Slider::IncDecButtons);
         setRange(1.0, 16.0, 1.0);
         setNumDecimalPlacesToDisplay(0);
     }
@@ -36,7 +36,7 @@ public:
     virtual double snapValue(double attemptedValue, DragMode dragMode) override
     {
         ignoreUnused(dragMode);
-        return roundToIntAccurate(attemptedValue);
+        return juce::roundToIntAccurate(attemptedValue);
     }
 };
 
@@ -49,19 +49,19 @@ MidiChannelEntry::MidiChannelEntry(TSetMidiChannelCallback callback) : callback_
 
 void MidiChannelEntry::setValue(MidiChannel newChannel)
 {
-    slider_->setValue(newChannel.toOneBasedInt(), dontSendNotification);
+    slider_->setValue(newChannel.toOneBasedInt(), juce::dontSendNotification);
 }
 
-void MidiChannelEntry::sliderValueChanged(Slider* slider)
+void MidiChannelEntry::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == slider_.get()) {
-        callback_(MidiChannel::fromOneBase(roundToIntAccurate(slider_->getValue())));
+        callback_(MidiChannel::fromOneBase(juce::roundToIntAccurate(slider_->getValue())));
     }
 }
 
 void MidiChannelEntry::resized()
 {
-    Rectangle<int> area(getLocalBounds());
+    juce::Rectangle<int> area(getLocalBounds());
     int sliderHeight = 30;
     slider_->setBounds(0, (area.getHeight() - sliderHeight) / 2, area.getWidth(), sliderHeight);
 }

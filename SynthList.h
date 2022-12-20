@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,18 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 class ActiveListItem {
 public:
     virtual std::string getName() = 0;
     virtual bool isActive() = 0;
-    virtual Colour getColour() = 0;
+    virtual juce::Colour getColour() = 0;
 };
 
-class SynthButtonWithActiveLight : public Component {
+class SynthButtonWithActiveLight : public juce::Component {
 public:
-    SynthButtonWithActiveLight(std::string const &name, Colour color, bool active);
+    SynthButtonWithActiveLight(std::string const &name, juce::Colour color, bool active);
 
     virtual void resized() override;
 
@@ -47,11 +47,11 @@ public:
     std::function<void(std::string const &)> onSynthSelected;
 
 private:
-    TextButton button_;
-    Label label_;
+    juce::TextButton button_;
+    juce::Label label_;
 };
 
-class SynthList : public Component, public ChangeListener {
+class SynthList : public juce::Component, public juce::ChangeListener {
 public:
     void setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback);
     void setActiveListItem(std::string const &active);
@@ -59,10 +59,10 @@ public:
     virtual void resized() override;
 
     // This is called when the synth list changes
-    virtual void changeListenerCallback(ChangeBroadcaster *source) override;
+    virtual void changeListenerCallback(juce::ChangeBroadcaster *source) override;
 
 private:
     std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback_;
     std::vector<std::shared_ptr<ActiveListItem>> synths_;
-    OwnedArray<SynthButtonWithActiveLight> buttons_;
+    juce::OwnedArray<SynthButtonWithActiveLight> buttons_;
 };

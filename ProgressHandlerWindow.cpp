@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 #include "ProgressHandlerWindow.h"
 
-ProgressHandlerWindow::ProgressHandlerWindow(std::string const &title, std::string const &message) : ThreadWithProgressWindow(title, true, true)
+ProgressHandlerWindow::ProgressHandlerWindow(std::string const &title, std::string const &message) : juce::ThreadWithProgressWindow(title, true, true)
 {
     setMessage(message);
 }
@@ -32,7 +32,7 @@ ProgressHandlerWindow::ProgressHandlerWindow(std::string const &title, std::stri
 void ProgressHandlerWindow::run()
 {
     while (!threadShouldExit()) {
-        Thread::sleep(100);
+        juce::Thread::sleep(100);
     }
 }
 

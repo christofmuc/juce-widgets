@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ InfoText::InfoText()
 {
     setMultiLine(true);
     setReadOnly(true);
-    setColour(TextEditor::ColourIds::outlineColourId, ColourHelpers::getUIColour(this, LookAndFeel_V4::ColourScheme::windowBackground));
-    setColour(TextEditor::ColourIds::backgroundColourId, ColourHelpers::getUIColour(this, LookAndFeel_V4::ColourScheme::windowBackground));
+    setColour(juce::TextEditor::ColourIds::outlineColourId, ColourHelpers::getUIColour(this, juce::LookAndFeel_V4::ColourScheme::windowBackground));
+    setColour(juce::TextEditor::ColourIds::backgroundColourId,
+        ColourHelpers::getUIColour(this, juce::LookAndFeel_V4::ColourScheme::windowBackground));
 }

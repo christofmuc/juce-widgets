@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,97 +26,99 @@
 
 #include "LayoutConstants.h"
 
-SynthButtonWithActiveLight::SynthButtonWithActiveLight(std::string const& name, Colour color, bool active)
+SynthButtonWithActiveLight::SynthButtonWithActiveLight(std::string const &name, juce::Colour color, bool active)
 {
-	button_.setButtonText(name);
-	button_.setClickingTogglesState(true);
-	button_.setColour(TextButton::buttonOnColourId, color);
-	button_.onClick = [this]() {
-		if (button_.getToggleState()) {
-			onSynthSelected(this->name());
-		}
-	};
-	addAndMakeVisible(button_);
+    button_.setButtonText(name);
+    button_.setClickingTogglesState(true);
+    button_.setColour(juce::TextButton::buttonOnColourId, color);
+    button_.onClick = [this]() {
+        if (button_.getToggleState()) {
+            onSynthSelected(this->name());
+        }
+    };
+    addAndMakeVisible(button_);
 
-	setActiveState(active);
-	addAndMakeVisible(label_);
+    setActiveState(active);
+    addAndMakeVisible(label_);
 }
 
 void SynthButtonWithActiveLight::resized()
 {
-	auto activeArea = getLocalBounds();
-	auto bottomrow = activeArea.removeFromBottom(20);
-	auto toprow = activeArea.removeFromTop(LAYOUT_LARGE_LINE_HEIGHT);
-	button_.setBounds(toprow);
-	label_.setBounds(bottomrow.reduced(LAYOUT_INSET_NORMAL));
+    auto activeArea = getLocalBounds();
+    auto bottomrow = activeArea.removeFromBottom(20);
+    auto toprow = activeArea.removeFromTop(LAYOUT_LARGE_LINE_HEIGHT);
+    button_.setBounds(toprow);
+    label_.setBounds(bottomrow.reduced(LAYOUT_INSET_NORMAL));
 }
 
 std::string SynthButtonWithActiveLight::name() const
 {
-	return button_.getButtonText().toStdString();
+    return button_.getButtonText().toStdString();
 }
 
 void SynthButtonWithActiveLight::setToggleState(bool toggleState)
 {
-	button_.setToggleState(toggleState, dontSendNotification);
+    button_.setToggleState(toggleState, juce::dontSendNotification);
 }
 
 void SynthButtonWithActiveLight::setActiveState(bool activeState)
 {
-	label_.setColour(Label::ColourIds::backgroundColourId, activeState ? Colours::darkgreen : Colours::darkgrey);
+    label_.setColour(juce::Label::ColourIds::backgroundColourId, activeState ? juce::Colours::darkgreen : juce::Colours::darkgrey);
 }
 
-void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback)
+void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths,
+    std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback)
 {
-	buttons_.clear();
-	synths_ = synths;
-	synthSwitchCallback_ = synthSwitchCallback;
-	for (auto synth : synths_) {
-		auto button = new SynthButtonWithActiveLight(synth->getName(), synth->getColour(), synth->isActive());
-		button->onSynthSelected = [this](std::string const &name) {
-			for (auto s : synths_) {
-				if (name == s->getName()) {
-					setActiveListItem(name);
-					synthSwitchCallback_(s);
-					return;
-				}
-			}
-			jassertfalse;
-		};
-		button->setToggleState(buttons_.size() == 0);
-		buttons_.add(button);
-		addAndMakeVisible(button);
-	}
-	resized();
+    buttons_.clear();
+    synths_ = synths;
+    synthSwitchCallback_ = synthSwitchCallback;
+    for (auto synth : synths_) {
+        auto button = new SynthButtonWithActiveLight(synth->getName(), synth->getColour(), synth->isActive());
+        button->onSynthSelected = [this](std::string const &name) {
+            for (auto s : synths_) {
+                if (name == s->getName()) {
+                    setActiveListItem(name);
+                    synthSwitchCallback_(s);
+                    return;
+                }
+            }
+            jassertfalse;
+        };
+        button->setToggleState(buttons_.size() == 0);
+        buttons_.add(button);
+        addAndMakeVisible(button);
+    }
+    resized();
 }
 
 void SynthList::setActiveListItem(std::string const &active)
 {
-	for (auto button : buttons_) {
-		button->setToggleState(button->name() == active);
-	}
+    for (auto button : buttons_) {
+        button->setToggleState(button->name() == active);
+    }
 }
 
-void SynthList::resized() {
-	Rectangle<int> area(getLocalBounds());
-	int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), LAYOUT_BUTTON_WIDTH + LAYOUT_INSET_NORMAL) : 0;
-
-	auto activeArea = area.removeFromRight(width * buttons_.size());
-
-	// Horizontal layout
-	for (int i = 0; i < buttons_.size(); i++) {
-		int rightMargin = 0;
-		if (i != buttons_.size() - 1) rightMargin = LAYOUT_INSET_NORMAL;
-		buttons_[i]->setBounds(activeArea.removeFromLeft(width).withTrimmedRight(rightMargin));
-	}
-}
-
-void SynthList::changeListenerCallback(ChangeBroadcaster*)
+void SynthList::resized()
 {
-	// Update the availability of the synths (not the list itself)
-	int i = 0;
-	for (auto synth : synths_) {
-		buttons_[i]->setActiveState(synth->isActive());
-		i++;
-	}
+    juce::Rectangle<int> area(getLocalBounds());
+    int width = buttons_.size() != 0 ? std::min(area.getWidth() / buttons_.size(), LAYOUT_BUTTON_WIDTH + LAYOUT_INSET_NORMAL) : 0;
+
+    auto activeArea = area.removeFromRight(width * buttons_.size());
+
+    // Horizontal layout
+    for (int i = 0; i < buttons_.size(); i++) {
+        int rightMargin = 0;
+        if (i != buttons_.size() - 1) rightMargin = LAYOUT_INSET_NORMAL;
+        buttons_[i]->setBounds(activeArea.removeFromLeft(width).withTrimmedRight(rightMargin));
+    }
+}
+
+void SynthList::changeListenerCallback(juce::ChangeBroadcaster *)
+{
+    // Update the availability of the synths (not the list itself)
+    int i = 0;
+    for (auto synth : synths_) {
+        buttons_[i]->setActiveState(synth->isActive());
+        i++;
+    }
 }

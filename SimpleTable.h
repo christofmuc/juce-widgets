@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2021 Christof Ruch
+ * Copyright (c) 2019-2023 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,111 +24,97 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 // Implement this function for your data type, effectively providing the descriptive text for the column of the data item
-template <typename I>
-void visit(I const &dataItem, int column, std::function<void(std::string const &)> visitor);
+template <typename I> void visit(I const &dataItem, int column, std::function<void(std::string const &)> visitor);
 
-template <class T>
-class SimpleTable : public Component, public TableListBoxModel {
+template <class T> class SimpleTable : public juce::Component, public juce::TableListBoxModel {
 public:
+    SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam) :
+        rowSelectedHandler(rowSelectedHandlerParam), items_(data)
+    {
+        addAndMakeVisible(table_);
 
-	SimpleTable(std::vector<std::string> const &columnHeader, T const &data, std::function<void(int)> rowSelectedHandlerParam)
-        : rowSelectedHandler(rowSelectedHandlerParam), items_(data) {
-		addAndMakeVisible(table_);
+        numColumns_ = 1;
+        for (const auto &column : columnHeader) {
+            table_.getHeader().addColumn(column, numColumns_++, 200, 50, -1);
+        }
 
-		numColumns_ = 1;
-		for (const auto& column : columnHeader) {
-			table_.getHeader().addColumn(column,
-				numColumns_++,
-				200,
-				50,
-				-1);
-		}
+        table_.setColour(ListBox::outlineColourId, Colours::grey);
+        table_.setOutlineThickness(1);
+        table_.setModel(this);
+    }
 
-		table_.setColour(ListBox::outlineColourId, Colours::grey);
-		table_.setOutlineThickness(1);
-		table_.setModel(this);
-	}
+    // Update data
+    void updateData(T const &newData)
+    {
+        items_ = newData;
+        MessageManager::callAsync([this]() {
+            table_.updateContent();
+            table_.autoSizeAllColumns();
+            table_.repaint();
+        });
+    }
 
-	// Update data
-	void updateData(T const &newData) {
-		items_ = newData;
-		MessageManager::callAsync([this]() {
-			table_.updateContent();
-			table_.autoSizeAllColumns();
-			table_.repaint();
-		});
+    void selectRow(int rowNum) { table_.selectRow(rowNum); }
 
-	}
+    void clearSelection() { table_.deselectAllRows(); }
 
-	void selectRow(int rowNum) {
-		table_.selectRow(rowNum);
-	}
+    // Implementing the TableListBoxModel
+    virtual int getNumRows() override { return (int) items_.size(); }
 
-	void clearSelection() {
-		table_.deselectAllRows();
-	}
-
-	// Implementing the TableListBoxModel
-	virtual int getNumRows() override {
-		return (int) items_.size();
-	}
-
-	virtual void paintRowBackground(Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override {
+    virtual void paintRowBackground(juce::Graphics &g, int rowNumber, int width, int height, bool rowIsSelected) override
+    {
         ignoreUnused(width, height);
-		auto alternateColour = getLookAndFeel().findColour(ListBox::backgroundColourId).interpolatedWith(getLookAndFeel().findColour(ListBox::textColourId), 0.03f);
-		if (rowIsSelected) {
-			g.fillAll(Colours::lightblue);
-		}
-		else if (rowNumber % 2) {
-			g.fillAll(alternateColour);
-		}
-	}
+        auto alternateColour = getLookAndFeel()
+                                   .findColour(juce::ListBox::backgroundColourId)
+                                   .interpolatedWith(getLookAndFeel().findColour(juce::ListBox::textColourId), 0.03f);
+        if (rowIsSelected) {
+            g.fillAll(juce::Colours::lightblue);
+        }
+        else if (rowNumber % 2) {
+            g.fillAll(alternateColour);
+        }
+    }
 
-	virtual void paintCell(Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override {
-		g.setColour(rowIsSelected ? Colours::darkblue : getLookAndFeel().findColour(ListBox::textColourId));
-		//g.setFont(font);
+    virtual void paintCell(juce::Graphics &g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override
+    {
+        g.setColour(rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour(juce::ListBox::textColourId));
+        // g.setFont(font);
 
-		visit(items_[rowNumber], columnId, [&](std::string const &text) {
-			g.drawText(text, 2, 0, width - 4, height, Justification::centredLeft, true);
-		});
+        visit(items_[rowNumber], columnId,
+            [&](std::string const &text) { g.drawText(text, 2, 0, width - 4, height, Justification::centredLeft, true); });
 
-		// Draw separator line
-		g.setColour(getLookAndFeel().findColour(ListBox::backgroundColourId));
-		g.fillRect(width - 1, 0, 1, height);
-	}
+        // Draw separator line
+        g.setColour(getLookAndFeel().findColour(juce::ListBox::backgroundColourId));
+        g.fillRect(width - 1, 0, 1, height);
+    }
 
-	virtual void selectedRowsChanged(int lastRowSelected) override {
-		if (rowSelectedHandler) {
-			rowSelectedHandler(lastRowSelected);
-		}
-	}
+    virtual void selectedRowsChanged(int lastRowSelected) override
+    {
+        if (rowSelectedHandler) {
+            rowSelectedHandler(lastRowSelected);
+        }
+    }
 
-	void resized() override
-	{
-		table_.setBounds(getLocalBounds());
-	}
+    void resized() override { table_.setBounds(getLocalBounds()); }
 
-	int getColumnAutoSizeWidth(int columnId) override
-	{
-		Font defaultFont;
-		int widest = defaultFont.getStringWidth(table_.getHeader().getColumnName(columnId));
-		for (auto rowNumber = getNumRows(); --rowNumber >= 0;)
-		{
-			visit(items_[rowNumber], columnId, [&](std::string const &text) {
-				widest = jmax(widest, defaultFont.getStringWidth(text));
-			});
-		}
-		return widest + 8;
-	}
+    int getColumnAutoSizeWidth(int columnId) override
+    {
+        juce::Font defaultFont;
+        int widest = defaultFont.getStringWidth(table_.getHeader().getColumnName(columnId));
+        for (auto rowNumber = getNumRows(); --rowNumber >= 0;) {
+            visit(items_[rowNumber], columnId, [&](std::string const &text) { widest = jmax(widest, defaultFont.getStringWidth(text)); });
+        }
+        return widest + 8;
+    }
 
-	std::function<void(int)> rowSelectedHandler;
+    std::function<void(int)> rowSelectedHandler;
 
 
 private:
-	TableListBox table_;
-	T items_;
-	int numColumns_;
+    juce::TableListBox table_;
+    T items_;
+    int numColumns_;
 };
