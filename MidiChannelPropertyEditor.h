@@ -24,10 +24,12 @@
 
 #pragma once
 
+#include <juce_audio_devices/juce_audio_devices.h>
+
 #include "MidiChannel.h"
 #include "TypedNamedValue.h"
 
-#include <set>
+#include <map>
 
 class MidiChannelPropertyEditor : public TypedNamedValue {
 public:
@@ -40,8 +42,13 @@ public:
     MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
 
     void refreshDeviceList();
-    void refreshDropdownList(std::vector<juce::MidiDeviceInfo> const &deviceList);
+    void refreshDropdownList(juce::Array<juce::MidiDeviceInfo> deviceList);
+
+    juce::MidiDeviceInfo selectedDevice() const;
+    void setSelectedDevice(juce::MidiDeviceInfo const &device);
 
 private:
     bool inputInsteadOfOutput_;
+    std::map<int, juce::String> identifierPerRow_;
+    std::map<juce::String, juce::MidiDeviceInfo> devices_;
 };
