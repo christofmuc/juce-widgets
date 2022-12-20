@@ -40,7 +40,7 @@ public:
     MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
 
     void refreshDeviceList();
-    void refreshDropdownList(std::vector<std::string> const &deviceList);
+    void refreshDropdownList(std::vector<juce::MidiDeviceInfo> const &deviceList);
 
 private:
     bool inputInsteadOfOutput_;
