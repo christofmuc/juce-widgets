@@ -65,7 +65,7 @@ private:
 };
 
 
-LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true */) :
+LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true */, bool showLevelSelector /* = false */) :
     juce::Component(), document_(new juce::CodeDocument)
 {
     tokenizer_ = new LogTokenizer(*document_);
@@ -85,6 +85,16 @@ LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true *
         lambdas.push_back({ "saveLog", { "Save log...", [this]() { saveLog(); } } });
     };
     buttons_->setButtonDefinitions(lambdas);
+    if (showLevelSelector) {
+        juce::StringArray levelItems;
+        for (auto level : tokenizer_->getDefaultColourScheme().types) {
+            levelItems.add(level.name);
+        }
+        levelSelector_.addItemList(levelItems, 1);
+        levelSelector_.getSelectedIdAsValue().referTo(level_);
+        addAndMakeVisible(levelSelector_);
+        levelSelector_.onChange = [this]() { refresh(); };
+    }
 }
 
 LogView::~LogView()
@@ -96,7 +106,11 @@ LogView::~LogView()
 
 void LogView::logMessage(spdlog::level::level_enum level, juce::String const& message)
 {
-    if (level >= level_) {
+    {
+        juce::ScopedLock lock(fullLogLock_);
+        fullLog_.emplace_back(level, message.toStdString());
+    }
+    if (level >= ((int)level_.getValue()) - 1) {
         juce::MessageManager::callAsync([this, level, message]() {
             //TODO We need to make sure this is only a single line!
             document_->insertText(document_->getNumCharacters(), message);
@@ -111,12 +125,13 @@ void LogView::resized()
 {
     juce::Rectangle<int> area(getLocalBounds());
     buttons_->setBounds(area.removeFromTop(30).withTrimmedTop(8).removeFromRight(180).withTrimmedRight(20));
+    levelSelector_.setBounds(area.removeFromTop(30).withTrimmedTop(8).removeFromRight(180).withTrimmedRight(20));
     logBox_->setBounds(getLocalBounds());
 }
 
 void LogView::addMessageToListWithoutTimestamp(juce::String const& message)
 {
-    logMessage(spdlog::level::debug, message);
+    logMessage(spdlog::level::info, message);
 }
 
 
@@ -129,10 +144,36 @@ void LogView::addMessageToList(juce::String const& message)
 
 void LogView::clearLog()
 {
+    clearView();
+    {
+        juce::ScopedLock lock(fullLogLock_);
+        fullLog_.clear();
+    }
+}
+
+void LogView::clearView()
+{
     document_->replaceAllContent("");
     document_->clearUndoHistory();
     document_->setSavePoint();
     tokenizer_->clear();
+}
+
+void LogView::refresh()
+{
+    juce::MessageManager::callAsync([this]() {
+        clearView();
+        juce::ScopedLock lock(fullLogLock_);
+        for (auto const& line : fullLog_) {
+            if (line.first >= ((int) level_.getValue()) - 1) {
+                // TODO We need to make sure this is only a single line!
+                document_->insertText(document_->getNumCharacters(), line.second);
+                tokenizer_->addLine(line.first);
+            }
+        }
+        document_->clearUndoHistory();
+        logBox_->scrollToKeepCaretOnScreen();
+    });
 }
 
 void LogView::saveLog()

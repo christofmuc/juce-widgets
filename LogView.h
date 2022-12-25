@@ -36,7 +36,7 @@ class LogTokenizer;
 
 class LogView : public juce::Component {
 public:
-    LogView(bool showClear = true, bool showSave = true, bool showLineNumbers = true);
+    explicit LogView(bool showClear = true, bool showSave = true, bool showLineNumbers = true, bool showLevelSelector = false);
     virtual ~LogView() override;
 
     void logMessage(spdlog::level::level_enum level, juce::String const &message);
@@ -50,11 +50,17 @@ public:
     virtual void resized() override;
 
 private:
+    void clearView();
+    void refresh();
+
     std::unique_ptr<juce::CodeDocument> document_;
+    std::vector<std::pair<spdlog::level::level_enum, std::string>> fullLog_;
+    juce::CriticalSection fullLogLock_;
     LogTokenizer *tokenizer_;
     std::unique_ptr<LambdaButtonStrip> buttons_;
     std::unique_ptr<juce::CodeEditorComponent> logBox_;
-    spdlog::level::level_enum level_ { spdlog::level::level_enum::info };
+    juce::ComboBox levelSelector_;
+    juce::Value level_ { spdlog::level::level_enum::info + 1};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LogView)
 };
