@@ -88,7 +88,7 @@ ENDIF()
 
 # Setup library
 add_library(juce-widgets ${Sources})
-target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} ${APPLE_BOOST} fmt::fmt spdlog::spdlog)
+target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} fmt::fmt spdlog::spdlog)
 target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
 # Pedantic about warnings and precompiled headers
