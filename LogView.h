@@ -30,22 +30,31 @@
 #include "Logger.h"
 
 #include <set>
+#include <spdlog/common.h>
+
+class LogTokenizer;
 
 class LogView : public juce::Component {
 public:
     LogView(bool showClear = true, bool showSave = true, bool showLineNumbers = true);
+    virtual ~LogView() override;
 
+    void logMessage(spdlog::level::level_enum level, juce::String const &message);
     void addMessageToList(juce::String const &message);
     void addMessageToListWithoutTimestamp(juce::String const &message);
     void clearLog();
     void saveLog();
 
+    void setLogLevel(spdlog::level::level_enum level);
+
     virtual void resized() override;
 
 private:
     std::unique_ptr<juce::CodeDocument> document_;
+    LogTokenizer *tokenizer_;
     std::unique_ptr<LambdaButtonStrip> buttons_;
-    juce::CodeEditorComponent logBox_;
+    std::unique_ptr<juce::CodeEditorComponent> logBox_;
+    spdlog::level::level_enum level_ { spdlog::level::level_enum::info };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LogView)
 };

@@ -29,12 +29,51 @@
 #include "fmt/core.h"
 #include <juce_cryptography/juce_cryptography.h>
 
+
+class LogTokenizer : public juce::CodeTokeniser {
+public:
+    LogTokenizer(juce::CodeDocument& doc) : document_(doc) {}
+
+    virtual int readNextToken(juce::CodeDocument::Iterator& source) override
+    {
+        // Just read a full line and return the memorized log level for this line
+        int lineNo = source.getLine();
+        source.skipToEndOfLine();
+        return lineNo < levels_.size() ? levels_[lineNo] : spdlog::level::level_enum::off;
+    }
+
+    virtual juce::CodeEditorComponent::ColourScheme getDefaultColourScheme() override
+    {
+        juce::CodeEditorComponent::ColourScheme result;
+        result.set(SPDLOG_LEVEL_NAME_TRACE.data(), juce::Colours::darkgrey);
+        result.set(SPDLOG_LEVEL_NAME_DEBUG.data(), juce::Colours::lightgrey);
+        result.set(SPDLOG_LEVEL_NAME_INFO.data(), juce::Colours::beige);
+        result.set(SPDLOG_LEVEL_NAME_WARNING.data(), juce::Colours::lightblue);
+        result.set(SPDLOG_LEVEL_NAME_ERROR.data(), juce::Colours::indianred);
+        result.set(SPDLOG_LEVEL_NAME_CRITICAL.data(), juce::Colours::orangered);
+        result.set(SPDLOG_LEVEL_NAME_OFF.data(), juce::Colours::black);
+        return result;
+    }
+
+    void addLine(int loglevel) { levels_.push_back(loglevel); }
+
+    void clear() { levels_.clear(); }
+
+private:
+    std::vector<int> levels_;
+    juce::CodeDocument& document_;
+};
+
+
 LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true */) :
-    juce::Component(), document_(new juce::CodeDocument), logBox_(*document_, nullptr)
+    juce::Component(), document_(new juce::CodeDocument)
 {
-    addAndMakeVisible(logBox_);
-    logBox_.setReadOnly(true);
-    logBox_.setLineNumbersShown(showLineNumbers);
+    tokenizer_ = new LogTokenizer(*document_);
+    logBox_ = std::make_unique<juce::CodeEditorComponent>(*document_, tokenizer_);
+
+    addAndMakeVisible(*logBox_);
+    logBox_->setReadOnly(true);
+    logBox_->setLineNumbersShown(showLineNumbers);
     document_->setNewLineCharacters("\n");
     buttons_ = std::make_unique<LambdaButtonStrip>(101, LambdaButtonStrip::Direction::Horizontal);
     addAndMakeVisible(*buttons_);
@@ -48,20 +87,36 @@ LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true *
     buttons_->setButtonDefinitions(lambdas);
 }
 
+LogView::~LogView()
+{
+    logBox_.reset();
+    delete tokenizer_;
+}   
+
+
+void LogView::logMessage(spdlog::level::level_enum level, juce::String const& message)
+{
+    if (level >= level_) {
+        juce::MessageManager::callAsync([this, level, message]() {
+            //TODO We need to make sure this is only a single line!
+            document_->insertText(document_->getNumCharacters(), message);
+            document_->clearUndoHistory();
+            logBox_->scrollToKeepCaretOnScreen();
+            tokenizer_->addLine(level);
+        });
+    }
+}
+
 void LogView::resized()
 {
     juce::Rectangle<int> area(getLocalBounds());
     buttons_->setBounds(area.removeFromTop(30).withTrimmedTop(8).removeFromRight(180).withTrimmedRight(20));
-    logBox_.setBounds(getLocalBounds());
+    logBox_->setBounds(getLocalBounds());
 }
 
 void LogView::addMessageToListWithoutTimestamp(juce::String const& message)
 {
-    juce::MessageManager::callAsync([this, message]() {
-        document_->insertText(document_->getNumCharacters(), message);
-        document_->clearUndoHistory();
-        logBox_.scrollToKeepCaretOnScreen();
-    });
+    logMessage(spdlog::level::debug, message);
 }
 
 
@@ -77,6 +132,7 @@ void LogView::clearLog()
     document_->replaceAllContent("");
     document_->clearUndoHistory();
     document_->setSavePoint();
+    tokenizer_->clear();
 }
 
 void LogView::saveLog()
@@ -101,6 +157,11 @@ void LogView::saveLog()
             SimpleLogger::instance()->postMessage("ERROR - couldn't open file for writing: " + logFile.getFullPathName());
         }
     }
+}
+
+void LogView::setLogLevel(spdlog::level::level_enum level)
+{
+    level_ = level;
 }
 
 void LogViewLogger::postMessage(const juce::String& message)
