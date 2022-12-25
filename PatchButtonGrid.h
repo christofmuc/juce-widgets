@@ -44,7 +44,7 @@ public:
 
     virtual void resized() override
     {
-        Rectangle<int> area(getLocalBounds());
+        juce::Rectangle<int> area(getLocalBounds());
 
         juce::Grid grid;
         grid.setGap(juce::Grid::Px(LAYOUT_INSET_SMALL));
