@@ -26,8 +26,10 @@
 
 #include "Settings.h"
 
-#include "fmt/core.h"
+#include "SpdLogJuce.h"
+#include <fmt/core.h>
 #include <juce_cryptography/juce_cryptography.h>
+#include <spdlog/spdlog.h>
 
 
 class LogTokenizer : public juce::CodeTokeniser {
@@ -101,7 +103,7 @@ LogView::~LogView()
 {
     logBox_.reset();
     delete tokenizer_;
-}   
+}
 
 
 void LogView::logMessage(spdlog::level::level_enum level, juce::String const& message)
@@ -110,9 +112,9 @@ void LogView::logMessage(spdlog::level::level_enum level, juce::String const& me
         juce::ScopedLock lock(fullLogLock_);
         fullLog_.emplace_back(level, message.toStdString());
     }
-    if (level >= ((int)level_.getValue()) - 1) {
+    if (level >= ((int) level_.getValue()) - 1) {
         juce::MessageManager::callAsync([this, level, message]() {
-            //TODO We need to make sure this is only a single line!
+            // TODO We need to make sure this is only a single line!
             document_->insertText(document_->getNumCharacters(), message);
             document_->clearUndoHistory();
             logBox_->scrollToKeepCaretOnScreen();
@@ -191,11 +193,11 @@ void LogView::saveLog()
             output.writeText(document_->getAllContent(), false, false, "\\n");
             output.flush(); // (called explicitly to force an fsync on posix)
             if (output.getStatus().failed()) {
-                SimpleLogger::instance()->postMessage("ERROR - writing to destination file " + logFile.getFullPathName() + ". Disk full?");
+                spdlog::error("Writing to destination file {}. Disk full?", logFile.getFullPathName());
             }
         }
         else {
-            SimpleLogger::instance()->postMessage("ERROR - couldn't open file for writing: " + logFile.getFullPathName());
+            spdlog::error("Couldn't open file for writing: {}", logFile.getFullPathName());
         }
     }
 }

@@ -124,7 +124,6 @@ void TextSearchBox::paint(juce::Graphics& g)
         if (nameSearchText_->hasKeyboardFocus(true) && !nameSearchText_->isReadOnly()) {
             g.setColour(getLookAndFeel().findColour(juce::TextEditor::focusedOutlineColourId));
             g.drawRect(0, 0, getWidth(), getHeight(), 2);
-            // SimpleLogger::instance()->postMessage("Painting at " + String(g.getClipBounds().getWidth()) + " but wanted to " + String(getWidth()));
         }
         else {
             g.setColour(getLookAndFeel().findColour(juce::TextEditor::outlineColourId));

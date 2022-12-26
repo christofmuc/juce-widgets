@@ -27,7 +27,8 @@
 #include "BinaryResources.h"
 #include "IconHelper.h"
 
-#include "Logger.h"
+#include "SpdLogJuce.h"
+#include <spdlog/spdlog.h>
 
 class PatchTextButtonFixedFontDraggable : public juce::TextButton {
 public:
@@ -219,6 +220,6 @@ bool PatchButtonWithDropTarget::isInterestedInDragSource(const SourceDetails& dr
 void PatchButtonWithDropTarget::itemDropped(const SourceDetails& dragSourceDetails)
 {
     juce::String name = dragSourceDetails.description;
-    SimpleLogger::instance()->postMessage("Item dropped: " + name);
+    spdlog::trace("Item dropped: {}", name);
     onItemDropped(dragSourceDetails.description);
 }
