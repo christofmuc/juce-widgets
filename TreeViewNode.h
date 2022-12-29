@@ -55,6 +55,7 @@ public:
     void regenerate();
 
     void setTextColour(juce::Colour color);
+    void removeTextColour();
 
     virtual bool mightContainSubItems() override;
     virtual void itemOpennessChanged(bool isNowOpen) override;

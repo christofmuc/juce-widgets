@@ -125,6 +125,11 @@ void TreeViewNode::setTextColour(juce::Colour color)
     customTextColour_ = color;
 }
 
+void TreeViewNode::removeTextColour()
+{
+    customTextColour_.reset();
+}
+
 juce::String TreeViewNode::getUniqueName() const
 {
     if (id_.isNotEmpty()) {
