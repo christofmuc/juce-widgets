@@ -79,8 +79,13 @@ void TreeViewNode::paintItem(juce::Graphics& g, int width, int height)
         // Editable items have a custom component and don't paint themselves
         return;
     }
-    auto& lf = juce::LookAndFeel::getDefaultLookAndFeel();
-    g.setColour(lf.findColour(juce::Label::textColourId));
+    if (customTextColour_.has_value()) {
+        g.setColour(customTextColour_.value());
+    }
+    else {
+        auto& lf = juce::LookAndFeel::getDefaultLookAndFeel();
+        g.setColour(lf.findColour(juce::Label::textColourId));
+    }
     g.drawText(text_, 0, 0, width, height, juce::Justification::centredLeft);
 }
 
@@ -113,6 +118,11 @@ void TreeViewNode::regenerate()
         }
         treeHasChanged();
     }
+}
+
+void TreeViewNode::setTextColour(juce::Colour color)
+{
+    customTextColour_ = color;
 }
 
 juce::String TreeViewNode::getUniqueName() const

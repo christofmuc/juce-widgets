@@ -26,6 +26,8 @@
 
 #include "Logger.h"
 
+#include <optional>
+
 class TreeViewNode : public juce::TreeViewItem {
 public:
     typedef std::function<std::vector<juce::TreeViewItem*>()> TChildGenerator;
@@ -51,6 +53,8 @@ public:
 
     void toggleOpenness();
     void regenerate();
+
+    void setTextColour(juce::Colour color);
 
     virtual bool mightContainSubItems() override;
     virtual void itemOpennessChanged(bool isNowOpen) override;
@@ -81,4 +85,5 @@ private:
     juce::String text_;
     juce::String id_;
     bool editable_;
+    std::optional<juce::Colour> customTextColour_;
 };
