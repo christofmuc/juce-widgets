@@ -34,14 +34,12 @@
 
 class LogTokenizer : public juce::CodeTokeniser {
 public:
-    LogTokenizer(juce::CodeDocument& doc) : document_(doc) {}
-
     virtual int readNextToken(juce::CodeDocument::Iterator& source) override
     {
         // Just read a full line and return the memorized log level for this line
         int lineNo = source.getLine();
         source.skipToEndOfLine();
-        return lineNo < levels_.size() ? levels_[lineNo] : spdlog::level::level_enum::off;
+        return lineNo < static_cast<int>(levels_.size()) ? levels_[lineNo] : spdlog::level::level_enum::off;
     }
 
     virtual juce::CodeEditorComponent::ColourScheme getDefaultColourScheme() override
@@ -63,14 +61,13 @@ public:
 
 private:
     std::vector<int> levels_;
-    juce::CodeDocument& document_;
 };
 
 
 LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true */, bool showLevelSelector /* = false */) :
     juce::Component(), document_(new juce::CodeDocument)
 {
-    tokenizer_ = new LogTokenizer(*document_);
+    tokenizer_ = new LogTokenizer();
     logBox_ = std::make_unique<juce::CodeEditorComponent>(*document_, tokenizer_);
 
     addAndMakeVisible(*logBox_);
