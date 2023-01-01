@@ -80,7 +80,7 @@ void TreeViewNode::paintItem(juce::Graphics& g, int width, int height)
         return;
     }
     if (customTextColour_.has_value()) {
-        g.setColour(customTextColour_.value());
+        g.setColour(*customTextColour_);
     }
     else {
         auto& lf = juce::LookAndFeel::getDefaultLookAndFeel();

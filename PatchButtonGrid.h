@@ -47,6 +47,7 @@ public:
         juce::Rectangle<int> area(getLocalBounds());
 
         juce::Grid grid;
+        using juce::operator""_fr;
         grid.setGap(juce::Grid::Px(LAYOUT_INSET_SMALL));
         using Track = juce::Grid::TrackInfo;
         for (int i = 0; i < rows_; i++)

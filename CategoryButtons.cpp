@@ -46,9 +46,12 @@ private:
 
 CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons,
     bool useCheckboxes) :
-    updateHandler_(updated),
-    useCheckboxes_(useCheckboxes), colouredButtons_(colouredButtons), usedHeight_(0), buttonWidth_(LAYOUT_BUTTON_WIDTH),
-    buttonHeight_(LAYOUT_LINE_HEIGHT)
+    useCheckboxes_(useCheckboxes)
+    , colouredButtons_(colouredButtons)
+    , updateHandler_(updated)
+    , buttonWidth_(LAYOUT_BUTTON_WIDTH)
+    , buttonHeight_(LAYOUT_LINE_HEIGHT)
+    , usedHeight_(0)
 {
     setCategories(categories);
 }

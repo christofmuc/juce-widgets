@@ -78,7 +78,7 @@ public:
     // Requred since JUCE 6.1.2, see 
     // https://github.com/juce-framework/JUCE/commit/b2f318a775ec2b9fbcaf2f7a90b75c9912dc2dce
     // https://forum.juce.com/t/breaking-change-in-treeview-custom-component/47916/6
-    virtual bool customComponentUsesTreeViewMouseHandler() const override { return true; };
+    virtual bool customComponentUsesTreeViewMouseHandler() const override { return true; }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TreeViewNode)
 
