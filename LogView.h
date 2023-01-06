@@ -40,6 +40,8 @@ public:
     void clearLog();
     void saveLog();
 
+    void jumpToStart();
+
     virtual void resized() override;
 
 private:

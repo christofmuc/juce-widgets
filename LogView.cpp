@@ -101,6 +101,11 @@ void LogView::saveLog()
     }
 }
 
+void LogView::jumpToStart() 
+{
+    logBox_.scrollToLine(0);
+}
+
 void LogViewLogger::postMessage(const String& message)
 {
     logview_.addMessageToList(message);
