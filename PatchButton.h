@@ -27,6 +27,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "Thumbnail.h"
+#include "LambdaValueListener.h"
 
 class PatchButton : public juce::Component, private juce::TextButton::Listener {
 public:
@@ -37,14 +38,19 @@ public:
     virtual void resized() override;
     // virtual void paint(Graphics& g) override;
 
-    void setColour(int colourId, juce::Colour newColour);
+    void setPatchColour(int colourId, juce::Colour newColour);
+    void bindColour(int colourId, juce::Value colourValue);
     juce::String getButtonText() const;
-    void setButtonData(const juce::String &text, const juce::String &dragInfo);
-    void setButtonData(const juce::String &line1, const juce::String &line2, const juce::String &dragInfo);
+    void setButtonData(const juce::String &text);
+    void setButtonDragInfo(const juce::String &dragInfo);
+    void bindButtonData(juce::Value textValue);
     void setSubtitle(const juce::String &text);
+    void bindSubtitle(juce::Value textValue);
 
     void setFavorite(bool isFavorite);
+    void bindFavorite(juce::Value isFavorite);
     void setHidden(bool isHidden);
+    void bindHidden(juce::Value isHidden);
     void setThumbnailFile(const juce::String &filename, const juce::String &cacheFileName);
     void setThumbnailFromCache(const Thumbnail::CacheInfo &cacheInfo);
     void clearThumbnailFile();
@@ -66,6 +72,12 @@ private:
     juce::Label synthName_;
     int id_;
     bool active_;
+
+    std::unique_ptr<LambdaValueListener> titleListener_;
+    std::unique_ptr<LambdaValueListener> subtitleListener_;
+    std::unique_ptr<LambdaValueListener> colourListener_;
+    std::unique_ptr<LambdaValueListener> favoriteListener_;
+    std::unique_ptr<LambdaValueListener> hiddenListener_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatchButton)
 };

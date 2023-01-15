@@ -139,9 +139,17 @@ void PatchButton::resized()
     synthName_.setFont(font);
 }
 
-void PatchButton::setColour(int colourId, juce::Colour newColour)
+void PatchButton::setPatchColour(int colourId, juce::Colour newColour)
 {
     button_->setColour(colourId, newColour);
+}
+
+void PatchButton::bindColour(int colourId, juce::Value colourValue) 
+{
+    colourListener_ = std::make_unique<LambdaValueListener>(colourValue,
+        [colourId, this](juce::Value const& newValue) { setPatchColour(colourId, juce::Colour::fromString(newValue.getValue().operator juce::String())); 
+        });
+    colourListener_->trigger();
 }
 
 juce::String PatchButton::getButtonText() const
@@ -149,17 +157,23 @@ juce::String PatchButton::getButtonText() const
     return button_->getButtonText();
 }
 
-void PatchButton::setButtonData(const juce::String& text, const juce::String& dragInfo)
+void PatchButton::setButtonData(const juce::String& text)
 {
     button_->setButtonText(text.trim());
+}
+
+void PatchButton::setButtonDragInfo(const juce::String& dragInfo) 
+{
     // TODO - ugly, but kind of impl pattern
     dynamic_cast<PatchTextButtonFixedFontDraggable*>(button_.get())->setDragStartInfo(dragInfo);
 }
 
-void PatchButton::setButtonData(const juce::String& line1, const juce::String& line2, const juce::String& dragInfo)
+void PatchButton::bindButtonData(juce::Value textValue)
 {
-    button_->setButtonText(line1.trim() + "\n" + line2.trim());
-    dynamic_cast<PatchTextButtonFixedFontDraggable*>(button_.get())->setDragStartInfo(dragInfo);
+    titleListener_ = std::make_unique<LambdaValueListener>(textValue,
+        [this](juce::Value const& newValue) { setButtonData(newValue.getValue());
+        });
+    titleListener_->trigger();
 }
 
 void PatchButton::setSubtitle(const juce::String& text)
@@ -167,14 +181,35 @@ void PatchButton::setSubtitle(const juce::String& text)
     synthName_.setText(text.trim(), juce::dontSendNotification);
 }
 
+void PatchButton::bindSubtitle(juce::Value textValue) 
+{
+    subtitleListener_ =
+        std::make_unique<LambdaValueListener>(textValue, [this](juce::Value const& newValue) { setSubtitle(newValue.getValue()); });
+    subtitleListener_->trigger();
+}
+
 void PatchButton::setFavorite(bool isFavorite)
 {
     favoriteIcon_.setVisible(isFavorite);
 }
 
+void PatchButton::bindFavorite(juce::Value isFavorite)
+{
+    favoriteListener_ =
+        std::make_unique<LambdaValueListener>(isFavorite, [this](juce::Value const& newValue) { setFavorite((bool) newValue.getValue()); });
+    favoriteListener_->trigger();
+}
+
 void PatchButton::setHidden(bool isHidden)
 {
     hiddenIcon_.setVisible(isHidden);
+}
+
+void PatchButton::bindHidden(juce::Value isHidden)
+{
+    hiddenListener_ =
+        std::make_unique<LambdaValueListener>(isHidden, [this](juce::Value const& newValue) { setHidden((bool) newValue.getValue()); });
+    hiddenListener_->trigger();
 }
 
 void PatchButton::setThumbnailFile(const juce::String& filename, const juce::String& cacheFileName)
