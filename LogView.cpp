@@ -26,7 +26,7 @@
 
 #include "Settings.h"
 
-#include "fmt/core.h"
+#include "fmt/format.h"
 
 LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true */) :
     Component(), document_(new CodeDocument), logBox_(*document_, nullptr)
