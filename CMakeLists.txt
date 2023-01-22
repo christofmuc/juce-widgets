@@ -88,8 +88,8 @@ ENDIF()
 
 # Setup library
 add_library(juce-widgets ${Sources})
-target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} ${APPLE_BOOST} fmt::fmt)
-target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
+target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} ${APPLE_BOOST})
+target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_SOURCE_DIR}/third_party/fmt/include")
 
 # Pedantic about warnings and precompiled headers
 if (MSVC)
