@@ -166,7 +166,7 @@ std::unique_ptr<Component> TreeViewNode::createItemComponent()
         auto labelCreated = std::make_unique<EditOnDoubleClickLabel>(id_, text_);
         labelCreated->setEditable(false, true, true);
         labelCreated->getTextValue().referTo(textValue);
-        return std::move(labelCreated);
+        return labelCreated;
     }
     return nullptr;
 }
