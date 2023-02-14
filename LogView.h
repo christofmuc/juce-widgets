@@ -56,7 +56,7 @@ private:
     std::unique_ptr<juce::CodeDocument> document_;
     std::vector<std::pair<spdlog::level::level_enum, std::string>> fullLog_;
     juce::CriticalSection fullLogLock_;
-    LogTokenizer *tokenizer_;
+    LogTokenizer *tokenizer_ {};
     std::unique_ptr<LambdaButtonStrip> buttons_;
     std::unique_ptr<juce::CodeEditorComponent> logBox_;
     juce::ComboBox levelSelector_;

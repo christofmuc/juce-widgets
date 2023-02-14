@@ -68,7 +68,7 @@ LogView::LogView(bool showClear, bool showSave, bool showLineNumbers /* = true *
     juce::Component(), document_(new juce::CodeDocument)
 {
     tokenizer_ = new LogTokenizer();
-    logBox_ = std::make_unique<juce::CodeEditorComponent>(*document_, tokenizer_);
+    logBox_ = std::make_unique<juce::CodeEditorComponent>(*document_, nullptr);
 
     addAndMakeVisible(*logBox_);
     logBox_->setReadOnly(true);
