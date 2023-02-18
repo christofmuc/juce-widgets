@@ -159,7 +159,7 @@ juce::String PatchButton::getButtonText() const
 
 void PatchButton::setButtonData(const juce::String& text)
 {
-    button_->setButtonText(text.trim());
+    button_->setButtonText(text);
 }
 
 void PatchButton::setButtonDragInfo(const juce::String& dragInfo) 
@@ -178,7 +178,7 @@ void PatchButton::bindButtonData(juce::Value textValue)
 
 void PatchButton::setSubtitle(const juce::String& text)
 {
-    synthName_.setText(text.trim(), juce::dontSendNotification);
+    synthName_.setText(text, juce::dontSendNotification);
 }
 
 void PatchButton::bindSubtitle(juce::Value textValue) 
