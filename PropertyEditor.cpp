@@ -76,7 +76,8 @@ juce::PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamed
     case ValueType::Bool:
         return new juce::BooleanPropertyComponent(juce::Value(property->value()), property->name(), "On/Off");
     case ValueType::String:
-        return new juce::TextPropertyComponent(juce::Value(property->value()), property->name(), property->maxValue(), false, property->enabled());
+        return new juce::TextPropertyComponent(juce::Value(property->value()), property->name(), property->maxValue(), property->multiLine(),
+            property->enabled());
 #ifdef GIN_AVAILABLE
     case ValueType::Color:
         return new gin::ColourPropertyComponent(juce::Value(property->value()), property->name(), false);
