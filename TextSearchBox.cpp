@@ -84,8 +84,8 @@ TextSearchBox::TextSearchBox(std::function<void()> updateHandler) : updateHandle
 
 void TextSearchBox::setFontSize(float fontSize)
 {
-    juce::Font biggerFont;
-    biggerFont.setHeight(fontSize);
+    juce::FontOptions fontOptions(fontSize);
+    juce::Font biggerFont(fontOptions);
     nameSearchText_->setFont(biggerFont);
 }
 
