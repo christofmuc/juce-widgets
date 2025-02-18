@@ -28,8 +28,9 @@
 
 #include "Thumbnail.h"
 #include "LambdaValueListener.h"
+#include "TouchButton.h"
 
-class PatchButton : public juce::Component, private juce::TextButton::Listener {
+class PatchButton : public juce::Component {
 public:
     PatchButton(int id, bool isToggle, std::function<void(int)> clickHandler);
 
@@ -58,14 +59,15 @@ public:
     void setToggleState(bool state);
     bool getToggleState() const;
 
-    virtual void buttonClicked(juce::Button *) override;
+    // For external control
+    void trigger(juce::ModifierKeys const &modifiers = juce::ModifierKeys());
 
     // This is required when using the PatchButton with a scrollable list model, which reuses the buttons
     void updateId(int id);
 
 private:
     std::function<void(int)> clicked_;
-    std::unique_ptr<juce::TextButton> button_;
+    std::unique_ptr<TouchButton> button_;
     Thumbnail thumbnail_;
     juce::ImageComponent favoriteIcon_;
     juce::ImageComponent hiddenIcon_;

@@ -30,9 +30,10 @@
 #include "SpdLogJuce.h"
 #include <spdlog/spdlog.h>
 
-class PatchTextButtonFixedFontDraggable : public juce::TextButton {
+class PatchTextButtonFixedFontDraggable : public TouchButton {
 public:
-    using juce::TextButton::TextButton;
+    PatchTextButtonFixedFontDraggable() : TouchButton() {
+    }
 
     void setDragStartInfo(juce::String dragInfo) { dragInfo_ = dragInfo; }
 
@@ -98,7 +99,8 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 {
     button_ = std::make_unique<PatchTextButtonFixedFontDraggable>();
     addAndMakeVisible(button_.get());
-    button_->addListener(this);
+    button_->onClickWithModifiers = [this](const juce::ModifierKeys& modifiers) { trigger(modifiers);
+    };
     button_->setClickingTogglesState(isToggle);
     IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size, 16);
     IconHelper::setupIcon(this, hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size, 16);
@@ -237,14 +239,17 @@ void PatchButton::setToggleState(bool state)
     button_->setToggleState(state, juce::dontSendNotification);
 }
 
-void PatchButton::buttonClicked(juce::Button*)
-{
-    clicked_(id_);
-}
-
 bool PatchButton::getToggleState() const
 {
     return button_->getToggleState();
+}
+
+void PatchButton::trigger(juce::ModifierKeys const& modifiers)
+{
+    ignoreUnused(modifiers);
+    if (clicked_) {
+        clicked_(id_);
+    }
 }
 
 bool PatchButtonWithDropTarget::isInterestedInDragSource(const SourceDetails& dragSourceDetails)
@@ -258,3 +263,5 @@ void PatchButtonWithDropTarget::itemDropped(const SourceDetails& dragSourceDetai
     spdlog::trace("Item dropped: {}", name);
     onItemDropped(dragSourceDetails.description);
 }
+
+

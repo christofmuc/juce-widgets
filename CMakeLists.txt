@@ -70,6 +70,7 @@ set(Sources
 	SynthList.cpp SynthList.h
 	TextSearchBox.cpp TextSearchBox.h
 	Thumbnail.cpp Thumbnail.h
+	TouchButton.cpp TouchButton.h
 	TreeViewNode.h TreeViewNode.cpp
 	TwoLabelSlider.cpp TwoLabelSlider.h
 	README.md
