@@ -28,7 +28,9 @@
 
 #include <set>
 
-class CategoryButtons : public juce::Component, private juce::ToggleButton::Listener {
+#include "TouchButton.h"
+
+class CategoryButtons : public juce::Component {
 public:
     class Category {
     public:
@@ -37,7 +39,8 @@ public:
         juce::Colour color;
     };
 
-    CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons, bool useCheckboxes);
+    CategoryButtons(std::vector<Category> const &categories, std::function<void(Category, TouchButtonFunction f)> updated, bool colouredButtons,
+        bool useCheckboxes);
 
     void setCategories(std::vector<Category> const &categories);
 
@@ -47,8 +50,6 @@ public:
 
     // Override Component method
     void resized() override;
-    // Implement button listener
-    void buttonClicked(juce::Button *) override;
 
     juce::Rectangle<float> determineSubAreaForButtonLayout(juce::Component *parent, juce::Rectangle<int> const &bounds);
 
@@ -57,11 +58,13 @@ public:
     void setButtonSize(int width, int height);
 
 private:
+    void buttonClicked(juce::Button *, TouchButtonFunction f);
+
     bool useCheckboxes_;
     bool colouredButtons_;
     std::vector<Category> categories_;
     juce::OwnedArray<juce::Button> categoryFilter_;
-    std::function<void(Category)> updateHandler_;
+    std::function<void(Category, TouchButtonFunction f)> updateHandler_;
     int buttonWidth_;
     int buttonHeight_;
     int usedHeight_; // Cache layout result on how much y space we need on screen

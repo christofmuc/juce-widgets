@@ -26,13 +26,44 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
+enum class TouchButtonFunction {
+    PRIMARY,  // Without any modifiers
+    SECONDARY, // With any modifier or right click
+    LONG  // A long press
+};
 
-class TouchButton : public juce::TextButton {
+
+class TouchButton : public juce::TextButton, private juce::Timer {
 public:
-    using juce::TextButton::TextButton;
+    TouchButton();
 
-    std::function<void(const juce::ModifierKeys&)> onClickWithModifiers;
+    std::function<void(TouchButtonFunction f)> onClickMultifunction;
 
-    virtual void clicked(const juce::ModifierKeys& modifiers);
+protected:
+    // Override these to implement special behavior
+    virtual void clicked(const juce::ModifierKeys&) override;
+    virtual void mouseDown(const juce::MouseEvent& e) override;
+    virtual void mouseUp(const juce::MouseEvent& e) override;
 
+private:
+    virtual void timerCallback();
+    bool wasRightClick_ = false;
+};
+
+
+class TouchToggleButton : public juce::ToggleButton, private juce::Timer {
+public:
+    TouchToggleButton();
+
+    std::function<void(TouchButtonFunction f)> onClickMultifunction;
+
+protected:
+    // Override these to implement special behavior
+    virtual void clicked(const juce::ModifierKeys&) override;
+    virtual void mouseDown(const juce::MouseEvent& e) override;
+    virtual void mouseUp(const juce::MouseEvent& e) override;
+
+private:
+    virtual void timerCallback();
+    bool wasRightClick_ = false;
 };

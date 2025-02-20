@@ -24,8 +24,72 @@
 
 #include "TouchButton.h"
 
+TouchButton::TouchButton() : wasRightClick_(false)
+{
+}
 
 void TouchButton::clicked(const juce::ModifierKeys& modifiers)
 {
-    juce::NullCheckedInvocation::invoke(onClickWithModifiers, modifiers);
+    TouchButtonFunction f = TouchButtonFunction::PRIMARY;
+    if (modifiers.isAnyModifierKeyDown() || wasRightClick_) {
+        f = TouchButtonFunction::SECONDARY;
+    }
+    if (getMillisecondsSinceButtonDown() > 500) {
+    //    f = TouchButtonFunction::LONG;
+    }
+    juce::NullCheckedInvocation::invoke(onClickMultifunction, f);
+}
+
+void TouchButton::mouseDown(const juce::MouseEvent& e)
+{
+    // Start a timer to auto release for long click
+    startTimer(500);
+    TextButton::mouseDown(e);
+}
+
+void TouchButton::mouseUp(const juce::MouseEvent& e)
+{
+    stopTimer();
+    wasRightClick_ = e.mods.isRightButtonDown();
+    TextButton::mouseUp(e);
+}
+
+void TouchButton::timerCallback()
+{
+    clicked(juce::ModifierKeys::currentModifiers);
+}
+
+TouchToggleButton::TouchToggleButton() : wasRightClick_(false)
+{
+}
+
+void TouchToggleButton::clicked(const juce::ModifierKeys& modifiers)
+{
+    TouchButtonFunction f = TouchButtonFunction::PRIMARY;
+    if (modifiers.isAnyModifierKeyDown() || wasRightClick_) {
+        f = TouchButtonFunction::SECONDARY;
+    }
+    if (getMillisecondsSinceButtonDown() > 500) {
+        f = TouchButtonFunction::LONG;
+    }
+    juce::NullCheckedInvocation::invoke(onClickMultifunction, f);
+}
+
+void TouchToggleButton::mouseDown(const juce::MouseEvent& e)
+{
+    // Start a timer to auto release for long click
+    startTimer(500);
+    ToggleButton::mouseDown(e);
+}
+
+void TouchToggleButton::mouseUp(const juce::MouseEvent& e)
+{
+    stopTimer();
+    wasRightClick_ = e.mods.isRightButtonDown();
+    ToggleButton::mouseUp(e);
+}
+
+void TouchToggleButton::timerCallback()
+{
+    clicked(juce::ModifierKeys::currentModifiers);
 }

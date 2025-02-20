@@ -28,23 +28,27 @@
 #include "FlexBoxHelper.h"
 #include "LayoutConstants.h"
 
-class ColouredCheckbox : public juce::ToggleButton {
+class ColouredCheckbox : public TouchToggleButton {
 public:
-    ColouredCheckbox(juce::String text, juce::Colour colour) : juce::ToggleButton(text), colour_(colour) {}
+    ColouredCheckbox(juce::String text, juce::Colour colour) : TouchToggleButton(), colour_(colour) { 
+        setButtonText(text);
+        setName(text);
+    }
 
 protected:
     void paintButton(juce::Graphics &g, bool b, bool c) override
     {
         g.setFillType(juce::FillType(colour_));
         g.fillRoundedRectangle(getLocalBounds().toFloat(), 4.0f);
-        juce::ToggleButton::paintButton(g, b, c);
+        TouchToggleButton::paintButton(g, b, c);
     }
 
 private:
     juce::Colour colour_;
 };
 
-CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category)> updated, bool colouredButtons,
+CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category, TouchButtonFunction f)> updated,
+    bool colouredButtons,
     bool useCheckboxes) :
     useCheckboxes_(useCheckboxes)
     , colouredButtons_(colouredButtons)
@@ -63,23 +67,28 @@ void CategoryButtons::setCategories(std::vector<Category> const &categories)
 
     // Build filter buttons for the categories
     for (const auto &c : categories_) {
-        juce::Button *button;
         if (useCheckboxes_) {
+            TouchToggleButton *button;
             if (colouredButtons_) {
                 button = new ColouredCheckbox(c.category, c.color);
             }
             else {
-                button = new juce::ToggleButton(c.category);
+                button = new TouchToggleButton();
+                button->setButtonText(c.category);
             }
+            button->onClickMultifunction = [this, button](TouchButtonFunction f) { this->buttonClicked(button, f); };
+            addAndMakeVisible(button);
+            categoryFilter_.add(button);
         }
         else {
-            button = new juce::TextButton(c.category);
+            TouchButton *button = new TouchButton();
+            button->setButtonText(c.category);
             button->setColour(juce::TextButton::ColourIds::buttonOnColourId, c.color);
             button->setClickingTogglesState(true);
+            button->onClickMultifunction = [this, button](TouchButtonFunction f) { this->buttonClicked(button, f); };
+            addAndMakeVisible(button);
+            categoryFilter_.add(button);
         }
-        button->addListener(this);
-        addAndMakeVisible(button);
-        categoryFilter_.add(button);
     }
     resized();
 }
@@ -129,12 +138,12 @@ void CategoryButtons::resized()
     }
 }
 
-void CategoryButtons::buttonClicked(juce::Button *button)
+void CategoryButtons::buttonClicked(juce::Button *button, TouchButtonFunction f)
 {
     const auto &category = button->getButtonText();
     for (auto predef : categories_) {
         if (predef.category == category) {
-            updateHandler_(predef);
+            updateHandler_(predef, f);
         }
     }
 }

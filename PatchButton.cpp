@@ -99,7 +99,7 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 {
     button_ = std::make_unique<PatchTextButtonFixedFontDraggable>();
     addAndMakeVisible(button_.get());
-    button_->onClickWithModifiers = [this](const juce::ModifierKeys& modifiers) { trigger(modifiers);
+    button_->onClickMultifunction= [this](TouchButtonFunction f) { trigger(f);
     };
     button_->setClickingTogglesState(isToggle);
     IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size, 16);
@@ -244,9 +244,9 @@ bool PatchButton::getToggleState() const
     return button_->getToggleState();
 }
 
-void PatchButton::trigger(juce::ModifierKeys const& modifiers)
+void PatchButton::trigger(TouchButtonFunction f)
 {
-    ignoreUnused(modifiers);
+    juce::ignoreUnused(f);
     if (clicked_) {
         clicked_(id_);
     }

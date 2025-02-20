@@ -60,7 +60,7 @@ public:
     bool getToggleState() const;
 
     // For external control
-    void trigger(juce::ModifierKeys const &modifiers = juce::ModifierKeys());
+    void trigger(TouchButtonFunction f = TouchButtonFunction::PRIMARY);
 
     // This is required when using the PatchButton with a scrollable list model, which reuses the buttons
     void updateId(int id);
