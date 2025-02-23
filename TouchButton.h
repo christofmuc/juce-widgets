@@ -46,7 +46,7 @@ protected:
     virtual void mouseUp(const juce::MouseEvent& e) override;
 
 private:
-    virtual void timerCallback();
+    virtual void timerCallback() override;
     bool wasRightClick_ = false;
 };
 
