@@ -28,6 +28,76 @@
 #include "gin/gin.h"
 #endif
 
+#include <spdlog/spdlog.h>
+
+#include "LayoutConstants.h"
+
+
+class SimpleListBoxModel : public juce::ListBoxModel {
+public:
+    SimpleListBoxModel(juce::StringArray content, juce::StringArray values) : content_(content), values_(values) {
+    }
+
+    int getNumRows() override { 
+        return content_.size();
+    }
+
+    void paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) override
+    {
+        auto background = rowIsSelected ? juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::TextEditor::highlightColourId) :
+                                      juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::ListBox::backgroundColourId);
+
+        auto textColour = rowIsSelected ? juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::TextEditor::highlightedTextColourId) :
+                                          juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::ListBox::textColourId);
+
+        g.fillAll(background);
+        g.setColour(textColour);
+        g.setFont((float) juce::jmin(height, 24) * 0.65f);
+        if (rowNumber < content_.size()) {
+            g.drawText(content_[rowNumber], 5, 0, width, height, juce::Justification::centredLeft);
+        }
+    }
+
+    void listBoxItemClicked(int row, const juce::MouseEvent &) override { 
+        if (onSelected) {
+            onSelected(values_[row]);
+        }
+    }
+
+    std::function<void(juce::String const &)> onSelected;
+
+private:
+    juce::StringArray content_;
+    juce::StringArray values_;
+};
+
+
+class ListPropertyEditor : public juce::PropertyComponent {
+public:
+    ListPropertyEditor(const juce::Value &valueToControl, juce::String const &propertyName, juce::StringArray titles, juce::StringArray values) :
+        juce::PropertyComponent(propertyName, 2*LAYOUT_LINE_SPACING), value_(valueToControl), listModel_(titles, values)
+    {
+        listBox_.setModel(&listModel_);
+        addAndMakeVisible(listBox_);
+        listModel_.onSelected = [this](juce::String const &value) { value_ = value;
+        };
+    }
+
+    virtual void refresh() {
+    }
+
+    virtual void resized() { 
+        auto area = getLocalBounds();
+        auto contentBox = getLookAndFeel().getPropertyComponentContentPosition(*this); // Get the width that JUCE's LookAndFeel uses for labels
+        listBox_.setBounds(contentBox.withTrimmedLeft(2));
+    }
+
+private:
+    SimpleListBoxModel listModel_;
+    juce::ListBox listBox_;
+    juce::Value value_;
+};
+
 PropertyEditor::PropertyEditor(bool dynamicLayout /* = false*/) : dynamicLayout_(dynamicLayout)
 {
     addAndMakeVisible(propertyPanel_);
@@ -70,6 +140,15 @@ juce::PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamed
             choices.add(lookup.second);
         }
         return new juce::ChoicePropertyComponent(juce::Value(property->value()), property->name(), choices, values);
+    }
+    case ValueType::List: {
+        juce::StringArray choices;
+        juce::Array<juce::var> values;
+        for (auto item : property->list()) {
+            choices.add(item.first);
+            values.add(juce::String(item.second));
+        }
+        return new ListPropertyEditor(juce::Value(property->value()), property->name(), choices, values);
     }
     case ValueType::Integer:
         return new juce::SliderPropertyComponent(juce::Value(property->value()), property->name(), property->minValue(), property->maxValue(), 1.0);
