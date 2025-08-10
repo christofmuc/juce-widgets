@@ -37,4 +37,6 @@ struct EditSessionKeeper : private juce::FocusChangeListener {
 
 private:
     juce::Component::SafePointer<EditOnDoubleClickLabel> lastLabel_;
+    bool reopenOnActivate_ = false;
+    juce::uint32 lastDeactivatedAtMs_ = 0;
 };

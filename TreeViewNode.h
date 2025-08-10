@@ -36,10 +36,12 @@ public:
     void editorAboutToBeHidden(juce::TextEditor* te) override;
     int getSavedCaret();
     juce::Range<int> getSavedSelection() const noexcept;
+    juce::uint32 getLastHiddenAtMs() const noexcept;
 
 private:
     int savedCaret_ = -1;
     juce::Range<int> savedSelection_ { -1, -1 };
+    juce::uint32 lastHiddenAtMs_ = 0;
 };
 
 

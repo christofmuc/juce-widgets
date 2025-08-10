@@ -45,8 +45,15 @@ void EditOnDoubleClickLabel::editorAboutToBeHidden(juce::TextEditor* te)
         savedCaret_ = te->getCaretPosition();
         savedSelection_ = te->getHighlightedRegion();
     }
+    lastHiddenAtMs_ = juce::Time::getMillisecondCounter(); // NEW: when the editor hid
     juce::Label::editorAboutToBeHidden(te);
 }
+
+juce::uint32 EditOnDoubleClickLabel::getLastHiddenAtMs() const noexcept
+{
+    return lastHiddenAtMs_;
+}
+
 
 int EditOnDoubleClickLabel::getSavedCaret()
 {

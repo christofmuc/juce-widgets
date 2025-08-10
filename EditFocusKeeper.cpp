@@ -42,12 +42,12 @@ void EditSessionKeeper::globalFocusChanged(juce::Component* c)
         if (auto* lbl = te->findParentComponentOfClass<EditOnDoubleClickLabel>()) lastLabel_ = lbl;
 }
 
-// Optional: if focus jumps straight to null on deactivate, try to remember the label
 void EditSessionKeeper::snapshotOnDeactivation()
 {
-    if (auto* te = dynamic_cast<juce::TextEditor*>(juce::Component::getCurrentlyFocusedComponent()))
-        if (auto* lbl = te->findParentComponentOfClass<EditOnDoubleClickLabel>()) lastLabel_ = lbl;
+    // Just remember *when* we deactivated. Editor is usually already closed now.
+    lastDeactivatedAtMs_ = juce::Time::getMillisecondCounter();
 }
+
 
 void EditSessionKeeper::restoreOnActivation()
 {
@@ -56,9 +56,20 @@ void EditSessionKeeper::restoreOnActivation()
 
     if (lbl == nullptr || !lbl->isShowing()) return;
 
-    // Pull the exact snapshot taken by the label at editor close
-    int caret = lbl->getSavedCaret();
-    auto sel = lbl->getSavedSelection();
+    // Only reopen if the editor hid just before we deactivated (Alt/Cmd-Tab case).
+    constexpr juce::uint32 reopenWindowMs = 250; // tweak if needed
+    const juce::uint32 hidAt = lbl->getLastHiddenAtMs();
+    const juce::uint32 deactAt = lastDeactivatedAtMs_;
+
+    // If we have no timestamps, or the gap is too large, assume intentional close (Esc/click).
+    if (hidAt == 0 || deactAt == 0) return;
+
+    // Unsigned wrap-safe: deactivation should come after hide in this scenario.
+    const juce::uint32 gap = deactAt - hidAt;
+    if (gap > reopenWindowMs) return;
+
+    const int caret = lbl->getSavedCaret();
+    const auto sel = lbl->getSavedSelection();
 
     juce::MessageManager::callAsync([lbl, caret, sel] {
         if (lbl == nullptr) return;
