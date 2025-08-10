@@ -28,6 +28,21 @@
 
 #include <optional>
 
+class EditOnDoubleClickLabel : public juce::Label {
+public:
+    EditOnDoubleClickLabel(const juce::String& componentName = {}, const juce::String& labelText = {});
+    void mouseDown(const juce::MouseEvent& e) override;
+
+    void editorAboutToBeHidden(juce::TextEditor* te) override;
+    int getSavedCaret();
+    juce::Range<int> getSavedSelection() const noexcept;
+
+private:
+    int savedCaret_ = -1;
+    juce::Range<int> savedSelection_ { -1, -1 };
+};
+
+
 class TreeViewNode : public juce::TreeViewItem {
 public:
     typedef std::function<std::vector<juce::TreeViewItem*>()> TChildGenerator;

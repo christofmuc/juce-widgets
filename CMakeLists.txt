@@ -47,6 +47,7 @@ set(Sources
 	CollapsibleContainer.cpp CollapsibleContainer.h
 	ColourHelpers.cpp ColourHelpers.h
 	CustomizedRotary.cpp CustomizedRotary.h
+	EditFocusKeeper.h EditFocusKeeper.cpp
 	HorizontalLayoutContainer.cpp HorizontalLayoutContainer.h
 	IconHelper.cpp IconHelper.h
 	InfoText.cpp InfoText.h

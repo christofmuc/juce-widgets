@@ -24,21 +24,39 @@
 
 #include "TreeViewNode.h"
 
-class EditOnDoubleClickLabel : public juce::Label {
-public:
-    using juce::Label::Label;
+EditOnDoubleClickLabel::EditOnDoubleClickLabel(const juce::String& componentName, const juce::String& labelText) :
+    juce::Label(componentName, labelText)
+{
+    setWantsKeyboardFocus(true);
+}
 
-    virtual void mouseDown(const juce::MouseEvent& event) override
-    {
-        // Pass to parent
-        auto parent = getParentComponent();
-        if (parent) {
-            parent->mouseDown(event.getEventRelativeTo(parent));
-        }
-        Label::mouseDown(event);
+void EditOnDoubleClickLabel::mouseDown(const juce::MouseEvent& e) 
+{
+    if (auto* parent = getParentComponent()) {
+        parent->mouseDown(e.getEventRelativeTo(parent)); // let TreeView row handle selection
     }
-};
+    juce::Label::mouseDown(e);
+}
 
+// Add this override and the accessors (place anywhere in the class body)
+void EditOnDoubleClickLabel::editorAboutToBeHidden(juce::TextEditor* te) 
+{
+    if (te != nullptr) {
+        savedCaret_ = te->getCaretPosition();
+        savedSelection_ = te->getHighlightedRegion();
+    }
+    juce::Label::editorAboutToBeHidden(te);
+}
+
+int EditOnDoubleClickLabel::getSavedCaret() 
+{
+    return savedCaret_;
+}
+
+juce::Range<int> EditOnDoubleClickLabel::getSavedSelection() const noexcept
+{
+    return savedSelection_;
+}
 
 TreeViewNode::TreeViewNode(juce::String text, juce::String id, bool editable /* = false */) : text_(text), id_(id), editable_(editable)
 {
@@ -179,7 +197,7 @@ std::unique_ptr<juce::Component> TreeViewNode::createItemComponent()
 {
     if (editable_) {
         auto labelCreated = std::make_unique<EditOnDoubleClickLabel>(id_, text_);
-        labelCreated->setEditable(false, true, true);
+        labelCreated->setEditable(false, true, false);
         labelCreated->getTextValue().referTo(textValue);
         return std::move(labelCreated);
     }
