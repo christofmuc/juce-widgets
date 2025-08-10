@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,22 +34,22 @@ void TouchButton::clicked(const juce::ModifierKeys& modifiers)
     if (modifiers.isAnyModifierKeyDown() || wasRightClick_) {
         f = TouchButtonFunction::SECONDARY;
     }
-//    if (getMillisecondsSinceButtonDown() > 500) {
-//    f = TouchButtonFunction::LONG;
-//    }
+    //    if (getMillisecondsSinceButtonDown() > 500) {
+    //    f = TouchButtonFunction::LONG;
+    //    }
     juce::NullCheckedInvocation::invoke(onClickMultifunction, f);
 }
 
 void TouchButton::mouseDown(const juce::MouseEvent& e)
 {
     // Start a timer to auto release for long click
-//    startTimer(500);
+    //    startTimer(500);
     TextButton::mouseDown(e);
 }
 
 void TouchButton::mouseUp(const juce::MouseEvent& e)
 {
-//    stopTimer();
+    //    stopTimer();
     wasRightClick_ = e.mods.isRightButtonDown();
     TextButton::mouseUp(e);
 }
@@ -69,22 +69,22 @@ void TouchToggleButton::clicked(const juce::ModifierKeys& modifiers)
     if (modifiers.isAnyModifierKeyDown() || wasRightClick_) {
         f = TouchButtonFunction::SECONDARY;
     }
-  //  if (getMillisecondsSinceButtonDown() > 500) {
-  //      f = TouchButtonFunction::LONG;
-  //  }
+    //  if (getMillisecondsSinceButtonDown() > 500) {
+    //      f = TouchButtonFunction::LONG;
+    //  }
     juce::NullCheckedInvocation::invoke(onClickMultifunction, f);
 }
 
 void TouchToggleButton::mouseDown(const juce::MouseEvent& e)
 {
     // Start a timer to auto release for long click
-//    startTimer(500);
+    //    startTimer(500);
     ToggleButton::mouseDown(e);
 }
 
 void TouchToggleButton::mouseUp(const juce::MouseEvent& e)
 {
-//    stopTimer();
+    //    stopTimer();
     wasRightClick_ = e.mods.isRightButtonDown();
     ToggleButton::mouseUp(e);
 }

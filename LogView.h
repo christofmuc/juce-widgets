@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,7 +60,7 @@ private:
     std::unique_ptr<LambdaButtonStrip> buttons_;
     std::unique_ptr<juce::CodeEditorComponent> logBox_;
     juce::ComboBox levelSelector_;
-    juce::Value level_ { spdlog::level::level_enum::info + 1};
+    juce::Value level_ { spdlog::level::level_enum::info + 1 };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(LogView)
 };

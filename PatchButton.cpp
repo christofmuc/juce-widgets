@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,7 @@
 
 class PatchTextButtonFixedFontDraggable : public TouchButton {
 public:
-    PatchTextButtonFixedFontDraggable() : TouchButton() {
-    }
+    PatchTextButtonFixedFontDraggable() : TouchButton() {}
 
     void setDragStartInfo(juce::String dragInfo) { dragInfo_ = dragInfo; }
 
@@ -99,8 +98,7 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
 {
     button_ = std::make_unique<PatchTextButtonFixedFontDraggable>();
     addAndMakeVisible(button_.get());
-    button_->onClickMultifunction= [this](TouchButtonFunction f) { trigger(f);
-    };
+    button_->onClickMultifunction = [this](TouchButtonFunction f) { trigger(f); };
     button_->setClickingTogglesState(isToggle);
     IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size, 16);
     IconHelper::setupIcon(this, hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size, 16);
@@ -146,11 +144,11 @@ void PatchButton::setPatchColour(int colourId, juce::Colour newColour)
     button_->setColour(colourId, newColour);
 }
 
-void PatchButton::bindColour(int colourId, juce::Value colourValue) 
+void PatchButton::bindColour(int colourId, juce::Value colourValue)
 {
-    colourListener_ = std::make_unique<LambdaValueListener>(colourValue,
-        [colourId, this](juce::Value const& newValue) { setPatchColour(colourId, juce::Colour::fromString(newValue.getValue().operator juce::String())); 
-        });
+    colourListener_ = std::make_unique<LambdaValueListener>(colourValue, [colourId, this](juce::Value const& newValue) {
+        setPatchColour(colourId, juce::Colour::fromString(newValue.getValue().operator juce::String()));
+    });
     colourListener_->trigger();
 }
 
@@ -164,7 +162,7 @@ void PatchButton::setButtonData(const juce::String& text)
     button_->setButtonText(text);
 }
 
-void PatchButton::setButtonDragInfo(const juce::String& dragInfo) 
+void PatchButton::setButtonDragInfo(const juce::String& dragInfo)
 {
     // TODO - ugly, but kind of impl pattern
     dynamic_cast<PatchTextButtonFixedFontDraggable*>(button_.get())->setDragStartInfo(dragInfo);
@@ -172,9 +170,7 @@ void PatchButton::setButtonDragInfo(const juce::String& dragInfo)
 
 void PatchButton::bindButtonData(juce::Value textValue)
 {
-    titleListener_ = std::make_unique<LambdaValueListener>(textValue,
-        [this](juce::Value const& newValue) { setButtonData(newValue.getValue());
-        });
+    titleListener_ = std::make_unique<LambdaValueListener>(textValue, [this](juce::Value const& newValue) { setButtonData(newValue.getValue()); });
     titleListener_->trigger();
 }
 
@@ -183,10 +179,9 @@ void PatchButton::setSubtitle(const juce::String& text)
     synthName_.setText(text, juce::dontSendNotification);
 }
 
-void PatchButton::bindSubtitle(juce::Value textValue) 
+void PatchButton::bindSubtitle(juce::Value textValue)
 {
-    subtitleListener_ =
-        std::make_unique<LambdaValueListener>(textValue, [this](juce::Value const& newValue) { setSubtitle(newValue.getValue()); });
+    subtitleListener_ = std::make_unique<LambdaValueListener>(textValue, [this](juce::Value const& newValue) { setSubtitle(newValue.getValue()); });
     subtitleListener_->trigger();
 }
 
@@ -209,8 +204,7 @@ void PatchButton::setHidden(bool isHidden)
 
 void PatchButton::bindHidden(juce::Value isHidden)
 {
-    hiddenListener_ =
-        std::make_unique<LambdaValueListener>(isHidden, [this](juce::Value const& newValue) { setHidden((bool) newValue.getValue()); });
+    hiddenListener_ = std::make_unique<LambdaValueListener>(isHidden, [this](juce::Value const& newValue) { setHidden((bool) newValue.getValue()); });
     hiddenListener_->trigger();
 }
 
@@ -263,5 +257,3 @@ void PatchButtonWithDropTarget::itemDropped(const SourceDetails& dragSourceDetai
     spdlog::trace("Item dropped: {}", name);
     onItemDropped(dragSourceDetails.description);
 }
-
-

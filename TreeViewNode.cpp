@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ EditOnDoubleClickLabel::EditOnDoubleClickLabel(const juce::String& componentName
     setWantsKeyboardFocus(true);
 }
 
-void EditOnDoubleClickLabel::mouseDown(const juce::MouseEvent& e) 
+void EditOnDoubleClickLabel::mouseDown(const juce::MouseEvent& e)
 {
     if (auto* parent = getParentComponent()) {
         parent->mouseDown(e.getEventRelativeTo(parent)); // let TreeView row handle selection
@@ -39,7 +39,7 @@ void EditOnDoubleClickLabel::mouseDown(const juce::MouseEvent& e)
 }
 
 // Add this override and the accessors (place anywhere in the class body)
-void EditOnDoubleClickLabel::editorAboutToBeHidden(juce::TextEditor* te) 
+void EditOnDoubleClickLabel::editorAboutToBeHidden(juce::TextEditor* te)
 {
     if (te != nullptr) {
         savedCaret_ = te->getCaretPosition();
@@ -48,7 +48,7 @@ void EditOnDoubleClickLabel::editorAboutToBeHidden(juce::TextEditor* te)
     juce::Label::editorAboutToBeHidden(te);
 }
 
-int EditOnDoubleClickLabel::getSavedCaret() 
+int EditOnDoubleClickLabel::getSavedCaret()
 {
     return savedCaret_;
 }

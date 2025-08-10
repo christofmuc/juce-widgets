@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,8 @@
 
 class ColouredCheckbox : public TouchToggleButton {
 public:
-    ColouredCheckbox(juce::String text, juce::Colour colour) : TouchToggleButton(), colour_(colour) { 
+    ColouredCheckbox(juce::String text, juce::Colour colour) : TouchToggleButton(), colour_(colour)
+    {
         setButtonText(text);
         setName(text);
     }
@@ -48,14 +49,9 @@ private:
 };
 
 CategoryButtons::CategoryButtons(std::vector<Category> const &categories, std::function<void(Category, TouchButtonFunction f)> updated,
-    bool colouredButtons,
-    bool useCheckboxes) :
-    useCheckboxes_(useCheckboxes)
-    , colouredButtons_(colouredButtons)
-    , updateHandler_(updated)
-    , buttonWidth_(LAYOUT_BUTTON_WIDTH)
-    , buttonHeight_(LAYOUT_LINE_HEIGHT)
-    , usedHeight_(0)
+    bool colouredButtons, bool useCheckboxes) :
+    useCheckboxes_(useCheckboxes),
+    colouredButtons_(colouredButtons), updateHandler_(updated), buttonWidth_(LAYOUT_BUTTON_WIDTH), buttonHeight_(LAYOUT_LINE_HEIGHT), usedHeight_(0)
 {
     setCategories(categories);
 }

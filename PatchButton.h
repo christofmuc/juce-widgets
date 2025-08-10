@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
-#include "Thumbnail.h"
 #include "LambdaValueListener.h"
+#include "Thumbnail.h"
 #include "TouchButton.h"
 
 class PatchButton : public juce::Component {

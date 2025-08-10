@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2023 Christof Ruch
+ * Copyright (c) 2019-2025 Christof Ruch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,17 +35,14 @@
 
 class SimpleListBoxModel : public juce::ListBoxModel {
 public:
-    SimpleListBoxModel(juce::StringArray content, juce::StringArray values) : content_(content), values_(values) {
-    }
+    SimpleListBoxModel(juce::StringArray content, juce::StringArray values) : content_(content), values_(values) {}
 
-    int getNumRows() override { 
-        return content_.size();
-    }
+    int getNumRows() override { return content_.size(); }
 
     void paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) override
     {
         auto background = rowIsSelected ? juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::TextEditor::highlightColourId) :
-                                      juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::ListBox::backgroundColourId);
+                                          juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::ListBox::backgroundColourId);
 
         auto textColour = rowIsSelected ? juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::TextEditor::highlightedTextColourId) :
                                           juce::LookAndFeel::getDefaultLookAndFeel().findColour(juce::ListBox::textColourId);
@@ -58,7 +55,8 @@ public:
         }
     }
 
-    void listBoxItemClicked(int row, const juce::MouseEvent &) override { 
+    void listBoxItemClicked(int row, const juce::MouseEvent &) override
+    {
         if (onSelected) {
             onSelected(values_[row]);
         }
@@ -75,18 +73,17 @@ private:
 class ListPropertyEditor : public juce::PropertyComponent {
 public:
     ListPropertyEditor(const juce::Value &valueToControl, juce::String const &propertyName, juce::StringArray titles, juce::StringArray values) :
-        juce::PropertyComponent(propertyName, 2*LAYOUT_LINE_SPACING), value_(valueToControl), listModel_(titles, values)
+        juce::PropertyComponent(propertyName, 2 * LAYOUT_LINE_SPACING), value_(valueToControl), listModel_(titles, values)
     {
         listBox_.setModel(&listModel_);
         addAndMakeVisible(listBox_);
-        listModel_.onSelected = [this](juce::String const &value) { value_ = value;
-        };
+        listModel_.onSelected = [this](juce::String const &value) { value_ = value; };
     }
 
-    virtual void refresh() {
-    }
+    virtual void refresh() {}
 
-    virtual void resized() { 
+    virtual void resized()
+    {
         auto area = getLocalBounds();
         auto contentBox = getLookAndFeel().getPropertyComponentContentPosition(*this); // Get the width that JUCE's LookAndFeel uses for labels
         listBox_.setBounds(contentBox.withTrimmedLeft(2));
