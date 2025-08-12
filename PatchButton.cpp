@@ -100,6 +100,8 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
     addAndMakeVisible(button_.get());
     button_->onClickMultifunction = [this](TouchButtonFunction f) { trigger(f); };
     button_->setClickingTogglesState(isToggle);
+    button_->onStateChange = [this]() { refreshColours();
+    };
     IconHelper::setupIcon(this, favoriteIcon_, heart_32_png, heart_32_png_size, 16);
     IconHelper::setupIcon(this, hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size, 16);
     addAndMakeVisible(thumbnail_);
@@ -108,6 +110,26 @@ PatchButton::PatchButton(int id, bool isToggle, std::function<void(int)> clickHa
     addAndMakeVisible(synthName_);
     synthName_.setInterceptsMouseClicks(false, false);
     synthName_.setJustificationType(juce::Justification::bottomLeft);
+
+    // Make the pressed button more visible. Default in our Colour scheme was gray
+    button_->setColour(juce::TextButton::buttonOnColourId, juce::Colours::white);
+    button_->setColour(juce::TextButton::textColourOnId, juce::Colours::black);    
+}
+
+void PatchButton::refreshColours()
+{
+    // Set the colours accordingly
+    synthName_.setColour(juce::Label::textColourId, button_->getToggleState() ? juce::Colours::black : juce::Colours::white);
+    juce::MessageManager::callAsync([this]() {
+        if (button_->getToggleState()) {
+            IconHelper::switchTintedIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png,
+                blind_symbol_of_an_opened_eye_with_a_slash_png_size, 16, juce::Colours::black);
+        }
+        else {
+            IconHelper::switchIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size,
+                16);
+        }
+    });
 }
 
 void PatchButton::updateId(int id)
@@ -119,6 +141,7 @@ void PatchButton::setActive(bool active)
 {
     active_ = active;
     button_->setToggleState(active, juce::dontSendNotification);
+    refreshColours();
     repaint();
 }
 
@@ -142,6 +165,7 @@ void PatchButton::resized()
 void PatchButton::setPatchColour(int colourId, juce::Colour newColour)
 {
     button_->setColour(colourId, newColour);
+    refreshColours();
 }
 
 void PatchButton::bindColour(int colourId, juce::Value colourValue)

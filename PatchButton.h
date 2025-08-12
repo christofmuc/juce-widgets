@@ -66,6 +66,8 @@ public:
     void updateId(int id);
 
 private:
+    void refreshColours();
+
     std::function<void(int)> clicked_;
     std::unique_ptr<TouchButton> button_;
     Thumbnail thumbnail_;

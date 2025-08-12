@@ -29,4 +29,6 @@
 class IconHelper {
 public:
     static void setupIcon(juce::Component* parent, juce::ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize);
+    static void switchIcon(juce::ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize);
+    static void switchTintedIcon(juce::ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize, juce::Colour tintColour);
 };

@@ -24,6 +24,34 @@
 
 #include "IconHelper.h"
 
+static juce::Image recolourWithShading(const juce::Image& srcIn, juce::Colour tint)
+{
+    auto src = srcIn.convertedToFormat(juce::Image::ARGB);
+    juce::Image dst(juce::Image::ARGB, src.getWidth(), src.getHeight(), true);
+
+    juce::Image::BitmapData s(src, juce::Image::BitmapData::readOnly);
+    juce::Image::BitmapData d(dst, juce::Image::BitmapData::writeOnly);
+
+    const float tr = tint.getFloatRed();
+    const float tg = tint.getFloatGreen();
+    const float tb = tint.getFloatBlue();
+
+    for (int y = 0; y < src.getHeight(); ++y) {
+        auto* sp = reinterpret_cast<const juce::PixelARGB*>(s.getLinePointer(y));
+        auto* dp = reinterpret_cast<juce::PixelARGB*>(d.getLinePointer(y));
+
+        for (int x = 0; x < src.getWidth(); ++x, ++sp, ++dp) {
+            const juce::uint8 a = sp->getAlpha();
+            const float lum = (0.2126f * sp->getRed() + 0.7152f * sp->getGreen() + 0.0722f * sp->getBlue()) / 255.0f;
+
+            dp->setARGB(a, (juce::uint8) std::round(255.0f * tr * lum), (juce::uint8) std::round(255.0f * tg * lum),
+                (juce::uint8) std::round(255.0f * tb * lum));
+        }
+    }
+    return dst;
+}
+
+
 void IconHelper::setupIcon(juce::Component* parent, juce::ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize)
 {
     juce::PNGImageFormat reader;
@@ -35,4 +63,25 @@ void IconHelper::setupIcon(juce::Component* parent, juce::ImageComponent& icon, 
     parent->addAndMakeVisible(icon);
     icon.setVisible(false);
     icon.toFront(false);
+}
+
+void IconHelper::switchIcon(juce::ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize)
+{
+    juce::PNGImageFormat reader;
+    juce::MemoryInputStream memStream(icondata, iconsize, false);
+    auto im = reader.decodeImage(memStream);
+    auto smaller = im.rescaled(destSize, destSize);
+    icon.setImage(smaller);
+}
+
+void IconHelper::switchTintedIcon(juce::ImageComponent& icon, const unsigned char* icondata, size_t iconsize, int destSize,
+    juce::Colour tintColour)
+{
+    juce::PNGImageFormat reader;
+    juce::MemoryInputStream memStream(icondata, iconsize, false);
+    auto im = reader.decodeImage(memStream).rescaled(destSize, destSize);
+
+    auto tinted = recolourWithShading(im, tintColour);
+
+    icon.setImage(tinted);
 }
