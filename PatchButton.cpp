@@ -120,7 +120,7 @@ void PatchButton::refreshColours()
 {
     // Set the colours accordingly
     synthName_.setColour(juce::Label::textColourId, button_->getToggleState() ? juce::Colours::black : juce::Colours::white);
-    juce::MessageManager::callAsync([this]() {
+    if (button_) {
         if (button_->getToggleState()) {
             IconHelper::switchTintedIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png,
                 blind_symbol_of_an_opened_eye_with_a_slash_png_size, 16, juce::Colours::black);
@@ -129,7 +129,7 @@ void PatchButton::refreshColours()
             IconHelper::switchIcon(hiddenIcon_, blind_symbol_of_an_opened_eye_with_a_slash_png, blind_symbol_of_an_opened_eye_with_a_slash_png_size,
                 16);
         }
-    });
+    }
 }
 
 void PatchButton::updateId(int id)
