@@ -143,6 +143,34 @@ public:
         }
 
     private:
+        void mouseDrag(const juce::MouseEvent& event) override
+        {
+            if (event.originalComponent == &valueLabel)
+            {
+                return;
+            }
+
+            if (!dragStarted_ && event.mouseWasDraggedSinceMouseDown())
+            {
+                if (auto* dragContainer = juce::DragAndDropContainer::findParentDragContainerFor(this))
+                {
+                    if (!dragContainer->isDragAndDropActive())
+                    {
+                        dragStarted_ = true;
+                        dragContainer->startDragging(item.getPropertyId().toString(), this);
+                    }
+                }
+            }
+
+            juce::Component::mouseDrag(event);
+        }
+
+        void mouseUp(const juce::MouseEvent& event) override
+        {
+            dragStarted_ = false;
+            juce::Component::mouseUp(event);
+        }
+
         void labelTextChanged(juce::Label* labelThatChanged) override
         {
             if (labelThatChanged == &valueLabel)
@@ -152,6 +180,7 @@ public:
         ValueTreePropertyItem& item;
         juce::Label nameLabel;
         juce::Label valueLabel;
+        bool dragStarted_ = false;
     };
 
 private:
