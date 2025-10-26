@@ -42,7 +42,6 @@ juce::var convertTextToVar(const juce::String& text, const juce::var& existing)
 }
 } // namespace
 
-class ValueTreeViewer::NodeItem;
 class ValueTreePropertyItem;
 
 class ValueTreePropertyItem : public juce::TreeViewItem,
