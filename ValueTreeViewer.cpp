@@ -82,6 +82,11 @@ public:
             treeHasChanged();
     }
 
+    juce::Colour colourFor(bool isValueLabel, juce::Colour defaultColour) const
+    {
+        return owner.colourForProperty(tree, propertyId, defaultColour, isValueLabel);
+    }
+
     bool mightContainSubItems() override { return false; }
     void paintItem(juce::Graphics&, int, int) override {}
     bool customComponentUsesTreeViewMouseHandler() const override { return true; }
@@ -139,6 +144,10 @@ public:
         {
             nameLabel.setText(item.getDisplayName(), juce::dontSendNotification);
             valueLabel.setText(item.getValueAsText(), juce::dontSendNotification);
+            const auto nameDefault = nameLabel.findColour(juce::Label::textColourId);
+            const auto valueDefault = valueLabel.findColour(juce::Label::textColourId);
+            nameLabel.setColour(juce::Label::textColourId, item.colourFor(false, nameDefault));
+            valueLabel.setColour(juce::Label::textColourId, item.colourFor(true, valueDefault));
         }
 
     private:
@@ -491,6 +500,12 @@ void ValueTreeViewer::refresh()
         rebuildRoot();
 }
 
+void ValueTreeViewer::setPropertyColourFunction(PropertyColourFunction fn)
+{
+    propertyColourFunction_ = std::move(fn);
+    refresh();
+}
+
 void ValueTreeViewer::resized()
 {
     treeView_.setBounds(getLocalBounds());
@@ -512,4 +527,14 @@ void ValueTreeViewer::rebuildRoot()
     {
         treeView_.setRootItemVisible(false);
     }
+}
+
+juce::Colour ValueTreeViewer::colourForProperty(const juce::ValueTree& tree, const juce::Identifier& propertyId, juce::Colour defaultColour, bool isValueLabel) const
+{
+	if (propertyColourFunction_)
+	{
+		if (auto colour = propertyColourFunction_(tree, propertyId, isValueLabel))
+			return *colour;
+	}
+    return defaultColour;
 }

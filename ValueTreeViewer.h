@@ -26,6 +26,9 @@
 #include <juce_data_structures/juce_data_structures.h>
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include <functional>
+#include <optional>
+
 /**
  * ValueTreeViewer renders a juce::ValueTree inside a TreeView and keeps the UI
  * and the underlying ValueTree in sync. Property edits performed via the UI
@@ -35,6 +38,8 @@
 class ValueTreeViewer : public juce::Component
 {
 public:
+    using PropertyColourFunction = std::function<std::optional<juce::Colour>(const juce::ValueTree&, juce::Identifier, bool isValueLabel)>;
+
     ValueTreeViewer();
     ~ValueTreeViewer() override;
 
@@ -50,18 +55,22 @@ public:
 
     /** Forces the TreeView to rebuild itself from the underlying ValueTree. */
     void refresh();
+    void setPropertyColourFunction(PropertyColourFunction fn);
 
     void resized() override;
 
 private:
     class NodeItem;
+    friend class ValueTreePropertyItem;
 
     void rebuildRoot();
+    juce::Colour colourForProperty(const juce::ValueTree& tree, const juce::Identifier& propertyId, juce::Colour defaultColour, bool isValueLabel) const;
 
     juce::TreeView treeView_;
     juce::ValueTree valueTree_;
     juce::UndoManager* undoManager_ = nullptr;
     std::unique_ptr<NodeItem> rootItem_;
+    PropertyColourFunction propertyColourFunction_;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ValueTreeViewer)
 };
