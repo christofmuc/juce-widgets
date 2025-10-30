@@ -49,3 +49,16 @@
 #define LAYOUT_TOUCHBUTTON_HEIGHT (2 * LAYOUT_BUTTON_HEIGHT)
 
 #define LAYOUT_LARGE_FONT_SIZE 24.0f
+
+const juce::Colour kPaletteFill = juce::Colour::fromRGB(0x2a, 0x2d, 0x35);
+const juce::Colour kPaletteFillHover = kPaletteFill.brighter(0.08f);
+const juce::Colour kPaletteOutline = juce::Colour::fromRGB(0x3a, 0x3f, 0x4a);
+const juce::Colour kAccentColour = juce::Colour::fromRGB(0x54, 0xc6, 0xff);
+const juce::Colour kAccentColourInactive = kAccentColour.withAlpha(0.45f);
+const juce::Colour kKnobFaceColour = juce::Colour::fromRGB(0x36, 0x3a, 0x43);
+const juce::Colour kKnobFaceHighlight = kKnobFaceColour.brighter(0.18f);
+const juce::Colour kKnobFaceShadow = kKnobFaceColour.darker(0.22f);
+const juce::Colour kKnobTrackColour = juce::Colour::fromRGB(0x22, 0x24, 0x2a);
+const float kCornerRadius = 10.0f;
+const float kPaletteShadowOffset = 4.0f;
+const float kPaletteShadowRadius = 14.0f;
