@@ -69,10 +69,10 @@ void MidiChannelPropertyEditor::setValue(MidiChannel channel)
     }
 }
 
-MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput) :
-    TypedNamedValue(title, sn, 0, std::map<int, std::string>()), inputInsteadOfOutput_(inputInsteadOfOutput)
+MidiDevicePropertyEditor::MidiDevicePropertyEditor(std::string const &title, std::string const &sn, bool inputInsteadOfOutput, bool includeEmptyEntry, std::string emptyEntryLabel) :
+    TypedNamedValue(title, sn, 0, std::map<int, std::string>()), inputInsteadOfOutput_(inputInsteadOfOutput), includeEmptyEntry_(includeEmptyEntry), emptyEntryLabel_(emptyEntryLabel)
 {
-    value_ = juce::Value(1);
+    value_ = juce::Value(includeEmptyEntry_ ? 0 : 1);
     refreshDeviceList();
 }
 
@@ -93,6 +93,11 @@ void MidiDevicePropertyEditor::refreshDropdownList(juce::Array<juce::MidiDeviceI
     int i = 0;
     lookup_.clear();
     identifierPerRow_.clear();
+    devices_.clear();
+    if (includeEmptyEntry_) {
+        lookup_[i] = emptyEntryLabel_.toStdString();
+        identifierPerRow_[i] = juce::String();
+    }
     for (const auto &device : deviceList) {
         lookup_[++i] = device.name.toStdString();
         identifierPerRow_[i] = device.identifier;
@@ -105,13 +110,27 @@ void MidiDevicePropertyEditor::refreshDropdownList(juce::Array<juce::MidiDeviceI
 juce::MidiDeviceInfo MidiDevicePropertyEditor::selectedDevice() const
 {
     int rowSelected = int(value_.getValue());
+    if (includeEmptyEntry_ && rowSelected == 0) {
+        return juce::MidiDeviceInfo();
+    }
     auto id = identifierPerRow_.find(rowSelected);
+    if (id == identifierPerRow_.end()) {
+        return juce::MidiDeviceInfo();
+    }
     juce::String selected = id->second;
-    return devices_.find(selected)->second;
+    auto device = devices_.find(selected);
+    if (device == devices_.end()) {
+        return juce::MidiDeviceInfo();
+    }
+    return device->second;
 }
 
 void MidiDevicePropertyEditor::setSelectedDevice(juce::MidiDeviceInfo const &device)
 {
+    if (includeEmptyEntry_ && device.identifier.isEmpty()) {
+        value() = 0;
+        return;
+    }
     for (auto row : identifierPerRow_) {
         if (row.second == device.identifier) {
             value() = row.first;

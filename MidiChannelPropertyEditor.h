@@ -39,7 +39,7 @@ public:
 
 class MidiDevicePropertyEditor : public TypedNamedValue {
 public:
-    MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput);
+    MidiDevicePropertyEditor(std::string const &title, std::string const &sectionName, bool inputInsteadOfOutput, bool includeEmptyEntry = false, std::string emptyEntryLabel = "None");
 
     void refreshDeviceList();
     void refreshDropdownList(juce::Array<juce::MidiDeviceInfo> deviceList);
@@ -49,6 +49,8 @@ public:
 
 private:
     bool inputInsteadOfOutput_;
+    bool includeEmptyEntry_;
+    juce::String emptyEntryLabel_;
     std::map<int, juce::String> identifierPerRow_;
     std::map<juce::String, juce::MidiDeviceInfo> devices_;
 };
