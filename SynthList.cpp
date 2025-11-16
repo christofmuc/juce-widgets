@@ -25,6 +25,7 @@
 #include "SynthList.h"
 
 #include "LayoutConstants.h"
+#include <algorithm>
 
 SynthButtonWithActiveLight::SynthButtonWithActiveLight(std::string const &name, juce::Colour color, bool active)
 {
@@ -71,6 +72,9 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths,
 {
     buttons_.clear();
     synths_ = synths;
+    std::sort(synths_.begin(), synths_.end(), [](auto const& lhs, auto const& rhs) {
+        return lhs->getName() < rhs->getName();
+    });
     synthSwitchCallback_ = synthSwitchCallback;
     for (auto synth : synths_) {
         auto button = new SynthButtonWithActiveLight(synth->getName(), synth->getColour(), synth->isActive());
