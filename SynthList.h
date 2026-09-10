@@ -31,6 +31,7 @@ public:
     virtual std::string getName() = 0;
     virtual bool isActive() = 0;
     virtual juce::Colour getColour() = 0;
+    virtual bool canCheckConnection() { return true; }
 };
 
 class SynthButtonWithActiveLight : public juce::Component {
@@ -43,17 +44,39 @@ public:
 
     void setToggleState(bool toggleState);
     void setActiveState(bool activeState);
+    void setConnectionActionsEnabled(bool enabled);
 
     std::function<void(std::string const &)> onSynthSelected;
+    std::function<void(std::string const &)> onCheckConnection;
+    std::function<void(std::string const &)> onFindSynth;
 
 private:
-    juce::TextButton button_;
-    juce::Label label_;
+    class ContextButton : public juce::TextButton {
+    public:
+        std::function<void()> onContextMenu;
+        void mouseDown(juce::MouseEvent const &event) override {
+            if (event.mods.isPopupMenu()) { if (onContextMenu) onContextMenu(); }
+            else juce::TextButton::mouseDown(event);
+        }
+        void mouseUp(juce::MouseEvent const &event) override {
+            if (!event.mods.isPopupMenu()) juce::TextButton::mouseUp(event);
+        }
+    };
+    class StatusButton : public ContextButton {
+    public:
+        bool detected = false;
+        void paintButton(juce::Graphics &g, bool highlighted, bool down) override;
+    };
+    void showConnectionMenu();
+    ContextButton button_;
+    StatusButton status_;
 };
 
 class SynthList : public juce::Component, public juce::ChangeListener {
 public:
-    void setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback);
+    using ItemCallback = std::function<void(std::shared_ptr<ActiveListItem>)>;
+    void setList(std::vector<std::shared_ptr<ActiveListItem>> &synths, ItemCallback synthSwitchCallback,
+        ItemCallback checkConnectionCallback = {}, ItemCallback findSynthCallback = {});
     void setActiveListItem(std::string const &active);
 
     virtual void resized() override;

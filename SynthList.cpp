@@ -39,8 +39,12 @@ SynthButtonWithActiveLight::SynthButtonWithActiveLight(std::string const &name, 
     };
     addAndMakeVisible(button_);
 
+    status_.setTitle("Check connection for " + juce::String(name));
+    status_.setName("Check connection for " + juce::String(name));
+    status_.onClick = [this]() { if (onCheckConnection) onCheckConnection(this->name()); };
+    button_.onContextMenu = status_.onContextMenu = [this]() { showConnectionMenu(); };
     setActiveState(active);
-    addAndMakeVisible(label_);
+    addAndMakeVisible(status_);
 }
 
 void SynthButtonWithActiveLight::resized()
@@ -49,7 +53,7 @@ void SynthButtonWithActiveLight::resized()
     auto bottomrow = activeArea.removeFromBottom(20);
     auto toprow = activeArea.removeFromTop(LAYOUT_LARGE_LINE_HEIGHT);
     button_.setBounds(toprow);
-    label_.setBounds(bottomrow.reduced(LAYOUT_INSET_NORMAL));
+    status_.setBounds(bottomrow);
 }
 
 std::string SynthButtonWithActiveLight::name() const
@@ -64,11 +68,46 @@ void SynthButtonWithActiveLight::setToggleState(bool toggleState)
 
 void SynthButtonWithActiveLight::setActiveState(bool activeState)
 {
-    label_.setColour(juce::Label::ColourIds::backgroundColourId, activeState ? juce::Colours::darkgreen : juce::Colours::darkgrey);
+    status_.detected = activeState;
+    status_.setTooltip(activeState ? "Previously detected - click to check the saved connection"
+        : "Not detected - click to check the saved connection");
+    if (!status_.isEnabled()) status_.setTooltip("Automatic detection is not available for this synth; use Setup to configure it");
+    status_.repaint();
+}
+
+void SynthButtonWithActiveLight::setConnectionActionsEnabled(bool enabled)
+{
+    status_.setEnabled(enabled);
+    if (!enabled) status_.setTooltip("Automatic detection is not available for this synth; use Setup to configure it");
+}
+
+void SynthButtonWithActiveLight::StatusButton::paintButton(juce::Graphics &g, bool highlighted, bool down)
+{
+    auto colour = detected ? juce::Colours::darkgreen : juce::Colours::darkgrey;
+    g.setColour(highlighted || down ? colour.brighter() : colour);
+    g.fillRect(getLocalBounds().reduced(LAYOUT_INSET_NORMAL));
+    if (isEnabled() && (highlighted || down || hasKeyboardFocus(false))) {
+        g.setColour(juce::Colours::white);
+        g.setFont(12.0f);
+        g.drawText("Check", getLocalBounds(), juce::Justification::centred);
+    }
+}
+
+void SynthButtonWithActiveLight::showConnectionMenu()
+{
+    juce::PopupMenu menu;
+    menu.addItem(1, "Check connection", status_.isEnabled() && bool(onCheckConnection));
+    menu.addItem(2, "Find this synth...", status_.isEnabled() && bool(onFindSynth));
+    juce::Component::SafePointer<SynthButtonWithActiveLight> safeThis(this);
+    menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&button_), [safeThis](int result) {
+        if (!safeThis) return;
+        if (result == 1 && safeThis->onCheckConnection) safeThis->onCheckConnection(safeThis->name());
+        if (result == 2 && safeThis->onFindSynth) safeThis->onFindSynth(safeThis->name());
+    });
 }
 
 void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths,
-    std::function<void(std::shared_ptr<ActiveListItem>)> synthSwitchCallback)
+    ItemCallback synthSwitchCallback, ItemCallback checkConnectionCallback, ItemCallback findSynthCallback)
 {
     buttons_.clear();
     synths_ = synths;
@@ -78,6 +117,13 @@ void SynthList::setList(std::vector<std::shared_ptr<ActiveListItem>> &synths,
     synthSwitchCallback_ = synthSwitchCallback;
     for (auto synth : synths_) {
         auto button = new SynthButtonWithActiveLight(synth->getName(), synth->getColour(), synth->isActive());
+        if (checkConnectionCallback) button->onCheckConnection = [synth, checkConnectionCallback](std::string const &) {
+            checkConnectionCallback(synth);
+        };
+        if (findSynthCallback) button->onFindSynth = [synth, findSynthCallback](std::string const &) {
+            findSynthCallback(synth);
+        };
+        button->setConnectionActionsEnabled(synth->canCheckConnection() && bool(checkConnectionCallback));
         button->onSynthSelected = [this](std::string const &name) {
             for (auto s : synths_) {
                 if (name == s->getName()) {
