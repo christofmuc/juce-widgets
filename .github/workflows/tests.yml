@@ -1,0 +1,40 @@
+name: Widget tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: widget-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and run widget tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install JUCE build dependencies and virtual display
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build xvfb xauth libasound2-dev \
+            libfontconfig1-dev libfreetype6-dev libx11-dev libxcomposite-dev \
+            libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev \
+            libxrender-dev libgl1-mesa-dev
+
+      - name: Configure
+        run: cmake -S tests/standalone -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build --target synth_connection_tests --parallel 2
+
+      - name: Run tests
+        run: xvfb-run -a ctest --test-dir build --verbose --no-tests=error

@@ -165,18 +165,50 @@ juce::PropertyComponent *PropertyEditor::createEditor(std::shared_ptr<TypedNamed
     }
 }
 
-void PropertyEditor::setProperties(TProperties const &props)
+namespace {
+class SectionActionProperty : public juce::ButtonPropertyComponent {
+public:
+    explicit SectionActionProperty(PropertyEditor::SectionAction action)
+        : juce::ButtonPropertyComponent(action.text, false), action_(std::move(action)) {
+        setEnabled(action_.enabled);
+        for (auto *child : getChildren()) {
+            if (auto *actionButton = dynamic_cast<juce::Button *>(child)) actionButton->setTooltip(action_.tooltip);
+        }
+    }
+    void buttonClicked() override {
+        // The action may rebuild the panel and destroy this property.
+        auto callback = action_.onClick;
+        if (callback) callback();
+    }
+    juce::String getButtonText() const override { return action_.text; }
+    void resized() override {
+        for (auto *child : getChildren()) child->setBounds(getLocalBounds().reduced(4, 2));
+    }
+    void paint(juce::Graphics &) override {} // The action button supplies its own label.
+private:
+    PropertyEditor::SectionAction action_;
+};
+}
+
+void PropertyEditor::setProperties(TProperties const &props, SectionActions const &actions)
 {
     propertyPanel_.clear();
 
     juce::Array<juce::PropertyComponent *> editors;
     juce::String activeSectionName = "";
+    auto addSection = [&]() {
+        auto sectionActions = actions.find(activeSectionName);
+        if (sectionActions != actions.end()) {
+            for (auto const &action : sectionActions->second) editors.add(new SectionActionProperty(action));
+        }
+        propertyPanel_.addSection(activeSectionName, editors, true);
+        editors.clear();
+    };
     for (auto property : props) {
         // See if we need to close the previous section
         if (activeSectionName != property->sectionName()) {
             if (!editors.isEmpty()) {
-                propertyPanel_.addSection(activeSectionName, editors, true);
-                editors.clear();
+                addSection();
             }
             activeSectionName = property->sectionName();
         }
@@ -187,7 +219,7 @@ void PropertyEditor::setProperties(TProperties const &props)
         }
     }
     if (!editors.isEmpty()) {
-        propertyPanel_.addSection(activeSectionName, editors, true);
+        addSection();
     }
 }
 

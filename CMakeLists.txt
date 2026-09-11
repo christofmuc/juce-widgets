@@ -94,6 +94,15 @@ add_library(juce-widgets ${Sources})
 target_link_libraries(juce-widgets juce-utils ${GIN_LINK_TARGET} fmt::fmt spdlog::spdlog)
 target_include_directories(juce-widgets INTERFACE ${CMAKE_CURRENT_LIST_DIR})
 
+option(JUCE_WIDGETS_BUILD_CONNECTION_TESTS "Build synth connection UI regression tests" OFF)
+if(JUCE_WIDGETS_BUILD_CONNECTION_TESTS)
+    enable_testing()
+    add_executable(synth_connection_tests tests/SynthConnectionTests.cpp)
+    target_link_libraries(synth_connection_tests PRIVATE juce-widgets)
+    add_test(NAME synth_connection_tests COMMAND synth_connection_tests)
+    set_tests_properties(synth_connection_tests PROPERTIES TIMEOUT 30)
+endif()
+
 # Pedantic about warnings and precompiled headers
 if (MSVC)
     # warning level 4 and all warnings as errors

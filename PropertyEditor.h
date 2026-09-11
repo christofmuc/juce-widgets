@@ -39,7 +39,14 @@ public:
 
     int getTotalContentHeight();
 
-    void setProperties(TProperties const &props);
+    struct SectionAction {
+        juce::String text;
+        juce::String tooltip;
+        std::function<void()> onClick;
+        bool enabled = true;
+    };
+    using SectionActions = std::map<juce::String, std::vector<SectionAction>>;
+    void setProperties(TProperties const &props, SectionActions const &actions = {});
     void clear();
 
     static juce::PropertyComponent *createEditor(std::shared_ptr<TypedNamedValue> property);
