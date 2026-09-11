@@ -78,7 +78,7 @@ void SynthButtonWithActiveLight::setActiveState(bool activeState)
 void SynthButtonWithActiveLight::setConnectionActionsEnabled(bool enabled)
 {
     status_.setEnabled(enabled);
-    if (!enabled) status_.setTooltip("Automatic detection is not available for this synth; use Setup to configure it");
+    setActiveState(status_.detected);
 }
 
 void SynthButtonWithActiveLight::StatusButton::paintButton(juce::Graphics &g, bool highlighted, bool down)
@@ -93,11 +93,17 @@ void SynthButtonWithActiveLight::StatusButton::paintButton(juce::Graphics &g, bo
     }
 }
 
-void SynthButtonWithActiveLight::showConnectionMenu()
+juce::PopupMenu SynthButtonWithActiveLight::createConnectionMenu() const
 {
     juce::PopupMenu menu;
     menu.addItem(1, "Check connection", status_.isEnabled() && bool(onCheckConnection));
-    menu.addItem(2, "Find this synth...", status_.isEnabled() && bool(onFindSynth));
+    menu.addItem(2, "Find this synth...", bool(onFindSynth));
+    return menu;
+}
+
+void SynthButtonWithActiveLight::showConnectionMenu()
+{
+    auto menu = createConnectionMenu();
     juce::Component::SafePointer<SynthButtonWithActiveLight> safeThis(this);
     menu.showMenuAsync(juce::PopupMenu::Options().withTargetComponent(&button_), [safeThis](int result) {
         if (!safeThis) return;

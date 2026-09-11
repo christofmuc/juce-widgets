@@ -1,6 +1,12 @@
 #include "PropertyEditor.h"
 #include "SynthList.h"
 
+struct SynthConnectionTestAccess {
+    static juce::PopupMenu connectionMenu(SynthButtonWithActiveLight const &button) {
+        return button.createConnectionMenu();
+    }
+};
+
 namespace {
 struct Item : public ActiveListItem {
     explicit Item(std::string itemName) : name(std::move(itemName)) {}
@@ -65,6 +71,39 @@ class ConnectionTests : public juce::UnitTest {
         click(statusB);
         expect(checked.empty());
         expect(statusB->getTooltip().contains("not available"));
+
+        beginTest("Re-enabling checks restores the tooltip for the current detection state");
+        for (bool detected : {false, true}) {
+            second->setConnectionActionsEnabled(false);
+            second->setActiveState(detected);
+            expect(statusB->getTooltip().contains("not available"));
+            second->setConnectionActionsEnabled(true);
+            expectEquals(statusB->getTooltip(), juce::String(detected
+                ? "Previously detected - click to check the saved connection"
+                : "Not detected - click to check the saved connection"));
+        }
+
+        beginTest("A find-only callback remains available in the connection menu");
+        SynthList findOnlyList;
+        findOnlyList.setList(items, [](auto) {}, {}, [](auto) {});
+        auto *findOnlyButton = dynamic_cast<SynthButtonWithActiveLight *>(findOnlyList.getChildComponent(0));
+        expect(findOnlyButton != nullptr);
+        if (findOnlyButton) {
+            auto menu = SynthConnectionTestAccess::connectionMenu(*findOnlyButton);
+            bool checkFound = false, findFound = false;
+            for (juce::PopupMenu::MenuItemIterator it(menu); it.next();) {
+                const auto &item = it.getItem();
+                if (item.itemID == 1) {
+                    checkFound = true;
+                    expect(!item.isEnabled);
+                }
+                if (item.itemID == 2) {
+                    findFound = true;
+                    expect(item.isEnabled);
+                }
+            }
+            expect(checkFound && findFound);
+        }
 
         beginTest("Section actions are rendered without adding fake values to the property list");
         PropertyEditor editor;

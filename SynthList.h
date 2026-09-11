@@ -51,6 +51,8 @@ public:
     std::function<void(std::string const &)> onFindSynth;
 
 private:
+    friend struct SynthConnectionTestAccess;
+    juce::PopupMenu createConnectionMenu() const;
     class ContextButton : public juce::TextButton {
     public:
         std::function<void()> onContextMenu;
