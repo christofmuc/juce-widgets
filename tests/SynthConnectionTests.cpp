@@ -1,5 +1,6 @@
 #include "PropertyEditor.h"
 #include "SynthList.h"
+#include <iostream>
 
 struct SynthConnectionTestAccess {
     static juce::PopupMenu connectionMenu(SynthButtonWithActiveLight const &button) {
@@ -129,5 +130,6 @@ int main() {
     int failures = 0;
     for (int i = 0; i < runner.getNumResults(); ++i)
         failures += runner.getResult(i)->failures;
-    return failures == 0 ? 0 : 1;
+    std::cout << runner.getNumResults() << " test cases, " << failures << " failures\n";
+    return runner.getNumResults() > 0 && failures == 0 ? 0 : 1;
 }

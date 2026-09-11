@@ -100,6 +100,7 @@ if(JUCE_WIDGETS_BUILD_CONNECTION_TESTS)
     add_executable(synth_connection_tests tests/SynthConnectionTests.cpp)
     target_link_libraries(synth_connection_tests PRIVATE juce-widgets)
     add_test(NAME synth_connection_tests COMMAND synth_connection_tests)
+    set_tests_properties(synth_connection_tests PROPERTIES TIMEOUT 30)
 endif()
 
 # Pedantic about warnings and precompiled headers

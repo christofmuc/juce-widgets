@@ -28,7 +28,19 @@ An unsorted bunch of useful widgets build for the JUCE cross-platform library
 ## Usage
 
 This repository is meant to be included as a git submodule in a main project, see for instance [JammerNetz](https://github.com/christofmuc/JammerNetz) for an example how this is used.
-In order to build this library standalone, which is what the CI server should be doing, there is a separate little repository that you can use.
+The standalone test setup fetches pinned JUCE, juce-utils, fmt, spdlog, and JSON dependencies:
+
+```sh
+cmake -S tests/standalone -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --config Debug --target synth_connection_tests --parallel 2
+ctest --test-dir build -C Debug --verbose --no-tests=error
+```
+
+GitHub Actions runs these tests on Ubuntu for pushes and pull requests. The workflow
+installs the required Linux development packages and runs CTest with `xvfb-run -a`
+to provide a virtual display for the UI tests. Use the same prefix when running on
+a Linux machine without a display. CTest fails if no tests are registered, and each
+test executable has a 30-second timeout.
 
 For what is in this library, please use the header files to see the utility functions, I am busy with my main projects and can't add more documentation right now.
 
